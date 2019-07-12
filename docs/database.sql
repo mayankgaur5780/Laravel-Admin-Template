@@ -42,7 +42,7 @@ CREATE TABLE `admins` (
 /*Data for the table `admins` */
 
 insert  into `admins`(`id`,`name`,`profile_image`,`role_id`,`dial_code`,`mobile`,`email`,`password`,`remember_token`,`hash_token`,`status`,`created_at`,`updated_at`) values 
-(1,'Admin','20180622153757LRM6xCxZVW.jpg',1,91,'1234567890','admin@demo.com','$2y$10$S.NJVoe6WxO7ZiuxtbSmze7qp0tIkDnuQ7dS/js2Ky44FwZCzMAfy','5K2ODJmHJOGe7P2fyFdTtAvSRHQIRHuk0jqFDRjgQlxfK45i0SzXu7zHVmcN',NULL,1,'2018-04-23 14:38:00','2019-06-27 10:34:23');
+(1,'Admin','20180622153757LRM6xCxZVW.jpg',1,91,'1234567890','admin@demo.com','$2y$10$S.NJVoe6WxO7ZiuxtbSmze7qp0tIkDnuQ7dS/js2Ky44FwZCzMAfy','KIXlSrbMLVGZod7KsXh4Ig2lIgG1D6gu8ECOYLhrlOBCjcvWGXsCk5TH9Hdg',NULL,1,'2018-04-23 14:38:00','2019-06-27 10:34:23');
 
 /*Table structure for table `app_cms` */
 
@@ -403,9 +403,9 @@ CREATE TABLE `navigation` (
 
 insert  into `navigation`(`id`,`parent_id`,`name`,`en_name`,`display_order`,`icon`,`action_path`,`status`,`show_in_menu`,`show_in_permission`,`type`,`created_at`,`updated_at`) values 
 (1,0,'لوحه القياده','Dashboard',0,'fa fa-tachometer','admin/dashboard',1,1,1,1,'2018-01-14 10:20:41','2019-06-25 09:38:57'),
-(2,0,'إدارة المسؤول','Manage Admin',1,'fa fa-universal-access','admin/admin',0,1,1,1,'2018-01-14 10:22:16','2019-06-25 12:20:11'),
-(3,0,'إدارة الأدوار','Manage Roles',1,'fa fa-cogs','admin/role',0,1,1,1,'2018-01-14 10:34:16','2019-06-25 12:20:52'),
-(4,0,'إدارة الملاحة','Manage Navigations',1,'fa fa-cogs','admin/navigation',0,1,1,1,'2018-01-14 10:34:50','2019-06-25 12:22:44'),
+(2,0,'إدارة المسؤول','Manage Admin',1,'fa fa-universal-access','admin/admin',1,1,1,1,'2018-01-14 10:22:16','2019-07-12 06:36:23'),
+(3,0,'إدارة الأدوار','Manage Roles',1,'fa fa-cogs','admin/role',1,1,1,1,'2018-01-14 10:34:16','2019-07-12 06:36:25'),
+(4,0,'إدارة الملاحة','Manage Navigations',1,'fa fa-cogs','admin/navigation',1,1,1,1,'2018-01-14 10:34:50','2019-07-12 06:36:29'),
 (5,0,'المستخدمين','Manage Users',2,'fa fa-users','admin/users',1,1,1,1,'2018-07-03 09:33:34','2019-03-14 09:51:43'),
 (6,0,'إعدادات التطبيقات','App Settings',50,'fa fa-cogs','admin/settings',1,1,1,1,'2018-07-20 14:52:58','2018-07-20 14:52:58'),
 (7,0,'إدارة تطبيق CMS','Manage App CMS',49,'fa fa-globe','#',1,1,1,1,'2019-01-12 15:38:02','2019-01-13 18:48:37'),
@@ -467,12 +467,12 @@ CREATE TABLE `roles_permissions` (
   KEY `roles_permissions_navigation_id` (`navigation_id`),
   CONSTRAINT `roles_permissions_navigation_id` FOREIGN KEY (`navigation_id`) REFERENCES `navigation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `roles_permissions_role_id` FOREIGN KEY (`role_id`) REFERENCES `users_roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `roles_permissions` */
 
 insert  into `roles_permissions`(`id`,`role_id`,`navigation_id`,`created_at`,`updated_at`) values 
-(6,2,1,'2019-06-27 10:23:46','2019-06-27 10:23:46');
+(8,2,1,'2019-07-12 07:10:17','2019-07-12 07:10:17');
 
 /*Table structure for table `settings` */
 
@@ -557,9 +557,12 @@ CREATE TABLE `users` (
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `users` */
+
+insert  into `users`(`id`,`profile_image`,`name`,`email`,`dial_code`,`mobile`,`gender`,`dob`,`password`,`remember_token`,`address`,`otp`,`otp_generated_at`,`status`,`created_at`,`updated_at`) values 
+(1,NULL,'Test User','','966','0512345678',1,'2019-07-12','$2y$10$G1aJHYFf4TqDqEuy4KPiluerQYD5dpKQUyqTBaFK7n88Gsgbc7qE6',NULL,NULL,NULL,NULL,1,'2019-07-12 06:23:26','2019-07-12 06:32:15');
 
 /*Table structure for table `users_permissions` */
 
