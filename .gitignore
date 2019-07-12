@@ -1,0 +1,11 @@
+local/vendor/
+local/node_modules/
+local/npm-debug.log
+
+# Laravel 5 & Lumen specific
+local/storage
+local/hot
+local/storage/*.key
+local/.env.*.php
+local/.env.php
+local/.env
