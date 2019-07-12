@@ -75,6 +75,7 @@ class NavigationController extends Controller
 
     public function getUpdate(Request $request)
     {
+        $locale = getCustomSessionLang();
         $navigation = \App\Models\Navigation::findOrFail($request->id);
         $parent_navigation = \App\Models\Navigation::select(\DB::raw("id, {$locale}name AS name"))->where('parent_id', 0)->get();
         return view('admin.navigation.update', compact('navigation', 'parent_navigation'));

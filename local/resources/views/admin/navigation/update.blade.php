@@ -21,6 +21,7 @@
 					<div class="box-body">
 						<p class="alert message_box hide"></p>
 						<form class="form-horizontal" id="update-form" enctype="multipart/form-data">
+							{{ csrf_field() }}
 							<div class="form-group">
 								<label for="name" class="col-sm-2 control-label">{{ transLang('name') }} <i class="has-error">*</i></label>
 								<div class="col-sm-6">
@@ -63,8 +64,8 @@
 									<select class="form-control select2-class" name="parent_id">
 										<option value="0">No Parent</option>
 										@if($parent_navigation->count())
-											@foreach($parent_navigation as $key => $navigation)
-												<option value="{{ $navigation->id }}"  {{ ($navigation->parent_id == $nav->id) ? 'selected' : '' }} >{{ $navigation->name }}</option>
+											@foreach($parent_navigation as $key => $nav)
+												<option value="{{ $nav->id }}"  {{ ($navigation->parent_id == $nav->id) ? 'selected' : '' }} >{{ $nav->name }}</option>
 											@endforeach
 										@endif
 								</select>
@@ -116,7 +117,6 @@
 									</select>
 								</div>
 							</div>
-							<input type="hidden" name="_token" value="{{ Session::token() }}">
 						</form>
 					</div>
 					<div class="box-footer">
