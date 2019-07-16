@@ -24,6 +24,7 @@
         <link rel="stylesheet" href="{{ asset('backend/dist/css/AdminLTE.min.css') }}">
         <!-- iCheck -->
         <link rel="stylesheet" href="{{ asset('backend/plugins/iCheck/square/blue.css') }}">
+        <link rel="stylesheet" href="{{ asset('backend/css/custom.css') }}?time={{ time() }}">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

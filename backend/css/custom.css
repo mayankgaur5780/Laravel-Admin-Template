@@ -1206,3 +1206,49 @@ body.ar_lang .box-footer .col-sm-6 {
 .height-450 {
     min-height: 450px;
 }
+
+/* Header, Login, Forgot & Reset Password Page Backgrounds  */
+
+.skin-blue .main-header .logo, .skin-blue .main-header .navbar {
+    background: none !important;
+}
+
+.skin-blue .main-header .logo:hover, .skin-blue .main-header .navbar .sidebar-toggle:hover {
+    background: none !important;
+}
+
+.skin-blue .main-header li.user-header {
+    background-image: linear-gradient(to right, #13547a 0%, #80d0c7 100%);
+}
+
+.skin-blue .sidebar-menu>li:hover>a, .skin-blue .sidebar-menu>li.active>a {
+    border-left-color: #80d0c7;
+}
+
+header.main-header {
+    background-image: linear-gradient(to right, #13547a 0%, #80d0c7 100%);
+}
+
+.login-page {
+    background-image: linear-gradient(to right, #13547a 0%, #80d0c7 100%);
+}
+
+.login-logo a {
+    color: #f8f1f1;
+}
+
+.login-page .btn {
+    background: #3d8397;
+    border-color: transparent;
+}
+
+.login-page .btn:active, .login-page .btn:hover {
+    background: #3d8397;
+    border-color: transparent;
+}
+
+table.table-bordered.dataTable thead tr:first-child {
+    background: #41889a;
+}
+
+/* Header, Login, Forgot & Reset Password Page Backgrounds  */
