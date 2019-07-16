@@ -1209,6 +1209,10 @@ body.ar_lang .box-footer .col-sm-6 {
 
 /* Header, Login, Forgot & Reset Password Page Backgrounds  */
 
+header.main-header {
+    background-image: linear-gradient(to right, #13547a 0%, #80d0c7 100%);
+}
+
 .skin-blue .main-header .logo, .skin-blue .main-header .navbar {
     background: none !important;
 }
@@ -1223,10 +1227,6 @@ body.ar_lang .box-footer .col-sm-6 {
 
 .skin-blue .sidebar-menu>li:hover>a, .skin-blue .sidebar-menu>li.active>a {
     border-left-color: #80d0c7;
-}
-
-header.main-header {
-    background-image: linear-gradient(to right, #13547a 0%, #80d0c7 100%);
 }
 
 .login-page {
@@ -1251,9 +1251,17 @@ table.table-bordered.dataTable thead tr:first-child {
     background: #41889a;
 }
 
-.pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover, .dt-buttons .dt-button, .dt-buttons .dt-button:hover {
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover, .dt-buttons .dt-button, .dt-buttons .dt-button:hover {
     background: #3d8397;
     border-color: transparent;
+}
+
+body.ar_lang header.main-header {
+    background-image: linear-gradient(to right, #80d0c7 0%, #13547a 100%);
+}
+
+body.ar_lang .skin-blue .main-header li.user-header {
+    background-image: linear-gradient(to right, #80d0c7 0%, #13547a 100%);
 }
 
 /* Header, Login, Forgot & Reset Password Page Backgrounds  */
