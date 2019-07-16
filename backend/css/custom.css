@@ -1251,4 +1251,9 @@ table.table-bordered.dataTable thead tr:first-child {
     background: #41889a;
 }
 
+.pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover, .dt-buttons .dt-button, .dt-buttons .dt-button:hover {
+    background: #3d8397;
+    border-color: transparent;
+}
+
 /* Header, Login, Forgot & Reset Password Page Backgrounds  */
