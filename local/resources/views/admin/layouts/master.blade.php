@@ -76,6 +76,8 @@
     </head>
     
     <body class="hold-transition skin-blue sidebar-mini {{ getSessionLang() }}_lang">
+        <div class="se-pre-con"></div>
+        
         <div class="wrapper">
         <!-- Header Container Start -->
         @include('admin.includes.header')
@@ -107,6 +109,7 @@
         </script>
         <!-- Bootstrap 3.3.6 -->
         <script src="{{ asset('backend/bootstrap/js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('backend/js/modernizr-custom.js') }}"></script>
         <!-- DataTables -->
         <script src="{{ asset('/backend/plugins/datatables/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('/backend/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
@@ -160,6 +163,11 @@
 
 	
         <script type="text/javascript">
+            $(window).on('load', function() {
+                // Animate loader off screen
+                $(".se-pre-con").fadeOut("slow");
+            });
+
             moment.tz.setDefault("Asia/Riyadh");
             @if(getSessionLang() == 'ar')
                 moment.locale("ar");

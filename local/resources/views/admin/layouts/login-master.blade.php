@@ -34,7 +34,7 @@
         <![endif]-->
     </head> 
     <body class="hold-transition login-page {{ getSessionLang() }}_lang">
-        
+        <div class="se-pre-con"></div>
         <div class="login-box">
             <div class="login-logo">
                 <a>
@@ -47,12 +47,18 @@
 
         <!-- jQuery 2.2.3 -->
         <script src="{{ asset('backend/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
+        <script src="{{ asset('backend/js/modernizr-custom.js') }}"></script>
         <!-- Bootstrap 3.3.6 -->
         <script src="{{ asset('backend/bootstrap/js/bootstrap.min.js') }}"></script>
         <!-- iCheck -->
         <script src="{{ asset('backend/plugins/iCheck/icheck.min.js') }}"></script>
 
         <script type="text/javascript">
+            $(window).on('load', function() {
+                // Animate loader off screen
+                $(".se-pre-con").fadeOut("slow");
+            });
+
             // <!-- Http Errors -->
             const ajax_errors = {
                 http_not_connected: "{{ transLang('http_not_connected') }}",
