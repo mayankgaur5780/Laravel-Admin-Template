@@ -217,7 +217,7 @@ if (!function_exists('sendOtp')) {
 }
 
 if (!function_exists('getLocales')) {
-    function getLocales($send_array = true)
+    function getLocales()
     {
         return ['en', 'ar'];
     }

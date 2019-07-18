@@ -122,8 +122,7 @@ active_current_url();
 
 function initBasicCkEditor() {
     CKEDITOR.config.toolbar = [
-        ['Styles', 'Format', 'Font', 'FontSize', 'Bold', 'Italic', 'Underline', 'StrikeThrough', '-', 'Undo', 'Redo', '-', 'Cut', 'Copy', 'Paste', 'Find', 'Replace', '-', 'Outdent', 'Indent', '-', 'Print'],
-        '/',
+        ['Styles', 'Format', 'Font', 'FontSize', 'Bold', 'Italic', 'Underline', 'StrikeThrough', '-', 'Find', 'Replace', '-', 'Outdent', 'Indent'],
         ['NumberedList', 'BulletedList', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
         ['Smiley', 'TextColor', 'BGColor', 'Source']
     ];

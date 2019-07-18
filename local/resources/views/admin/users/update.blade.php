@@ -73,7 +73,7 @@
                                 <div class="col-sm-6">
                                     <select class="form-control" name="status">
                                         @foreach(transLang('action_status') as $key => $status)
-                                            <option value="{{ $key }}" {{ ($user->status == $key) ? 'selected="selected"' : ''}}>{{ $status }}</option>
+                                            <option value="{{ $key }}" {{ ($user->status == $key) ? 'selected' : ''}}>{{ $status }}</option>
                                         @endforeach
                                     </select>
                                 </div>

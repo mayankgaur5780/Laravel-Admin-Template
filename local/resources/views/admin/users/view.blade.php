@@ -51,7 +51,7 @@
                                     </tr>
                                     <tr>
                                         <th>{{ transLang('status') }}</th>
-                                        <td>{{ transLang('cms.user_status')[$user->status] }}</td>
+                                        <td>{{ transLang('action_status')[$user->status] }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ transLang('profile_image') }}</th>

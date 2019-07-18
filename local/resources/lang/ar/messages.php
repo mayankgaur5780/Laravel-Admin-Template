@@ -183,5 +183,6 @@ return [
     'subscription_days' => [30 => "شهر واحد", 180 => "ستة أشهر", 365 => "سنة واحدة", 0 => "غير محدود"],
     'other_action' => ['1' => 'نعم', '0' => 'لا'],
     'navigation_types' => [1 => 'المشرف'],
-    'account_info_updated' => 'Account info updated successfully.',
+    'account_info_updated' => 'تم تحديث معلومات الحساب بنجاح.',
+    'otp_resend' => 'إعادة إرسال OTP بنجاح.',
 ];

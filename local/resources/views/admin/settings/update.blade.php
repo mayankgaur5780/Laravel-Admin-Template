@@ -53,25 +53,25 @@
     jQuery(function($) {
       $(document).on('click','#updateBtn',function(e){
             e.preventDefault();
+            const btn = $(this);
+            const loader = $('.message_box');
             
             $.ajax({
                 url: "{{ route('admin.settings.update', ['id' => $setting->id]) }}",
                 data: $('#save-frm').serialize(),
                 dataType: 'json',
                 type: 'POST',
-                beforeSend: function() {
-                    $('#updateBtn').attr('disabled',true);
-                    $('.message_box').html('').removeClass('alert-success').addClass('hide alert-danger');
+                beforeSend: () => {
+                    btn.attr('disabled',true);
+                    loader.html(`{!! transLang('loader_message') !!}`).removeClass('hide alert-danger alert-success').addClass('alert-info');
                 },
-                error: function(jqXHR, exception) {
-                    $('#updateBtn').attr('disabled',false);
-                    
-                    var msg = formatErrorMessage(jqXHR, exception);
-                    $('.message_box').html(msg).removeClass('hide');
+                error: (jqXHR, exception) => {
+                    btn.attr('disabled',false);
+                    loader.html(formatErrorMessage(jqXHR, exception)).removeClass('alert-info').addClass('alert-danger');
                 },
-                success: function (data) {
-                    $('#updateBtn').attr('disabled',false);
-                    $('.message_box').html(data.message).removeClass('hide alert-danger').addClass('alert-success');
+                success: response => {
+                    btn.attr('disabled',false);
+                    loader.html(response.message).removeClass('alert-info').addClass('alert-success');
                     location.replace('{{ route("admin.settings.index")}}');
                 }
             });

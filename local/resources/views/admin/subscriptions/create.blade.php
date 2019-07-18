@@ -91,17 +91,17 @@
                     data: new FormData($('#save-frm')[0]),
                     processData: false,
                     contentType: false,
-                    beforeSend: function() {
-                        btn.attr('disabled', true);
-                        loader.html('{!! transLang("loader_message") !!}').removeClass('alert-success alert-danger hide').addClass('alert-info');
+                    beforeSend: () => {
+                        btn.attr('disabled',true);
+                        loader.html(`{!! transLang('loader_message') !!}`).removeClass('hide alert-danger alert-success').addClass('alert-info');
                     },
-                    error: function(jqXHR, exception) {
-                        btn.attr('disabled', false);
-                        var msg = formatErrorMessage(jqXHR, exception);
-                        loader.html(msg).removeClass('alert-info').addClass('alert-danger');
+                    error: (jqXHR, exception) => {
+                        btn.attr('disabled',false);
+                        loader.html(formatErrorMessage(jqXHR, exception)).removeClass('alert-info').addClass('alert-danger');
                     },
-                    success: function (data) {
-                        loader.html(data.message).removeClass('alert-danger').addClass('alert-success');
+                    success: response => {
+                        btn.attr('disabled',false);
+                        loader.html(response.message).removeClass('alert-info').addClass('alert-success');
                         location.replace('{{ route("admin.subscriptions.index")}}');
                     }
                 });
