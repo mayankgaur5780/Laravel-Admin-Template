@@ -229,10 +229,9 @@
                 var target_element = $(this).data('target');
                 $(target_element).find('.modal-content').html(`
                     <div class="modal-body">
-                            <div class="row">
+                        <div class="row">
                             <div class="col-md-12 center">
-                                    {!! transLang("long_loader_message") !!}..
-                                </div>
+                                {!! transLang("loader_message") !!}..
                             </div>
                         </div>
                     </div>
@@ -244,25 +243,6 @@
                 $(this).find('.modal-content').empty();
             });
             $('#remote_model').on('show.bs.modal', function (e) {});
-
-            $(document).on('click', 'td img, .form-group img', function(e){
-                e.preventDefault();
-                let src = $(this).attr('src');
-                let html = `<div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h4 class="modal-title">{{ transLang('preview') }}</h4>
-                        </div>
-                        <div class="modal-body">
-                            <img src="${src}" width="100%" height="400">
-                        </div>
-                    </div>
-                `;
-                $('#remote_model').find('.modal-dialog').html(html);
-                $('#remote_model').modal('show');
-            });
         </script>
         @yield('scripts')
 

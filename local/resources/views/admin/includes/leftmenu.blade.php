@@ -1,3 +1,7 @@
+@if (blank(\Session::get('navigation_admin')))
+    {{! navigationMenuListing() }}
+@endif
+
 {{! $user = Auth::guard('admin')->user() }}
 {{! $userMenuList = Session::get('navigation_admin') }}
 {{! $fieldname = getSessionLang() == 'en' ? 'en_name' : 'name' }}

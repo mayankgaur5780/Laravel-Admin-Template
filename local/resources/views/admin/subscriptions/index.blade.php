@@ -77,9 +77,7 @@
                 e.preventDefault();
                 if (confirm("{{ transLang('are_you_sure_to_delete') }}")) {
                     var href = $(this).attr('href');
-                    $.get( href, function( data ) {
-                        $('#data-table').DataTable().ajax.reload();
-                    });
+                    $.get( href, () => reloadTable('data-table'));
                 }
             });
         });

@@ -185,4 +185,6 @@ return [
     'navigation_types' => [1 => 'Admin'],
     'account_info_updated' => 'Account info updated successfully.',
     'otp_resend' => 'OTP resend successfully.',
+    'invalid_mobile_no' => 'The mobile no field should contain valid no.',
+    'close' => 'Close',
 ];

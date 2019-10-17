@@ -10,10 +10,7 @@ class DashboardController extends Controller
     public function getIndex()
     {
         // navigationMenuListing();
-
-        $users = \App\Models\User::select(\DB::raw('id, CONCAT(name, " (+", dial_code, " ", mobile, ")") AS name'))->where('status', 1)->orderBy('name')->get();
-
-        return view('admin.dashboard.index', compact('users'));
+        return view('admin.dashboard.index');
     }
 
     public function getStats(Request $request)
