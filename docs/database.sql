@@ -1,6 +1,6 @@
 /*
-SQLyog Community v13.1.2 (64 bit)
-MySQL - 10.3.16-MariaDB-1:10.3.16+maria~xenial : Database - laravel_boilerplate_setup
+SQLyog Ultimate v13.1.1 (64 bit)
+MySQL - 10.1.44-MariaDB-0ubuntu0.18.04.1 : Database - laravel-template
 *********************************************************************
 */
 
@@ -12,37 +12,37 @@ MySQL - 10.3.16-MariaDB-1:10.3.16+maria~xenial : Database - laravel_boilerplate_
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`laravel_boilerplate_setup` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`laravel-template` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
 
-USE `laravel_boilerplate_setup`;
+USE `laravel-template`;
 
 /*Table structure for table `admins` */
 
 DROP TABLE IF EXISTS `admins`;
 
 CREATE TABLE `admins` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint(80) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `profile_image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `role_id` int(10) unsigned DEFAULT 0,
-  `dial_code` int(11) DEFAULT 0,
-  `mobile` varchar(15) COLLATE utf8mb4_unicode_ci DEFAULT '0',
+  `role_id` bigint(10) unsigned DEFAULT NULL,
+  `dial_code` int(11) DEFAULT NULL,
+  `mobile` varchar(15) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `hash_token` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` tinyint(1) DEFAULT 1 COMMENT '0.Inactive, 1.Active, 2.Block',
+  `status` tinyint(1) DEFAULT '1' COMMENT '0.Inactive, 1.Active, 2.Block',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `admins_role_id` (`role_id`),
-  CONSTRAINT `admins_role_id` FOREIGN KEY (`role_id`) REFERENCES `users_roles` (`id`)
+  CONSTRAINT `admins_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `users_roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `admins` */
 
 insert  into `admins`(`id`,`name`,`profile_image`,`role_id`,`dial_code`,`mobile`,`email`,`password`,`remember_token`,`hash_token`,`status`,`created_at`,`updated_at`) values 
-(1,'Admin','20180622153757LRM6xCxZVW.jpg',1,91,'1234567890','admin@demo.com','$2y$10$S.NJVoe6WxO7ZiuxtbSmze7qp0tIkDnuQ7dS/js2Ky44FwZCzMAfy','KIXlSrbMLVGZod7KsXh4Ig2lIgG1D6gu8ECOYLhrlOBCjcvWGXsCk5TH9Hdg',NULL,1,'2018-04-23 14:38:00','2019-06-27 10:34:23');
+(1,'Admin','20180622153757LRM6xCxZVW.jpg',1,91,'1234567890','admin@demo.com','$2y$10$S.NJVoe6WxO7ZiuxtbSmze7qp0tIkDnuQ7dS/js2Ky44FwZCzMAfy','aBurbHfpukWfOcYSSQTaMLHh93v5gg4ciOOe7ObMNZiiJeg8YEZStFRJF7Z2',NULL,1,'2018-04-23 14:38:00','2019-06-27 10:34:23');
 
 /*Table structure for table `app_cms` */
 
@@ -53,8 +53,8 @@ CREATE TABLE `app_cms` (
   `attribute` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `title` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `en_title` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `content` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `en_content` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `content` text COLLATE utf8mb4_unicode_ci,
+  `en_content` text COLLATE utf8mb4_unicode_ci,
   `image` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
@@ -74,15 +74,15 @@ DROP TABLE IF EXISTS `countries`;
 
 CREATE TABLE `countries` (
   `id` bigint(10) unsigned NOT NULL AUTO_INCREMENT,
-  `country_name` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `en_country_name` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `en_name` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `dial_code` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `alpha_2` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `alpha_3` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `currency` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `flag` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `tax` decimal(5,2) DEFAULT 18.00,
-  `status` tinyint(1) DEFAULT 1,
+  `tax` decimal(5,2) DEFAULT '18.00',
+  `status` tinyint(1) DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -90,7 +90,7 @@ CREATE TABLE `countries` (
 
 /*Data for the table `countries` */
 
-insert  into `countries`(`id`,`country_name`,`en_country_name`,`dial_code`,`alpha_2`,`alpha_3`,`currency`,`flag`,`tax`,`status`,`created_at`,`updated_at`) values 
+insert  into `countries`(`id`,`name`,`en_name`,`dial_code`,`alpha_2`,`alpha_3`,`currency`,`flag`,`tax`,`status`,`created_at`,`updated_at`) values 
 (1,'Afghanistan','Afghanistan','93','AF','AFG','AFN','AFG_s.png',18.00,0,'2019-03-05 14:13:05','2019-03-05 14:13:05'),
 (2,'Albania','Albania','355','AL','ALB','ALL','ALB_s.png',18.00,0,'2019-03-05 14:13:05','2019-03-05 14:13:05'),
 (3,'Algeria','Algeria','213','DZ','DZA','DZD','DZA_s.png',18.00,0,'2019-03-05 14:13:05','2019-03-05 14:13:05'),
@@ -327,10 +327,10 @@ CREATE TABLE `coupons` (
   `type` tinyint(1) DEFAULT NULL COMMENT '1.Flat, 2.Percentage',
   `discount` decimal(18,2) DEFAULT NULL,
   `max_discount` decimal(18,2) DEFAULT NULL,
-  `per_user_usage` int(5) DEFAULT 0 COMMENT '0.Unlimited',
+  `per_user_usage` int(5) DEFAULT '0' COMMENT '0.Unlimited',
   `valid_from` date DEFAULT NULL,
   `valid_to` date DEFAULT NULL,
-  `status` tinyint(1) DEFAULT 1,
+  `status` tinyint(1) DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -346,8 +346,8 @@ CREATE TABLE `faq` (
   `id` bigint(50) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `en_title` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `content` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `en_content` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `content` longtext COLLATE utf8mb4_unicode_ci,
+  `en_content` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -364,11 +364,10 @@ DROP TABLE IF EXISTS `fcm_tokens`;
 
 CREATE TABLE `fcm_tokens` (
   `id` bigint(50) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(50) unsigned DEFAULT NULL,
+  `user_id` bigint(80) unsigned DEFAULT NULL,
   `fcm_id` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `device_id` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `device_type` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `locale` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -383,38 +382,40 @@ CREATE TABLE `fcm_tokens` (
 DROP TABLE IF EXISTS `navigation`;
 
 CREATE TABLE `navigation` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT 0,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  `en_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  `display_order` tinyint(4) DEFAULT 0,
-  `icon` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  `action_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  `status` tinyint(4) DEFAULT 0 COMMENT '0.Inactive, 1.Active',
-  `show_in_menu` tinyint(4) DEFAULT 0 COMMENT '0.No, 1.Yes',
-  `show_in_permission` tinyint(4) DEFAULT 0 COMMENT '0.No, 1.Yes',
-  `type` tinyint(1) DEFAULT 1 COMMENT '1.Admin, 2.Company',
+  `id` bigint(10) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` bigint(10) unsigned DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `en_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `display_order` tinyint(4) DEFAULT '0',
+  `icon` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `action_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '0' COMMENT '0.Inactive, 1.Active',
+  `show_in_menu` tinyint(4) DEFAULT '0' COMMENT '0.No, 1.Yes',
+  `show_in_permission` tinyint(4) DEFAULT '0' COMMENT '0.No, 1.Yes',
+  `type` tinyint(1) DEFAULT '1' COMMENT '1.Admin, 2.Company',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `parent_id` (`parent_id`),
+  CONSTRAINT `navigation_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `navigation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `navigation` */
 
 insert  into `navigation`(`id`,`parent_id`,`name`,`en_name`,`display_order`,`icon`,`action_path`,`status`,`show_in_menu`,`show_in_permission`,`type`,`created_at`,`updated_at`) values 
-(1,0,'لوحه القياده','Dashboard',0,'fa fa-tachometer','admin/dashboard',1,1,1,1,'2018-01-14 10:20:41','2019-06-25 09:38:57'),
-(2,0,'إدارة المسؤول','Manage Admin',1,'fa fa-universal-access','admin/admin',1,1,1,1,'2018-01-14 10:22:16','2019-07-12 06:36:23'),
-(3,0,'إدارة الأدوار','Manage Roles',1,'fa fa-cogs','admin/role',1,1,1,1,'2018-01-14 10:34:16','2019-07-12 06:36:25'),
-(4,0,'إدارة الملاحة','Manage Navigations',1,'fa fa-cogs','admin/navigation',1,1,1,1,'2018-01-14 10:34:50','2019-07-12 06:36:29'),
-(5,0,'المستخدمين','Manage Users',2,'fa fa-users','admin/users',1,1,1,1,'2018-07-03 09:33:34','2019-03-14 09:51:43'),
-(6,0,'إعدادات التطبيقات','App Settings',50,'fa fa-cogs','admin/settings',1,1,1,1,'2018-07-20 14:52:58','2018-07-20 14:52:58'),
-(7,0,'إدارة تطبيق CMS','Manage App CMS',49,'fa fa-globe','#',1,1,1,1,'2019-01-12 15:38:02','2019-01-13 18:48:37'),
+(1,NULL,'لوحه القياده','Dashboard',0,'fa fa-tachometer','admin/dashboard',1,1,1,1,'2018-01-14 10:20:41','2019-06-25 09:38:57'),
+(2,NULL,'إدارة المسؤول','Manage Admin',1,'fa fa-universal-access','admin/admin',1,1,1,1,'2018-01-14 10:22:16','2019-07-12 06:36:23'),
+(3,NULL,'إدارة الأدوار','Manage Roles',1,'fa fa-cogs','admin/role',1,1,1,1,'2018-01-14 10:34:16','2019-07-12 06:36:25'),
+(4,NULL,'إدارة الملاحة','Manage Navigations',1,'fa fa-cogs','admin/navigation',1,1,1,1,'2018-01-14 10:34:50','2019-07-12 06:36:29'),
+(5,NULL,'المستخدمين','Manage Users',2,'fa fa-users','admin/users',1,1,1,1,'2018-07-03 09:33:34','2019-03-14 09:51:43'),
+(6,NULL,'إعدادات التطبيقات','App Settings',50,'fa fa-cogs','admin/settings',1,1,1,1,'2018-07-20 14:52:58','2018-07-20 14:52:58'),
+(7,NULL,'إدارة تطبيق CMS','Manage App CMS',49,'fa fa-globe','#',1,1,1,1,'2019-01-12 15:38:02','2019-01-13 18:48:37'),
 (8,7,'CMS','CMS',3,NULL,'admin/app_cms',1,1,1,1,'2019-01-13 18:49:17','2019-01-13 18:49:17'),
 (9,10,'إدارة الدول','Manage Countries',1,NULL,'admin/countries',1,1,1,1,'2019-02-02 18:00:37','2019-02-16 07:03:23'),
-(10,0,'أداره المواقع','Manage Locations',3,'fa fa-globe','#',1,1,1,1,'2019-02-09 10:35:28','2019-02-09 10:35:28'),
-(11,0,'أداره الكوبونات','Manage Coupons',5,'fa fa-ticket','admin/coupons',1,1,1,1,'2019-03-08 12:53:57','2019-03-11 17:51:27'),
+(10,NULL,'أداره المواقع','Manage Locations',3,'fa fa-globe','#',1,1,1,1,'2019-02-09 10:35:28','2019-02-09 10:35:28'),
+(11,NULL,'أداره الكوبونات','Manage Coupons',5,'fa fa-ticket','admin/coupons',1,1,1,1,'2019-03-08 12:53:57','2019-03-11 17:51:27'),
 (12,7,'الأسئلة المتداولة','FAQ',3,NULL,'admin/faq',1,1,1,1,'2019-03-12 16:11:56','2019-03-12 16:11:56'),
-(13,0,'أداره الاشتراكات','Manage Subscriptions',6,'fa fa-newspaper-o','admin/subscriptions',1,1,1,1,'2019-03-17 17:48:28','2019-03-17 17:48:28');
+(13,NULL,'أداره الاشتراكات','Manage Subscriptions',6,'fa fa-newspaper-o','admin/subscriptions',1,1,1,1,'2019-03-17 17:48:28','2019-03-17 17:48:28');
 
 /*Table structure for table `notifications` */
 
@@ -422,14 +423,14 @@ DROP TABLE IF EXISTS `notifications`;
 
 CREATE TABLE `notifications` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(50) unsigned DEFAULT NULL,
+  `user_id` bigint(80) unsigned DEFAULT NULL,
   `title` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `en_title` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `message` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `en_message` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `message` longtext COLLATE utf8mb4_unicode_ci,
+  `en_message` longtext COLLATE utf8mb4_unicode_ci,
   `attribute` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `notification_type` tinyint(1) DEFAULT 0 COMMENT '0.Admin',
+  `notification_type` tinyint(1) DEFAULT '0' COMMENT '0.Admin',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -457,16 +458,16 @@ CREATE TABLE `password_resets` (
 DROP TABLE IF EXISTS `roles_permissions`;
 
 CREATE TABLE `roles_permissions` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `role_id` int(10) unsigned DEFAULT 0,
-  `navigation_id` int(10) unsigned DEFAULT 0,
+  `id` bigint(10) unsigned NOT NULL AUTO_INCREMENT,
+  `role_id` bigint(10) unsigned DEFAULT NULL,
+  `navigation_id` bigint(10) unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `roles_permissions_role_id` (`role_id`),
   KEY `roles_permissions_navigation_id` (`navigation_id`),
-  CONSTRAINT `roles_permissions_navigation_id` FOREIGN KEY (`navigation_id`) REFERENCES `navigation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `roles_permissions_role_id` FOREIGN KEY (`role_id`) REFERENCES `users_roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `roles_permissions_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `users_roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `roles_permissions_ibfk_2` FOREIGN KEY (`navigation_id`) REFERENCES `navigation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `roles_permissions` */
@@ -501,7 +502,7 @@ CREATE TABLE `subscription_histories` (
   `payment_date` date DEFAULT NULL,
   `mode_of_payment` tinyint(1) DEFAULT NULL COMMENT '1.Cash, 2.Online Banking',
   `transaction_id` varchar(250) DEFAULT NULL,
-  `amount` decimal(18,2) DEFAULT 0.00,
+  `amount` decimal(18,2) DEFAULT '0.00',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -523,8 +524,8 @@ CREATE TABLE `subscriptions` (
   `en_name` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `price` decimal(18,2) DEFAULT NULL,
   `duration` int(10) DEFAULT NULL COMMENT 'In days',
-  `no_of_vendors` int(10) DEFAULT 0,
-  `status` tinyint(1) DEFAULT 1,
+  `no_of_vendors` int(10) DEFAULT '0',
+  `status` tinyint(1) DEFAULT '1',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -540,20 +541,17 @@ insert  into `subscriptions`(`id`,`name`,`en_name`,`price`,`duration`,`no_of_ven
 DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
-  `id` bigint(50) unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint(80) unsigned NOT NULL AUTO_INCREMENT,
   `profile_image` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `dial_code` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `mobile` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `gender` tinyint(1) DEFAULT NULL COMMENT '1.Male, 2.Female',
-  `dob` date DEFAULT NULL,
   `password` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `remember_token` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `otp` varchar(4) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `otp_generated_at` datetime DEFAULT NULL,
-  `status` tinyint(1) DEFAULT 1 COMMENT '0.Inactive, 1.Active',
+  `status` tinyint(1) DEFAULT '1' COMMENT '0.Inactive, 1.Active',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -561,24 +559,24 @@ CREATE TABLE `users` (
 
 /*Data for the table `users` */
 
-insert  into `users`(`id`,`profile_image`,`name`,`email`,`dial_code`,`mobile`,`gender`,`dob`,`password`,`remember_token`,`address`,`otp`,`otp_generated_at`,`status`,`created_at`,`updated_at`) values 
-(1,NULL,'Test User','','966','0512345678',1,'2019-07-12','$2y$10$G1aJHYFf4TqDqEuy4KPiluerQYD5dpKQUyqTBaFK7n88Gsgbc7qE6',NULL,NULL,NULL,NULL,1,'2019-07-12 06:23:26','2019-07-12 06:32:15');
+insert  into `users`(`id`,`profile_image`,`name`,`email`,`dial_code`,`mobile`,`password`,`remember_token`,`otp`,`otp_generated_at`,`status`,`created_at`,`updated_at`) values 
+(1,NULL,'Test User','','966','0512345678','$2y$10$G1aJHYFf4TqDqEuy4KPiluerQYD5dpKQUyqTBaFK7n88Gsgbc7qE6',NULL,NULL,NULL,1,'2019-07-12 06:23:26','2019-07-12 06:32:15');
 
 /*Table structure for table `users_permissions` */
 
 DROP TABLE IF EXISTS `users_permissions`;
 
 CREATE TABLE `users_permissions` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(50) unsigned DEFAULT 0,
-  `navigation_id` int(10) unsigned DEFAULT 0,
+  `id` bigint(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(80) unsigned DEFAULT NULL,
+  `navigation_id` bigint(10) unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `users_permissions_user_id` (`user_id`),
   KEY `users_permissions_navigation_id` (`navigation_id`),
-  CONSTRAINT `users_permissions_navigation_id` FOREIGN KEY (`navigation_id`) REFERENCES `navigation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `users_permissions_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `users_permissions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `users_permissions_ibfk_2` FOREIGN KEY (`navigation_id`) REFERENCES `navigation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `users_permissions` */
@@ -588,9 +586,9 @@ CREATE TABLE `users_permissions` (
 DROP TABLE IF EXISTS `users_roles`;
 
 CREATE TABLE `users_roles` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0.Inactive, 1.Active',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0.Inactive, 1.Active',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
