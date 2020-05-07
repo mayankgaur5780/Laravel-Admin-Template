@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 
-class RoleController extends Controller
+class RoleController extends WebController
 {
     public function getIndex()
     {
@@ -14,9 +14,10 @@ class RoleController extends Controller
 
     public function getList()
     {
-        $role = \App\Models\UserRole::where('id', '<>', 1);
-        return \DataTables::of($role)
-            ->editColumn('status', function ($query) {
+        $list = \App\Models\UserRole::where('id', '<>', 1);
+
+        return \DataTables::of($list)
+            ->addColumn('status_text', function ($query) {
                 return transLang('action_status')[$query->status];
             })
             ->make();
@@ -33,7 +34,7 @@ class RoleController extends Controller
             'name' => 'required|unique:users_roles',
             'status' => 'required',
         ]);
-        $dataArr = arrayFromPost($request, ['name', 'en_name', 'status']);
+        $dataArr = arrayFromPost(['name', 'en_name', 'status']);
 
         $userRole = new \App\Models\UserRole();
         $userRole->name = $dataArr->name;
@@ -55,7 +56,7 @@ class RoleController extends Controller
             'name' => "required|unique:users_roles,name,{$request->id}",
             'status' => 'required',
         ]);
-        $dataArr = arrayFromPost($request, ['name', 'en_name', 'status']);
+        $dataArr = arrayFromPost(['name', 'en_name', 'status']);
 
         $userRole = \App\Models\UserRole::find($request->id);
         if ($userRole != null) {
@@ -78,7 +79,7 @@ class RoleController extends Controller
         $this->validate($request, [
             'navigation_id' => 'required|array',
         ]);
-        $dataArr = arrayFromPost($request, ['navigation_id']);
+        $dataArr = arrayFromPost(['navigation_id']);
 
         try {
             // Start Transaction

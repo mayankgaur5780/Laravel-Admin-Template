@@ -1,10 +1,11 @@
-{{! $user = Auth::guard('admin')->user() }}
+{{! $user = auth()->user() }}
 <header class="main-header">
     <!-- Logo -->
     <a href="{{ route('admin.dashboard') }}" class="logo">
         <span class="logo-mini"><b><img src="{{ asset("logo/logo.png") }}" width="30px"></b></span>
         <span class="logo-lg"><img src="{{ asset("logo/logo.png") }}" width="30px"></b> <b>{{ transLang('company') }}</b></span>
     </a>
+
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
         <!-- Sidebar toggle button-->

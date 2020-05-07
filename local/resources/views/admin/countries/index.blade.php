@@ -31,7 +31,6 @@
                                 <tr>
                                     <th>{{ transLang('flag') }}</th>
                                     <th>{{ transLang('name') }}</th>
-                                    <th>{{ transLang('en_name') }}</th>
                                     <th>{{ transLang('dial_code') }}</th>
                                     <th>{{ transLang('alpha_2') }}</th>
                                     <th>{{ transLang('alpha_3') }}</th>
@@ -53,46 +52,34 @@
 @section('scripts')
     <script type="text/javascript">
         $(function() {
-            const imagePath = '{{ imageBasePath('', 'flagPath') }}';
-            
             $('#data-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: '{{ route("admin.countries.list") }}',
+                order : [[8, 'desc']],
                 columns : [
-                    { 
-                        "data": "flag",
-                        "mRender": function (data, type, row) {
-                            return data ? `<img src="${imagePath}/${data}" width="40px"/>` : ``;
-                        } 
-                    },
-                    { "data": "country_name" },
-                    { "data": "en_country_name" },
-                    { "data": "dial_code" },
-                    { "data": "alpha_2" },
-                    { "data": "alpha_3" },
-                    { "data": "currency" },
-                    { "data": "tax" },
-                    { "data": "status" },
+                    { data: "flag", mRender: data => data ? `<img src="{{ imageBasePath('', 'flagPath') }}/${data}" width="40px"/>` : `` },
+                    { data: "name", name: "{{ getCustomSessionLang() }}name"},
+                    { data: "dial_code" },
+                    { data: "alpha_2" },
+                    { data: "alpha_3" },
+                    { data: "currency" },
+                    { data: "tax" },
+                    { data: "status_text", name: "status" },
                     {
-                        "mRender": function (data, type, row) {
+                        mRender: (data, type, row) => {
                             return `
-                                <a href="{{ URL::to("admin/countries/update") }}/${row.id}">
-                                    <i class="fa fa-edit fa-fw"></i>
-                                </a>
-                                <a href="{{ URL::to("admin/countries/delete") }}/${row.id}" class="delete-entry hide" >
-                                    <i class="fa fa-trash fa-fw"></i>
-                                </a>
+                                <a href="{{ URL::to("admin/countries/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
+                                <a href="{{ URL::to("admin/countries/delete") }}/${row.id}" class="delete-entry hide"><i class="fa fa-trash fa-fw"></i></a>
                             `;
                         }, 
                         orderable: false,
                         searchable: false
                     }
                 ],
-                order : [[8, 'desc']]
             });
 
-            $('#data-table').on('click', '.delete-entry', function(e){
+            $('#data-table').on('click', '.delete-entry', function(e) {
                 e.preventDefault();
                 if (confirm("{{ transLang('are_you_sure_to_delete') }}")) {
                     var href = $(this).attr('href');

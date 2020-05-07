@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 
-class SettingController extends Controller
+class SettingController extends WebController
 {
     public function getIndex()
     {

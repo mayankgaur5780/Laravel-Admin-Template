@@ -1,4 +1,4 @@
-{{! $user = Auth::guard('admin')->user() }}
+{{! $user = auth()->user() }}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,6 +16,11 @@
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <!-- Bootstrap 3.3.6 -->
         <link rel="stylesheet" href="{{ asset('backend/bootstrap/css/bootstrap.min.css') }}">
+        @if(getSessionLang() == 'ar')
+            <link rel="stylesheet" href="{{ asset('backend/bootstrap/css/bootstrap-flipped.css') }}">
+            <link rel="stylesheet" href="{{ asset('backend/bootstrap/css/bootstrap-rtl.css') }}">
+        @endif
+
         <!-- Font Awesome -->
         <link rel="stylesheet" href="{{ asset('backend/plugins/font-awesome-4.7.0/css/font-awesome.css') }}">
         <!-- Ionicons -->
@@ -23,18 +28,18 @@
         <!-- DataTables -->
         <link rel="stylesheet" href="{{ asset('backend/plugins/datatables/dataTables.bootstrap.css') }}">
 
-        @if(getSessionLang() == 'en')
-            <!-- Theme style -->
-            <link rel="stylesheet" href="{{ asset('backend/dist/css/AdminLTE.min.css') }}">
-            <!-- AdminLTE Skins. Choose a skin from the css/skins
-            folder instead of downloading all of them to reduce the load. -->
-            <link rel="stylesheet" href="{{ asset('backend/dist/css/skins/_all-skins.min.css') }}">
-        @else
+        @if(getSessionLang() == 'ar')
             <!-- Theme style -->
             <link rel="stylesheet" href="{{ asset('backend/dist/css/AdminLTE-rtl.min.css') }}">
             <!-- AdminLTE Skins. Choose a skin from the css/skins
             folder instead of downloading all of them to reduce the load. -->
             <link rel="stylesheet" href="{{ asset('backend/dist/css/skins/_all-skins-rtl.min.css') }}">
+        @else
+            <!-- Theme style -->
+            <link rel="stylesheet" href="{{ asset('backend/dist/css/AdminLTE.min.css') }}">
+            <!-- AdminLTE Skins. Choose a skin from the css/skins
+            folder instead of downloading all of them to reduce the load. -->
+            <link rel="stylesheet" href="{{ asset('backend/dist/css/skins/_all-skins.min.css') }}">
         @endif
         
         
@@ -158,7 +163,7 @@
         <!-- AdminLTE App -->
         <script src="{{ asset('backend/dist/js/app.min.js') }}"></script>
         <!-- Google Map API js -->
-        <script src="http://maps.google.com/maps/api/js?key={{ config('cms.google_api_key') }}&libraries=places"></script>
+        {{-- <script src="http://maps.google.com/maps/api/js?key={{ config('cms.google_api_key') }}&libraries=places"></script> --}}
 
 
 	
@@ -168,7 +173,6 @@
                 $(".se-pre-con").fadeOut("slow");
             });
 
-            moment.tz.setDefault("Asia/Riyadh");
             @if(getSessionLang() == 'ar')
                 moment.locale("ar");
                 CKEDITOR.config.language = 'ar';
@@ -195,6 +199,9 @@
                     },
                 @endif
                 scrollX: true,
+                scrollCollapse: true,
+                fixedColumns: true,
+                stateSave: true,
                 dom: 'lBfrtip',
                 buttons: [
                     {
@@ -230,9 +237,7 @@
                 $(target_element).find('.modal-content').html(`
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-12 center">
-                                {!! transLang("loader_message") !!}..
-                            </div>
+                            <div class="col-md-12 center">{!! transLang("loader_message") !!}</div>
                         </div>
                     </div>
                 `);
@@ -245,6 +250,5 @@
             $('#remote_model').on('show.bs.modal', function (e) {});
         </script>
         @yield('scripts')
-
     </body>
 </html>

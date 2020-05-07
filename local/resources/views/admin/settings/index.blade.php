@@ -1,6 +1,6 @@
 @extends('admin.layouts.master') 
-@section('title') {{ transLang('all_settings') }}
-@endsection
+
+@section('title') {{ transLang('all_settings') }} @endsection
  
 @section('content')
     <section class="content-header">
@@ -44,14 +44,12 @@
             serverSide: true,
             ajax: '{{ route("admin.settings.list") }}',
             columns : [
-	            { "data": "label" },
-                { "data": "value" },
+	            { data: "label" },
+                { data: "value" },
                 {
-                    "mRender": function (data, type, row) {
-                        return '<a href="{{ URL::to("admin/settings/update") }}/'+row.id+'" class="danger">\
-                            <i class="fa fa-edit fa-fw"></i>\
-                        </a>';
-                    }, 
+                    mRender: (data, type, row) => {
+                        return `<a href="{{ URL::to("admin/settings/update") }}/${row.id}" class="danger"><i class="fa fa-edit fa-fw"></i></a>`;
+                    },
                     searchable: false,
                     orderable: false
                 }

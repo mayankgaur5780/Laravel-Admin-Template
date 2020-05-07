@@ -1,6 +1,6 @@
 @extends('admin.layouts.master') 
-@section('title') {{ transLang('update_navigation') }}
-@endsection
+
+@section('title') {{ transLang('update_navigation') }} @endsection
  
 @section('content')
 	<section class="content-header">
@@ -20,24 +20,24 @@
 					</div>
 					<div class="box-body">
 						<p class="alert message_box hide"></p>
-						<form class="form-horizontal" id="update-form" enctype="multipart/form-data">
-							{{ csrf_field() }}
+						<form class="form-horizontal" id="update-form">
+							@csrf
 							<div class="form-group">
-								<label for="name" class="col-sm-2 control-label">{{ transLang('name') }} <i class="has-error">*</i></label>
+								<label for="name" class="col-sm-2 control-label required">{{ transLang('name') }}</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" name="name" placeholder="{{ transLang('name') }}" value="{{ $navigation->name }}">
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label for="en_name" class="col-sm-2 control-label">{{ transLang('en_name') }} <i class="has-error">*</i></label>
+								<label for="en_name" class="col-sm-2 control-label required">{{ transLang('en_name') }}</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" name="en_name" placeholder="{{ transLang('en_name') }}" value="{{ $navigation->en_name }}">
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label for="action_path" class="col-sm-2 control-label">{{ transLang('action_path') }} <i class="has-error">*</i></label>
+								<label for="action_path" class="col-sm-2 control-label required">{{ transLang('action_path') }}</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" name="action_path" placeholder="{{ transLang('action_path') }}" value="{{ $navigation->action_path }}">
 								</div>
@@ -51,18 +51,18 @@
 							</div>
 
 							<div class="form-group">
-								<label for="display_order" class="col-sm-2 control-label">{{ transLang('display_order') }} <i class="has-error">*</i></label>
+								<label for="display_order" class="col-sm-2 control-label required">{{ transLang('display_order') }}</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" name="display_order" placeholder="{{ transLang('display_order') }}" value="{{ $navigation->display_order }}">
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label for="parent_id" class="col-sm-2 control-label">{{ transLang('parent_id') }} <i class="has-error">*</i></label>
+								<label for="parent_id" class="col-sm-2 control-label required">{{ transLang('parent_id') }}</label>
 
 								<div class="col-sm-6">
 									<select class="form-control select2-class" name="parent_id">
-										<option value="0">No Parent</option>
+										<option value="">{{ transLang('no_parent') }}</option>
 										@if($parent_navigation->count())
 											@foreach($parent_navigation as $key => $nav)
 												<option value="{{ $nav->id }}"  {{ ($navigation->parent_id == $nav->id) ? 'selected' : '' }} >{{ $nav->name }}</option>
@@ -73,7 +73,7 @@
 							</div>
 
 							<div class="form-group">
-								<label for="parent_id" class="col-sm-2 control-label">{{ transLang('type') }} <i class="has-error">*</i></label>
+								<label for="parent_id" class="col-sm-2 control-label required">{{ transLang('type') }}</label>
 								<div class="col-sm-6">
 									<select class="form-control select2-class" name="type" data-placeholder="{{ transLang('choose') }}">
 										<option value=""></option>
@@ -85,7 +85,7 @@
 							</div>
 
 							<div class="form-group">
-								<label for="show_in_menu" class="col-sm-2 control-label">{{ transLang('show_in_menu') }} <i class="has-error">*</i></label>
+								<label for="show_in_menu" class="col-sm-2 control-label required">{{ transLang('show_in_menu') }}</label>
 								<div class="col-sm-6">
 									<select class="form-control" name="show_in_menu">
 										@foreach(transLang('other_action') as $key => $status)
@@ -96,7 +96,7 @@
 							</div>
 
 							<div class="form-group">
-								<label for="show_in_permission" class="col-sm-2 control-label">{{ transLang('show_in_permission') }} <i class="has-error">*</i></label>
+								<label for="show_in_permission" class="col-sm-2 control-label required">{{ transLang('show_in_permission') }}</label>
 								<div class="col-sm-6">
 									<select class="form-control" name="show_in_permission">
 										@foreach(transLang('other_action') as $key => $status)
@@ -107,7 +107,7 @@
 							</div>
 							
 							<div class="form-group">
-								<label for="status" class="col-sm-2 control-label">{{ transLang('status') }} <i class="has-error">*</i></label>
+								<label for="status" class="col-sm-2 control-label required">{{ transLang('status') }}</label>
 
 								<div class="col-sm-6">
 									<select class="form-control" name="status">
@@ -134,7 +134,7 @@
 
 <script type="text/javascript">
 	jQuery(function($) {
-		$(document).on('click','#updateBtn',function(e){
+		$(document).on('click','#updateBtn',function(e) {
             e.preventDefault();
 			let btn = $(this);
 			let loader = $('.message_box');

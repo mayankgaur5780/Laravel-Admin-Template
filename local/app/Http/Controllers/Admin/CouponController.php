@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 
-class CouponController extends Controller
+class CouponController extends WebController
 {
     public function getIndex()
     {
@@ -17,9 +17,10 @@ class CouponController extends Controller
         $list = \App\Models\Coupon::select('*');
 
         return \DataTables::of($list)
-            ->editColumn('status', function ($query) {
+            ->addColumn('status_text', function ($query) {
                 return transLang('action_status')[$query->status];
-            })->make();
+            })
+            ->make();
     }
 
     public function getCreate()
@@ -39,7 +40,7 @@ class CouponController extends Controller
             'per_user_usage' => 'required|numeric|min:0',
             'status' => 'required',
         ]);
-        $dataArr = arrayFromPost($request, ['coupon_code', 'type', 'discount', 'max_discount', 'valid_from', 'valid_to', 'per_user_usage', 'status']);
+        $dataArr = arrayFromPost(['coupon_code', 'type', 'discount', 'max_discount', 'valid_from', 'valid_to', 'per_user_usage', 'status']);
 
         $coupon = new \App\Models\Coupon();
         $coupon->coupon_code = $dataArr->coupon_code;
@@ -73,7 +74,7 @@ class CouponController extends Controller
             'per_user_usage' => 'required|numeric|min:0',
             'status' => 'required',
         ]);
-        $dataArr = arrayFromPost($request, ['coupon_code', 'type', 'discount', 'max_discount', 'valid_from', 'valid_to', 'per_user_usage', 'status']);
+        $dataArr = arrayFromPost(['coupon_code', 'type', 'discount', 'max_discount', 'valid_from', 'valid_to', 'per_user_usage', 'status']);
 
         $coupon = \App\Models\Coupon::find($request->id);
         $coupon->coupon_code = $dataArr->coupon_code;

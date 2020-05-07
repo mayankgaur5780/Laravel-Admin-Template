@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 
-class AuthController extends Controller
+class AuthController extends WebController
 {
     public function __construct()
     {
@@ -19,7 +19,7 @@ class AuthController extends Controller
 
     public function getChangeLocale(Request $request)
     {
-        \Session::put('admin_lang', $request->lang);
+        \Session::put('lang', $request->lang);
         return redirect()->back();
     }
 
@@ -65,7 +65,7 @@ class AuthController extends Controller
         ]);
 
         try {
-            $dataArr = arrayFromPost($request, ['email']);
+            $dataArr = arrayFromPost(['email']);
 
             $admin = \App\Models\Admin::where('email', $dataArr->email)->first();
             if (blank($admin)) {
@@ -109,7 +109,7 @@ class AuthController extends Controller
         ]);
 
         try {
-            $dataArr = arrayFromPost($request, ['id', 'password']);
+            $dataArr = arrayFromPost(['id', 'password']);
 
             $admin = \App\Models\Admin::find($dataArr->id);
             $admin->hash_token = null;

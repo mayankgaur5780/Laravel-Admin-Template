@@ -38,18 +38,6 @@
                                         <td>{{ $user->email }}</td>
                                     </tr>
                                     <tr>
-                                        <th>{{ transLang('gender') }}</th>
-                                        <td>{{ blank($user->gender) ? '' : ($user->gender == 1 ? transLang('male') : transLang('female')) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ transLang('dob') }}</th>
-                                        <td>{{ blank($user->dob) ? '' : date('d M, Y', strtotime($user->dob)) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>{{ transLang('address') }}</th>
-                                        <td>{{ $user->address }}</td>
-                                    </tr>
-                                    <tr>
                                         <th>{{ transLang('status') }}</th>
                                         <td>{{ transLang('action_status')[$user->status] }}</td>
                                     </tr>

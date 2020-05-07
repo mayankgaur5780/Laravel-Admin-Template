@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 
-class FaqController extends Controller
+class FaqController extends WebController
 {
     public function getIndex()
     {
@@ -31,7 +31,7 @@ class FaqController extends Controller
             'content' => 'required',
             'en_content' => 'required',
         ]);
-        $dataArr = arrayFromPost($request, ['title', 'en_title', 'content', 'en_content']);
+        $dataArr = arrayFromPost(['title', 'en_title', 'content', 'en_content']);
 
         $faq = new \App\Models\Faq();
         $faq->title = $dataArr->title;
@@ -57,7 +57,7 @@ class FaqController extends Controller
             'content' => 'required',
             'en_content' => 'required',
         ]);
-        $dataArr = arrayFromPost($request, ['title', 'en_title', 'content', 'en_content']);
+        $dataArr = arrayFromPost(['title', 'en_title', 'content', 'en_content']);
 
         $faq = \App\Models\Faq::find($request->id);
         if ($faq != null) {

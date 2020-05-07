@@ -1,6 +1,6 @@
 @extends('admin.layouts.master') 
-@section('title') {{ transLang('manage_permissions') }}
-@endsection
+
+@section('title') {{ transLang('manage_permissions') }} @endsection
  
 @section('content')
     <section class="content-header">
@@ -21,7 +21,7 @@
                     <div class="box-body">
                         <p class="alert message_box hide"></p>
                         <form class="form-horizontal" id="update-form">
-                            {{ csrf_field() }}
+                            @csrf
                             <input type="hidden" name="navigation_id[]" value="1"> 
                             <?php if(count($navigation)) { ?> 
                                 <?php foreach($navigation as $group) { ?>
@@ -70,7 +70,7 @@
 @section('scripts')
     <script type="text/javascript">
         jQuery(function($) {
-            $(document).on('change', '.checkAll', function(e){
+            $(document).on('change', '.checkAll', function(e) {
                 var ContainerID = $(this).val();
                 var status = this.checked ? true : false;
                 $("#permission-user-"+ContainerID).find("input[type=checkbox]").each(function() {
@@ -78,7 +78,7 @@
                 });
             });
 
-            $(document).on('click','#createBtn',function(e){
+            $(document).on('click','#createBtn',function(e) {
                 e.preventDefault()
                 let btn = $(this);
                 let loader = $('.message_box');

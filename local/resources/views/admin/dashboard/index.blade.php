@@ -1,6 +1,6 @@
 @extends('admin.layouts.master') 
-@section('title') {{ transLang('dashboard') }}
-@endsection
+
+@section('title') {{ transLang('dashboard') }} @endsection
  
 @section('content')
     <section class="content-header">
@@ -79,10 +79,7 @@
                 endDate = moment();
 
             getStats();
-            
-            setTimeout(function () {
-                getSubscriptionGraphData();
-            }, 500);
+            setTimeout(() =>getSubscriptionGraphData(), 500);
 
             const subscriptionsChart = new Chart($('#subscriptionsChart').get(0).getContext('2d'), {
                 type: 'line',
@@ -125,14 +122,8 @@
                     dataType: 'json',
                     type: 'GET',
                     url: '{{ route("admin.dashboard.stats") }}',
-                    error: function (response) {
-                        $('.total_users, .total_vehicles, .total_services, .total_products, .total_coupons, .total_vendors, .total_companies, .total_bookings').text('0');
-                    },
-                    success: function (response) {
-                        $.each(response, function (key, val) {
-                            $(`.${key}`).text(val);
-                        });
-                    }
+                    error: () => $('.total_users, .total_vehicles, .total_services, .total_products, .total_coupons, .total_vendors, .total_companies, .total_bookings').text('0'),
+                    success: response => $.each(response, (key, val) => $(`.${key}`).text(val))
                 });
             }
 
@@ -145,22 +136,19 @@
                         start_date: startDate.lang('en').format('YYYY-MM-DD'),
                         end_date: endDate.lang('en').format('YYYY-MM-DD'),
                     },
-                    success: function (response) {
+                    success: response => {
                         subscriptionsChart.data = {
                             labels: response.labels,
                             datasets: [{
                                 label: '{{ transLang("no_of_subscriptions") }}',
                                 data: response.subscriptions,
-                                borderColor: "rgb(255,136,162)",
-                                backgroundColor: 'rgb(255,136,162, .4)',
+                                borderColor: "rgb(114, 192, 189)",
+                                backgroundColor: 'rgb(114, 192, 189, .4)',
                                 borderWidth: 1.5,
                             }]
                         };
                         subscriptionsChart.update();
-
-                        $.each(response.stats, function (key, val) {
-                            $(`.${key}`).text(val);
-                        });
+                        $.each(response.stats, (key, val) => $(`.${key}`).text(val));
                     }
                 });
             }

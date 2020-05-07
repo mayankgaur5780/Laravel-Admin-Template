@@ -51,15 +51,11 @@
                 serverSide: true,
                 ajax: '{{ route("admin.app_cms.list") }}',
                 columns : [
-                    { "data": "title" },
-                    { "data": "en_title" },
+                    { data: "title" },
+                    { data: "en_title" },
                     {
-                        "mRender": function (data, type, row) {
-                            return `
-                                <a href="{{ URL::to("admin/app_cms/update") }}/${row.id}">
-                                    <i class="fa fa-edit fa-fw"></i>
-                                </a>
-                            `;
+                        mRender: (data, type, row) => {
+                            return `<a href="{{ URL::to("admin/app_cms/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>`;
                         }, 
                         orderable: false,
                         searchable: false

@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="box-body grid-view">
-                        <table class="table table-striped table-bordered table-hover dataTable" id="admins-table">
+                        <table class="table table-striped table-bordered table-hover dataTable" id="data-table">
                             <thead>
                                 <tr>
                                     <th>{{ transLang('name') }}</th>
@@ -46,23 +46,22 @@
 @section('scripts')
     <script type="text/javascript">
         $(function() {
-            $('#admins-table').DataTable({
+            $('#data-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: '{{ route("admin.admins.list") }}',
                 columns : [
-                    { "data": "name" },
-                    { "data": "email" },
-                    { "data": "mobile" },
-                    { "data": "status" },
+                    { data: "name" },
+                    { data: "email" },
+                    { data: "mobile" },
+                    { data: "status_text", name: "status" },
                     {
-                        "mRender": function (data, type, row) 
-                        {
+                        mRender: (data, type, row) => {
                             return `
                                 <a href="{{ URL::to("admin/admin/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
                                 <a href="{{ URL::to("admin/admin/view") }}/${row.id}"><i class="fa fa-eye fa-fw"></i></a>
-                                <a href="{{ URL::to("admin/admin-account/reset-password") }}/${row.id}" class="danger" ><i class="fa fa-key fa-fw"></i></a>
-                                <a href="{{ URL::to("admin/admin/delete") }}/${row.id}" class="delete_admins" ><i class="fa fa-trash fa-fw"></i></a>
+                                <a href="{{ URL::to("admin/admin-account/reset-password") }}/${row.id}" class="danger"><i class="fa fa-key fa-fw"></i></a>
+                                <a href="{{ URL::to("admin/admin/delete") }}/${row.id}" class="delete_admins"><i class="fa fa-trash fa-fw"></i></a>
                             `;
                         }, 
                         orderable: false,
@@ -71,11 +70,11 @@
                 ]
             });
 
-            $('#admins-table').on('click', '.delete_admins', function(e){
+            $('#data-table').on('click', '.delete_admins', function(e) {
                 e.preventDefault();
                 if (confirm("{{ transLang('are_you_sure_to_delete') }}")) {
                     var href = $(this).attr('href');
-                    $.get( href, () => reloadTable('admins-table'));
+                    $.get( href, () => reloadTable('data-table'));
                 }
             });
         });

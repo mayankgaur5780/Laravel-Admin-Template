@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 
-class CountryController extends Controller
+class CountryController extends WebController
 {
     public function getIndex()
     {
@@ -14,12 +14,13 @@ class CountryController extends Controller
 
     public function getList()
     {
-        $list = \App\Models\Country::select('*');
+        $list = \App\Models\Country::select(\DB::raw("countries.*, {$this->locale}name AS name"));
 
         return \DataTables::of($list)
-            ->editColumn('status', function ($query) {
+            ->addColumn('status_text', function ($query) {
                 return transLang('action_status')[$query->status];
-            })->make();
+            })
+            ->make();
     }
 
     public function getCreate()
@@ -30,8 +31,8 @@ class CountryController extends Controller
     public function postCreate(Request $request)
     {
         $this->validate($request, [
-            'country_name' => 'required',
-            'en_country_name' => 'required|unique:countries',
+            'name' => 'required',
+            'en_name' => 'required|unique:countries',
             'dial_code' => 'required',
             'alpha_2' => 'required|unique:countries',
             'alpha_3' => 'required|unique:countries',
@@ -40,11 +41,11 @@ class CountryController extends Controller
             'status' => 'required',
             'file' => 'required|' . config('cms.allowed_image_mimes'),
         ]);
-        $dataArr = arrayFromPost($request, ['country_name', 'en_country_name', 'dial_code', 'alpha_2', 'alpha_3', 'currency', 'tax', 'status']);
+        $dataArr = arrayFromPost(['name', 'en_name', 'dial_code', 'alpha_2', 'alpha_3', 'currency', 'tax', 'status']);
 
         $country = new \App\Models\Country();
-        $country->country_name = $dataArr->country_name;
-        $country->en_country_name = $dataArr->en_country_name;
+        $country->name = $dataArr->name;
+        $country->en_name = $dataArr->en_name;
         $country->dial_code = $dataArr->dial_code;
         $country->alpha_2 = strtoupper($dataArr->alpha_2);
         $country->alpha_3 = strtoupper($dataArr->alpha_3);
@@ -66,8 +67,8 @@ class CountryController extends Controller
     public function postUpdate(Request $request)
     {
         $this->validate($request, [
-            'country_name' => 'required',
-            'en_country_name' => "required|unique:countries,en_country_name,{$request->id},id",
+            'name' => 'required',
+            'en_name' => "required|unique:countries,en_name,{$request->id},id",
             'dial_code' => 'required',
             'alpha_2' => "required|unique:countries,alpha_2,{$request->id},id",
             'alpha_3' => "required|unique:countries,alpha_3,{$request->id},id",
@@ -76,12 +77,12 @@ class CountryController extends Controller
             'status' => 'required',
             'file' => config('cms.allowed_image_mimes'),
         ]);
-        $dataArr = arrayFromPost($request, ['country_name', 'en_country_name', 'dial_code', 'alpha_2', 'alpha_3', 'currency', 'tax', 'status']);
+        $dataArr = arrayFromPost(['name', 'en_name', 'dial_code', 'alpha_2', 'alpha_3', 'currency', 'tax', 'status']);
 
         $country = \App\Models\Country::find($request->id);
         if ($country != null) {
-            $country->country_name = $dataArr->country_name;
-            $country->en_country_name = $dataArr->en_country_name;
+            $country->name = $dataArr->name;
+            $country->en_name = $dataArr->en_name;
             $country->dial_code = $dataArr->dial_code;
             $country->alpha_2 = strtoupper($dataArr->alpha_2);
             $country->alpha_3 = strtoupper($dataArr->alpha_3);

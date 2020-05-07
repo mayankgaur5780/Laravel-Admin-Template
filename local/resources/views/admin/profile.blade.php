@@ -23,29 +23,25 @@
                         <div class="tab-pane active" id="basic-info-tab">
                             <p class="alert message_box hide"></p>
                             <form id="save-frm" class="form-horizontal">
-                                {{ csrf_field() }}
-    
+                                @csrf
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label required">{{ transLang('name') }}</label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" name="name" placeholder="{{ transLang('name') }}" value="{{ $admin->name }}">
                                     </div>
                                 </div>
-                                
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label required">{{ transLang('email') }}</label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" name="email" placeholder="{{ transLang('email') }}" value="{{ $admin->email }}">
                                     </div>
                                 </div>
-                                
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label required">{{ transLang('mobile') }}</label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" name="mobile" value="{{ $admin->mobile }}">
                                     </div>
                                 </div>
-    
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">{{ transLang('profile_image') }}</label>
                                     <div class="col-sm-6">
@@ -66,7 +62,7 @@
                         <div class="tab-pane" id="change-password-tab">
                             <p class="alert message_box hide"></p>
                             <form id="change-password-frm" class="form-horizontal">
-                                {{ csrf_field() }}
+                                @csrf
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label required">{{ transLang('old_password') }}</label>
                                     <div class="col-sm-6">

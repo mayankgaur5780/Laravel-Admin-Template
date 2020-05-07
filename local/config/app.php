@@ -176,10 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
 
-        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
-        Jenssegers\Mongodb\MongodbServiceProvider::class,
-        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
@@ -235,9 +232,7 @@ return [
         'Str' => Illuminate\Support\Str::class,
         'Crypt' => Illuminate\Support\Facades\Crypt::class,
 
-        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

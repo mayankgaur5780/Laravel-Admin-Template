@@ -55,36 +55,17 @@
                 serverSide: true,
                 ajax: '{{ route("admin.coupons.list") }}',
                 columns : [
-                    { "data": "coupon_code" },
+                    { data: "coupon_code" },
+                    { data: "type", mRender: data => data == 1 ? '{{ transLang('flat') }}' : '{{ transLang('percentage') }}' },
+                    { data: "discount" },
+                    { data: "valid_from", mRender: data => formatDate(data, 'YYYY-MM-DD') },
+                    { data: "valid_to", mRender: data => formatDate(data, 'YYYY-MM-DD') },
+                    { data: "status_text", name: "status" },
                     {
-                        "data": "type",
-                        "mRender": function (data, type, row) {
-                            return data == 1 ? '{{ transLang('flat') }}' : '{{ transLang('percentage') }}';
-                        }
-                    },
-                    { "data": "discount" },
-                    {
-                        "data": "valid_from",
-                        "mRender": function (data, type, row) {
-                            return moment(data).format('YYYY-MM-DD');
-                        }
-                    },
-                    {
-                        "data": "valid_to",
-                        "mRender": function (data, type, row) {
-                            return moment(data).format('YYYY-MM-DD');
-                        }
-                    },
-                    { "data": "status" },
-                    {
-                        "mRender": function (data, type, row) {
+                        mRender: (data, type, row) => {
                             return `
-                                <a href="{{ URL::to("admin/coupons/update") }}/${row.id}">
-                                    <i class="fa fa-edit fa-fw"></i>
-                                </a>
-                                <a href="{{ URL::to("admin/coupons/delete") }}/${row.id}" class="delete-entry" >
-                                    <i class="fa fa-trash fa-fw"></i>
-                                </a>
+                                <a href="{{ URL::to("admin/coupons/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
+                                <a href="{{ URL::to("admin/coupons/delete") }}/${row.id}" class="delete-entry"><i class="fa fa-trash fa-fw"></i></a>
                             `;
                         }, 
                         orderable: false,
@@ -93,7 +74,7 @@
                 ]
             });
 
-            $('#data-table').on('click', '.delete-entry', function(e){
+            $('#data-table').on('click', '.delete-entry', function(e) {
                 e.preventDefault();
                 if (confirm("{{ transLang('are_you_sure_to_delete') }}")) {
                     var href = $(this).attr('href');

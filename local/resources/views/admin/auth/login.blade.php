@@ -27,7 +27,7 @@
         </div>
         
         <form id="login-form">
-            {{ csrf_field() }}
+            @csrf
             <div class="form-group has-feedback">
                 <input type="email" class="form-control login_input" name="email" placeholder="{{ transLang('email') }}" value="admin@demo.com">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
@@ -58,48 +58,46 @@
 @endsection
 
 @section('scripts')
+    <script type="text/javascript">
+        jQuery(function($) {
+            $(document).on('click','#login-submit',function(e) {
+                e.preventDefault();
+                
+                $.ajax({
+                    url: '{{ route("admin.login") }}',
+                    dataType : 'json',
+                    type: 'POST',
+                    data: $('#login-form').serialize(),
+                    beforeSend: () => {
+                        $('#message_box').remove();
+                        $('#login-submit').attr('disabled',true);
+                        $('.message_box').html('').addClass('hide');
+                    },
+                    error: (jqXHR, exception) => {
+                        $('#login-submit').attr('disabled',false);
+                        
+                        var msg = formatErrorMessage(jqXHR, exception);
+                        $('.message_box').html(msg).removeClass('hide');
+                    },
+                    success: data => {
+                        $('#login-submit').html(data.success).removeClass('btn-primary').addClass('btn-success');
+                        window.location.replace('{{ route("admin.dashboard")}}');
+                    }
+                });
+            });
 
-<script type="text/javascript">
-    jQuery(function($) {
-
-        $(document).on('click','#login-submit',function(e){
-            e.preventDefault();
-            $.ajax({
-                url: '{{ route("admin.login") }}',
-                dataType : 'json',
-                type: 'POST',
-                data: $('#login-form').serialize(),
-                beforeSend: function() {
-                    $('#message_box').remove();
-                    $('#login-submit').attr('disabled',true);
-                    $('.message_box').html('').addClass('hide');
-                },
-                error: function(jqXHR, exception) {
-                    $('#login-submit').attr('disabled',false);
-                    
-                    var msg = formatErrorMessage(jqXHR, exception);
-                    $('.message_box').html(msg).removeClass('hide');
-                },
-                success: function (data) {
-                    $('#login-submit').html(data.success).removeClass('btn-primary').addClass('btn-success');
-                    window.location.replace('{{ route("admin.dashboard")}}');
+            $(document).on('keypress', '.login_input', function(e) {
+                if(e.which == 10 || e.which == 13) {
+                    e.preventDefault();
+                    $('#login-submit').click();
                 }
             });
-        });
 
-        $(document).on('keypress', '.login_input', function(e){
-            if(e.which == 10 || e.which == 13) {
-                e.preventDefault();
-                $('#login-submit').click();
-            }
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                radioClass: 'iradio_square-blue',
+                increaseArea: '20%' // optional
+            });
         });
-
-        $('input').iCheck({
-            checkboxClass: 'icheckbox_square-blue',
-            radioClass: 'iradio_square-blue',
-            increaseArea: '20%' // optional
-        });
-    });
-</script>
-
+    </script>
 @endsection

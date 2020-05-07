@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+class DashboardController extends WebController
 {
     public function getIndex()
     {
@@ -50,7 +50,7 @@ class DashboardController extends Controller
 
     public function getChangeLocale(Request $request)
     {
-        \Session::put('admin_lang', $request->lang);
+        \Session::put('lang', $request->lang);
         return redirect()->back();
     }
 }

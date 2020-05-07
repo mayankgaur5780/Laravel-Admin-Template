@@ -54,24 +54,13 @@
                 serverSide: true,
                 ajax: '{{ route("admin.users.list") }}',
                 columns : [
-                    { "data": "name" },
-                    { "data": "email" },
+                    { data: "name" },
+                    { data: "email" },
+                    { data: "mobile", mRender: (data, type, row) => `+${row.dial_code} ${row.mobile}` },
+                    { data: "status_text", name: "status" },
+                    { data: "created_at", mRender: data => formatDate(data, 'YYYY-MM-DD hh:mm A') },
                     {
-                        "data": "mobile",
-                        "mRender": function (data, type, row) {
-                            return `+${row.dial_code} ${row.mobile}`;
-                        }
-                    },
-                    { "data": "status" },
-                    {
-                        "data": "created_at",
-                        "mRender": function (data, type, row) {
-                            return moment(data).format('YYYY-MM-DD hh:mm A');
-                        }
-                    },
-                    {
-                        "mRender": function (data, type, row) 
-                        {
+                        "mRender": (data, type, row) => {
                             return `
                                 <a href="{{ URL::to("admin/users/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
                                 <a href="{{ URL::to("admin/users/view") }}/${row.id}"><i class="fa fa-eye fa-fw"></i></a>
@@ -85,7 +74,7 @@
                 ]
             });
 
-            $('#users-table').on('click', '.delete_admins', function(e){
+            $('#users-table').on('click', '.delete_admins', function(e) {
                 e.preventDefault();
                 if (confirm("{{ transLang('are_you_sure_to_delete') }}")) {
                     var href = $(this).attr('href');

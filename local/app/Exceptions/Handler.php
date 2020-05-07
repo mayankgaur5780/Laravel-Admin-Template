@@ -11,6 +11,7 @@ use Illuminate\Routing\Exceptions\InvalidSignatureException;
 use Illuminate\Routing\Exceptions\UrlGenerationException;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Exceptions\InvalidClaimException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\PayloadException;
@@ -18,6 +19,7 @@ use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
+use \Illuminate\Session\TokenMismatchException;
 
 class Handler extends ExceptionHandler
 {
@@ -60,14 +62,14 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if($request->locale) {
+        if ($request->locale) {
             // Set App Language
             \App::setLocale($request->locale);
         }
-       
+
         $message = new \stdClass;
         $message->message = __('messages.invalid_data');
-        if ($request->is('api/*')) {
+        if ($request->expectsJson()) {
             if ($exception instanceof HttpResponseException) {
                 $message->errors = [
                     'error' => [$exception->getMessage()],
@@ -122,7 +124,7 @@ class Handler extends ExceptionHandler
                 $message->errors = [
                     'jwt_token' => [__('messages.jwt_blacklisted')],
                 ];
-                return response()->json($message, 401);
+                return response()->json($message, 403);
             }
 
             if ($exception instanceof TokenExpiredException) {
@@ -145,7 +147,7 @@ class Handler extends ExceptionHandler
                 $message->errors = [
                     'jwt_token' => [__('messages.jwt_user_not_defined_exception')],
                 ];
-                return response()->json($message, 422);
+                return response()->json($message, 401);
             }
 
             if ($exception instanceof JWTException) {
@@ -154,8 +156,22 @@ class Handler extends ExceptionHandler
                 ];
                 return response()->json($message, 401);
             }
+
+            if ($exception instanceof UnauthorizedHttpException) {
+                $message->errors = [
+                    'error' => [$exception->getMessage()],
+                ];
+                return response()->json($message, $exception->getStatusCode());
+            }
         }
-        
+
+        if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
+            $message->errors = [
+                'csrf' => [$exception->getMessage()],
+            ];
+            return response()->json($message, 401);
+        }
+
         if ($exception instanceof FileException) {
             $message->errors = [
                 'file' => [$exception->getMessage()],
@@ -168,6 +184,13 @@ class Handler extends ExceptionHandler
                 'error' => [__('messages.post_too_large_exception')],
             ];
             return response()->json($message, $exception->getStatusCode());
+        }
+
+        if ($exception instanceof TokenMismatchException) {
+            $message->errors = [
+                'error' => [__('messages.token_mismatch')],
+            ];
+            return response()->json($message, 422);
         }
 
         return parent::render($request, $exception);

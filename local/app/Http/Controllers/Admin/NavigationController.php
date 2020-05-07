@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 
-class NavigationController extends Controller
+class NavigationController extends WebController
 {
+
     public function getIndex()
     {
         return view('admin.navigation.index');
@@ -14,18 +15,13 @@ class NavigationController extends Controller
 
     public function getList()
     {
-        $navigation = \App\Models\Navigation::select('*');
-        return \DataTables::of($navigation)
-            ->editColumn('status', function ($query) {
+        $list = \App\Models\Navigation::select(\DB::raw("navigation.*, {$this->locale}name AS name"));
+
+        return \DataTables::of($list)
+            ->addColumn('status_text', function ($query) {
                 return transLang('action_status')[$query->status];
             })
-            ->editColumn('show_in_menu', function ($query) {
-                return transLang('other_action')[$query->show_in_menu];
-            })
-            ->editColumn('show_in_permission', function ($query) {
-                return transLang('other_action')[$query->show_in_permission];
-            })
-            ->editColumn('type', function ($query) {
+            ->addColumn('type_text', function ($query) {
                 return transLang('navigation_types')[$query->type];
             })
             ->make();
@@ -46,13 +42,13 @@ class NavigationController extends Controller
             'en_name' => 'required',
             'action_path' => 'required',
             'display_order' => 'required|numeric',
-            'parent_id' => 'required',
+            'parent_id' => 'nullable|numeric',
             'status' => 'required',
             'show_in_menu' => 'required',
             'show_in_permission' => 'required',
             'type' => 'required',
         ]);
-        $dataArr = arrayFromPost($request, ['name', 'en_name', 'action_path', 'icon', 'display_order', 'parent_id', 'status', 'show_in_menu', 'show_in_permission', 'type']);
+        $dataArr = arrayFromPost(['name', 'en_name', 'action_path', 'icon', 'display_order', 'parent_id', 'status', 'show_in_menu', 'show_in_permission', 'type']);
 
         $navigationMaster = new \App\Models\Navigation();
         $navigationMaster->name = $dataArr->name;
@@ -88,13 +84,13 @@ class NavigationController extends Controller
             'en_name' => 'required',
             'action_path' => 'required',
             'display_order' => 'required|numeric',
-            'parent_id' => 'required',
+            'parent_id' => 'nullable|numeric',
             'status' => 'required',
             'show_in_menu' => 'required',
             'show_in_permission' => 'required',
             'type' => 'required',
         ]);
-        $dataArr = arrayFromPost($request, ['name', 'en_name', 'action_path', 'icon', 'display_order', 'parent_id', 'status', 'show_in_menu', 'show_in_permission', 'type']);
+        $dataArr = arrayFromPost(['name', 'en_name', 'action_path', 'icon', 'display_order', 'parent_id', 'status', 'show_in_menu', 'show_in_permission', 'type']);
 
         $navigationMaster = \App\Models\Navigation::find($request->id);
         if ($navigationMaster != null) {

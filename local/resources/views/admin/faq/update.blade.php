@@ -21,7 +21,7 @@
                 <div class="box-body">
                     <p class="alert message_box hide"></p>
                     <form id="save-frm" class="form-horizontal">
-                        {{ csrf_field() }}
+                        @csrf
                         <div class="form-group">
                             <label class="col-sm-2 control-label required">{{ transLang('title') }}</label>
                             <div class="col-sm-6">

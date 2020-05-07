@@ -1,6 +1,6 @@
 @extends('admin.layouts.master') 
-@section('title') {{ transLang('update_role') }}
-@endsection
+
+@section('title') {{ transLang('update_role') }} @endsection
  
 @section('content')
     <section class="content-header">
@@ -20,17 +20,17 @@
                     </div>
                     <div class="box-body">
                         <p class="alert message_box hide"></p>
-                        <form class="form-horizontal" id="update-form" enctype="multipart/form-data">
-                            {{ csrf_field() }}
+                        <form class="form-horizontal" id="update-form">
+                            @csrf
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">{{ transLang('name') }} <i class="has-error">*</i></label>
+                                <label class="col-sm-2 control-label required">{{ transLang('name') }}</label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" name="name" placeholder="{{ transLang('name') }}" value="{{ $role->name }}">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">{{ transLang('status') }} <i class="has-error">*</i></label>
+                                <label class="col-sm-2 control-label required">{{ transLang('status') }}</label>
                                 <div class="col-sm-6">
                                     <select class="form-control" name="status">
                                         @foreach(transLang('action_status') as $key => $status)
@@ -55,7 +55,7 @@
 @section('scripts')
     <script type="text/javascript">
         jQuery(function($) {
-            $(document).on('click','#updateBtn',function(e){
+            $(document).on('click','#updateBtn',function(e) {
                 e.preventDefault();
                 let btn = $(this);
                 let loader = $('.message_box');

@@ -30,7 +30,6 @@
                             <thead>
                                 <tr>
                                     <th>{{ transLang('name') }}</th>
-                                    <th>{{ transLang('en_name') }}</th>
                                     <th>{{ transLang('price') }} ({{ config('cms.default_currency') }})</th>
                                     <th>{{ transLang('duration') }}</th>
                                     <th>{{ transLang('status') }}</th>
@@ -54,13 +53,12 @@
                 serverSide: true,
                 ajax: '{{ route("admin.subscriptions.list") }}',
                 columns : [
-                    { "data": "name" },
-                    { "data": "en_name" },
-                    { "data": "price" },
-                    { "data": "duration_text", "name":"duration" },
-                    { "data": "status" },
+                    { data: "name", name: "{{ getCustomSessionLang() }}name"},
+                    { data: "price" },
+                    { data: "duration_text", "name":"duration" },
+                    { data: "status_text", name: "status" },
                     {
-                        "mRender": function (data, type, row) {
+                        mRender: (data, type, row) => {
                             let response = `<a href="{{ URL::to("admin/subscriptions/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>`;
                             if(row.id != 1) {
                                 response += `<a href="{{ URL::to("admin/subscriptions/delete") }}/${row.id}" class="delete-entry" ><i class="fa fa-trash fa-fw"></i></a>`;
@@ -73,7 +71,7 @@
                 ]
             });
 
-            $('#data-table').on('click', '.delete-entry', function(e){
+            $('#data-table').on('click', '.delete-entry', function(e) {
                 e.preventDefault();
                 if (confirm("{{ transLang('are_you_sure_to_delete') }}")) {
                     var href = $(this).attr('href');

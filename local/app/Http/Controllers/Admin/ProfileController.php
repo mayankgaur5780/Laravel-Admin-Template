@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 
-class ProfileController extends Controller
+class ProfileController extends WebController
 {
     public function getDetails()
     {
@@ -23,7 +23,7 @@ class ProfileController extends Controller
             'mobile' => 'required|numeric|digits_between:9,20',
             'profile_image' => config('cms.allowed_image_mimes'),
         ]);
-        $dataArr = arrayFromPost($request, ['name', 'email', 'mobile']);
+        $dataArr = arrayFromPost(['name', 'email', 'mobile']);
 
         try {
 
@@ -49,7 +49,7 @@ class ProfileController extends Controller
         ]);
 
         $fieldArr = ['old_password', 'password', 'locale'];
-        $dataArr = arrayFromPost($request, $fieldArr);
+        $dataArr = arrayFromPost( $fieldArr);
         $admin = \Auth::guard('admin')->user();
 
         if (!\Hash::check($dataArr->old_password, $admin->password)) {

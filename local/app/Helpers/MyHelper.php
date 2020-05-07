@@ -1,8 +1,9 @@
 <?php
 
 if (!function_exists('array_from_post')) {
-    function arrayFromPost($request, $fieldArr = [])
+    function arrayFromPost($fieldArr = [])
     {
+        $request = request();
         $output = new \stdClass;
         if (count($fieldArr)) {
             foreach ($fieldArr as $value) {
@@ -14,13 +15,9 @@ if (!function_exists('array_from_post')) {
 }
 
 if (!function_exists('transLang')) {
-    function transLang($template = '')
+    function transLang($template = null, $dataArr = [])
     {
-        $output = '';
-        if (!empty($template)) {
-            $output = trans("messages.{$template}");
-        }
-        return $output;
+        return $template ? trans("messages.{$template}", $dataArr) : '';
     }
 }
 
@@ -28,13 +25,16 @@ if (!function_exists('deleteFCMToken')) {
     function deleteFCMToken($device_id = false, $from = 'user')
     {
         if ($device_id) {
-            $tokens = \App\Models\FcmToken::where('device_id', $device_id);
-            if ($from == 'user') {
-                $tokens->whereNotNull('user_id');
-            } else {
-                $tokens->whereNotNull('vendor_id');
-            }
-            return $tokens->delete();
+            \App\Models\FcmToken::where('device_id', $device_id)
+                ->when($from == 'user', function ($query) {
+                    $query->whereNotNull('user_id');
+                })
+                ->when($from != 'user', function ($query) {
+                    $query->whereNotNull('vendor_id');
+                })
+                ->delete();
+
+            return true;
         }
         return false;
     }
@@ -45,10 +45,7 @@ if (!function_exists('updateFCMToken')) {
     {
         $fcmToken = new \stdClass;
         if ($dataArr == null) {
-            return [
-                'msg' => transLang('invalid_data_processed'),
-                'errors' => ['error' => [transLang('invalid_data_processed')]],
-            ];
+            return false;
         }
 
         $fcmToken = \App\Models\FcmToken::where('device_id', '=', $dataArr->device_id)->first();
@@ -56,114 +53,13 @@ if (!function_exists('updateFCMToken')) {
             $fcmToken = new \App\Models\FcmToken();
         }
 
-        if ($column == 'user') {
-            $fcmToken->user_id = $dataArr->user_id;
-        }
-
-        $fcmToken->locale = $dataArr->locale;
+        $fcmToken->{"{$column}_id"} = $dataArr->{"{$column}_id"};
         $fcmToken->fcm_id = $dataArr->fcm_id;
         $fcmToken->device_id = $dataArr->device_id;
         $fcmToken->device_type = $dataArr->device_type;
         $fcmToken->save();
 
-        return [
-            'status' => 1,
-            'data' => $fcmToken,
-        ];
-    }
-}
-
-if (!function_exists('sendPushNotification')) {
-    function sendPushNotification($fcm_id = [], $dataArr = [])
-    {
-        $url = 'https://fcm.googleapis.com/fcm/send';
-        $api_key = config('cms.fcm_legacy_key');
-        $notification = [
-            'title' => @$dataArr['title'],
-            'en_title' => @$dataArr['en_title'],
-            'body' => @$dataArr['body'],
-            'en_body' => @$dataArr['en_body'],
-            'extra_data' => $dataArr,
-        ];
-
-        $arrayToSend = [
-            'registration_ids' => is_array($fcm_id) ? $fcm_id : [$fcm_id],
-            'priority' => "high",
-            'data' => $notification,
-            'content_available' => true,
-        ];
-
-        $headers = [
-            'Content-Type:application/json',
-            "Authorization:key={$api_key}",
-        ];
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($arrayToSend));
-
-        $result = curl_exec($ch);
-        if ($result === false) {
-            $result = curl_error($ch);
-        }
-        curl_close($ch);
-
-        return $result;
-    }
-}
-
-if (!function_exists('sendNotification')) {
-    function sendNotification($users = [], $dataArr, $column = 'user_id', $send_fcm = true)
-    {
-        if (env('ALLOW_SEND_NOTIFICATIONS')) {
-            $users = is_array($users) ? $users : [$users];
-
-            $dataArr['notification_type'] = isset($dataArr['notification_type']) ? $dataArr['notification_type'] : 0;
-            $dataArr['save_data'] = isset($dataArr['save_data']) ? $dataArr['save_data'] : true;
-
-            // Save Notification In DB
-            $notification = [];
-            $notification['title'] = @$dataArr['title'];
-            $notification['en_title'] = @$dataArr['en_title'];
-            $notification['message'] = @$dataArr['body'];
-            $notification['en_message'] = @$dataArr['en_body'];
-            if (isset($dataArr['attribute'])) {
-                $notification['attribute'] = $dataArr['attribute'];
-                $notification['value'] = $dataArr['value'];
-            }
-            $notification['notification_type'] = $dataArr['notification_type'];
-            $notification['created_at'] = date('Y-m-d H:i:s');
-            $notification['updated_at'] = date('Y-m-d H:i:s');
-
-            if ($dataArr['save_data'] == true) {
-                $notificationArr = [];
-                foreach ($users as $id) {
-                    $notification[$column] = $id;
-                    $notificationArr[] = $notification;
-                }
-
-                try {
-                    \App\Models\Notification::insert($notificationArr);
-                } catch (\Exception $e) {
-                    $data = [
-                        'message' => $e->getMessage(),
-                        'error' => $e,
-                    ];
-                    \Log::error(json_encode($data));
-                }
-            }
-
-            if ($send_fcm) {
-                $tokens = \App\Models\FcmToken::whereIn($column, $users)->pluck('fcm_id')->toArray();
-                return sendPushNotification($tokens, $dataArr);
-            }
-        }
-        return true;
+        return $fcmToken;
     }
 }
 
@@ -196,7 +92,7 @@ if (!function_exists('sendOtpToUser')) {
 if (!function_exists('sendOtp')) {
     function sendOtp($mobile = false, $message = false)
     {
-        $url = 'http://www.kingsms.ws/api/sendsms.php?username=services&password=abcdef';
+        $url = 'http://www.kingsms.ws/api/sendsms.php?username=&password=';
         $url .= '&message=' . urlencode($message);
         $url .= '&numbers=' . urlencode($mobile);
         $url .= '&sender=S-Booking';
@@ -224,18 +120,22 @@ if (!function_exists('getLocales')) {
 }
 
 if (!function_exists('processUserResponseData')) {
-    function processUserResponseData($user_id = false, $device_id = false, $user = null)
+    function processUserResponseData($user = null, $access_token = null)
     {
         $output = new \stdClass;
-        if ($user_id || $user) {
-            $user = $user == null ? \App\Models\User::find($user_id) : $user;
+        if (!blank($access_token)) {
+            $output->access_token = $access_token;
+            $output->token_type = 'bearer';
+            $output->expires_in = (env('JWT_TTL') * 60);
+            $output->expires_unit = 'Seconds';
+        }
 
-            if ($user != null) {
-                /* $user->fcmData = new \stdClass();
-                if ($device_id) {
-                $user->fcmData = getUserFCMToken($user->id, $device_id);
-                } */
-                unset($user->password, $user->remember_token, $user->otp, $user->otp_generated_at);
+        if ($user != null) {
+            unset($user->password, $user->remember_token, $user->otp, $user->otp_generated_at);
+
+            if (!blank($access_token)) {
+                $output->data = $user;
+            } else {
                 $output = $user;
             }
         }
@@ -256,9 +156,15 @@ if (!function_exists('successMessage')) {
 }
 
 if (!function_exists('errorMessage')) {
-    function errorMessage($template = '', $string = false)
+    function errorMessage($template = '', $string = false, $throw_exception = false)
     {
         $message = !$string ? transLang($template) : $template;
+
+        if ($throw_exception) {
+            $validator = \Validator::make([], []);
+            $validator->errors()->add('error', $message);
+            throw new \Illuminate\Validation\ValidationException($validator);
+        }
 
         return response()->json([
             'message' => transLang('given_data_invalid'),
@@ -369,16 +275,19 @@ if (!function_exists('filterMobileNo')) {
 }
 
 if (!function_exists('getTokenUser')) {
-    function getTokenUser($request, $force_login = true)
+    function getTokenUser($force_login = true)
     {
+        $request = request();
         $tokenUser = null;
         if ($request->header('Authorization')) {
             if (!$tokenUser = \JWTAuth::parseToken()->authenticate()) {
-                errorMessage('user_not_logged_in');
+                throw new \Tymon\JWTAuth\Exceptions\TokenExpiredException();
             }
         }
         if ($tokenUser == null && $force_login) {
-            errorMessage('user_not_logged_in');
+            throw new \Tymon\JWTAuth\Exceptions\TokenExpiredException();
+        } elseif ($tokenUser != null && $tokenUser->status != 1) {
+            throw new \Tymon\JWTAuth\Exceptions\TokenExpiredException();
         }
         return $tokenUser;
     }
@@ -398,7 +307,7 @@ if (!function_exists('sendEmail')) {
                         ->to($to_email);
                 });
             } catch (\Exception $e) {
-                \Log::error($e->getMessage());
+                \Log::error($e);
                 return $e->getMessage();
             }
         }
@@ -408,8 +317,7 @@ if (!function_exists('sendEmail')) {
 if (!function_exists('generateBookingCode')) {
     function generateBookingCode()
     {
-        // return 'KW' . microtime(true) * 10000 . getRandomNumber(4);
-        return 'KW' . getRandomNumber(4);
+        return 'PROJ' . getRandomNumber(4);
     }
 }
 
@@ -424,18 +332,6 @@ if (!function_exists('getBtwDays')) {
         $to_date = new \DateTime($to_date);
         $interval = $from_date->diff($to_date);
         return $interval->format('%a');
-    }
-}
-
-if (!function_exists('generateRefCode')) {
-    function generateRefCode()
-    {
-        $referralCode = getRandomNumber();
-        if (\App\Models\User::where('referral_code', $referralCode)->count()) {
-            return generateRefCode();
-        } else {
-            return $referralCode;
-        }
     }
 }
 
@@ -511,15 +407,44 @@ if (!function_exists('compareNumbers')) {
 if (!function_exists('getSessionLang')) {
     function getSessionLang($session = 'admin')
     {
-        $keyArr = ['admin' => 'admin_lang'];
+        $keyArr = ['admin' => 'lang'];
         return \Session::get($keyArr[$session]);
     }
 }
 
 if (!function_exists('getCustomSessionLang')) {
-    function getCustomSessionLang($session = 'admin')
+    function getCustomSessionLang($locale = null)
     {
-        $keyArr = ['admin' => 'admin_lang'];
-        return \Session::get($keyArr[$session]) == 'en' ? 'en_' : '';
+        $locale = is_null($locale) ? getSessionLang() : $locale;
+        return $locale == 'ar' ? '' : "{$locale}_";
+    }
+}
+
+if (!function_exists('buildHierarchyTree')) {
+    function buildHierarchyTree($elements, $parentId = null)
+    {
+        $branch = collect();
+
+        foreach ($elements as $element) {
+            if ($element->parent_id == $parentId) {
+                $children = buildHierarchyTree($elements, $element->id);
+                if ($children->count()) {
+                    $element->children = $children;
+                }
+                $branch->add($element);
+            }
+        }
+
+        return $branch;
+    }
+}
+
+if (!function_exists('apiResponse')) {
+    function apiResponse($template = 'success', $dataArr = null, $httpCode = 200)
+    {
+        $output = new \stdClass;
+        $output->message = transLang($template);
+        !$dataArr || $output->data = $dataArr;
+        return response()->json($output, $httpCode);
     }
 }

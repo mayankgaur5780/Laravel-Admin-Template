@@ -51,17 +51,13 @@
                 serverSide: true,
                 ajax: '{{ route("admin.faq.list") }}',
                 columns : [
-                    { "data": "title" },
-                    { "data": "en_title" },
+                    { data: "title" },
+                    { data: "en_title" },
                     {
-                        "mRender": function (data, type, row) {
+                        mRender: (data, type, row) => {
                             return `
-                                <a href="{{ URL::to("admin/faq/update") }}/${row.id}">
-                                    <i class="fa fa-edit fa-fw"></i>
-                                </a>
-                                <a href="{{ URL::to("admin/faq/delete") }}/${row.id}" class="delete-entry">
-                                    <i class="fa fa-trash fa-fw"></i>
-                                </a>
+                                <a href="{{ URL::to("admin/faq/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
+                                <a href="{{ URL::to("admin/faq/delete") }}/${row.id}" class="delete-entry"><i class="fa fa-trash fa-fw"></i></a>
                             `;
                         }, 
                         orderable: false,
@@ -70,7 +66,7 @@
                 ]
             });
 
-            $('#data-table').on('click', '.delete-entry', function(e){
+            $('#data-table').on('click', '.delete-entry', function(e) {
                 e.preventDefault();
                 if (confirm("{{ transLang('are_you_sure_to_delete') }}")) {
                     var href = $(this).attr('href');

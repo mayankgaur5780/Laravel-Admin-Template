@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 
-class AdminController extends Controller
+class AdminController extends WebController
 {
     public function getIndex()
     {
@@ -14,28 +14,21 @@ class AdminController extends Controller
 
     public function getList()
     {
-        $admins = \App\Models\Admin::select(['id', 'name', 'email', 'mobile', 'status', 'created_at'])
-        /* ->where('id', '!=', 1) */;
-        return \DataTables::of($admins)
-            ->editColumn('created_at', function ($query) {
-                return $query->created_at ? with(new \Carbon\Carbon($query->created_at))->format('Y/m/d h:i:s A') : '';
-            })
-            ->filterColumn('created_at', function ($query, $keyword) {
-                $query->whereRaw("DATE_FORMAT(created_at,'%Y/%m/%d') like ?", ["%$keyword%"]);
-            })
-            ->editColumn('status', function ($query) {
+        $list = \App\Models\Admin::select(['id', 'name', 'email', 'mobile', 'status', 'created_at'])
+            ->where('id', '!=', 1);
+
+        return \DataTables::of($list)
+            ->addColumn('status_text', function ($query) {
                 return transLang('action_status')[$query->status];
-            })
-            ->filterColumn('status', function ($query, $keyword) {
-                $keyword = strtolower($keyword) == "active" ? 1 : 0;
-                $query->where("status", $keyword);
             })
             ->make();
     }
 
     public function getCreate()
     {
-        $roles = \App\Models\UserRole::where('status', '=', 1)->where('id', '<>', [1])->get();
+        $roles = \App\Models\UserRole::where('status', '=', 1)
+            ->where('id', '<>', [1])
+            ->get();
         return view('admin.admins.create', compact('roles'));
     }
 
@@ -49,7 +42,7 @@ class AdminController extends Controller
             'user_type' => 'required',
             'profile_image' => config('cms.allowed_image_mimes'),
         ]);
-        $dataArr = arrayFromPost($request, ['name', 'email', 'user_type', 'mobile', 'password', 'status']);
+        $dataArr = arrayFromPost(['name', 'email', 'user_type', 'mobile', 'password', 'status']);
 
         try {
             // Start Transaction
@@ -94,7 +87,7 @@ class AdminController extends Controller
             'mobile' => 'nullable|numeric|min:9',
             'profile_image' => config('cms.allowed_image_mimes'),
         ]);
-        $dataArr = arrayFromPost($request, ['name', 'email', 'user_type', 'mobile', 'locale', 'status']);
+        $dataArr = arrayFromPost(['name', 'email', 'user_type', 'mobile', 'locale', 'status']);
 
         try {
             // Start Transaction

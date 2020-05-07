@@ -29,9 +29,7 @@
                         <table class="table table-striped table-bordered table-hover dataTable" id="navigation-table">
                             <thead>
                                 <tr>
-                                    <th>{{ transLang('id') }}</th>
                                     <th>{{ transLang('name') }}</th>
-                                    <th>{{ transLang('en_name') }}</th>
                                     <th>{{ transLang('action_path') }}</th>
                                     <th>{{ transLang('display_order') }}</th>
                                     <th>{{ transLang('type') }}</th>
@@ -55,24 +53,20 @@
             processing: true,
             serverSide: true,
             ajax: '{{ route("admin.navigation.list") }}',
+            order : [[2, 'desc']],
             columns : [
-                { "data": "id"},
-                { "data": "name"},
-	            { "data": "en_name" },
-                { "data": "action_path" },
-	            { "data": "display_order" },
-                { "data": "type" },
-                { "data": "status" },
+                { data: "name", name: "{{ getCustomSessionLang() }}name"},
+                { data: "action_path" },
+	            { data: "display_order" },
+                { data: "type_text", "name": "type" },
+                { data: "status_text", name: "status" },
                 {
-                    "mRender": function (data, type, row) {
-                        return `
-                            <a href="{{ URL::to("admin/navigation/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
-                        `;
+                    mRender: (data, type, row) => {
+                        return `<a href="{{ URL::to("admin/navigation/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>`;
                     }, 
                     orderable: false
                 }
 	        ],
-            order : [[0, 'desc']]
         });
     });
 

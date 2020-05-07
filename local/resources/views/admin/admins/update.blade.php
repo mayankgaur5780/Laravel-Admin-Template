@@ -21,28 +21,28 @@
 					<div class="box-body">
 						<p class="alert message_box hide"></p>
 						<form class="form-horizontal" id="save-frm">
-							{{ csrf_field() }}
+							@csrf
 							<div class="form-group">
-								<label class="col-sm-2 control-label">{{ transLang('name') }} <i class="has-error">*</i></label>
+								<label class="col-sm-2 control-label required">{{ transLang('name') }}</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" name="name" placeholder="{{ transLang('name') }}" value="{{ $admin->name }}">
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label">{{ transLang('email') }} <i class="has-error">*</i></label>
+								<label class="col-sm-2 control-label required">{{ transLang('email') }}</label>
 								<div class="col-sm-6">
 									<input type="email" class="form-control" name="email" placeholder="{{ transLang('email') }}" value="{{ $admin->email }}">
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label">{{ transLang('mobile') }} <i class="has-error">*</i></label>
+								<label class="col-sm-2 control-label required">{{ transLang('mobile') }}</label>
 
 								<div class="col-sm-6">
 									<input type="text" class="form-control" name="mobile" placeholder="{{ transLang('mobile') }}" value="{{ $admin->mobile }}">
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label">{{ transLang('user_type') }} <i class="has-error">*</i></label>
+								<label class="col-sm-2 control-label required">{{ transLang('user_type') }}</label>
 								<div class="col-sm-6">
 									<select class="form-control select2-class" name="user_type" data-placeholder="{{ transLang('choose') }}">
 										<option value=""></option>
@@ -55,7 +55,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label">{{ transLang('status') }} <i class="has-error">*</i></label>
+								<label class="col-sm-2 control-label required">{{ transLang('status') }}</label>
 								<div class="col-sm-6">
 									<select class="form-control" name="status">
 										@foreach(transLang('action_status') as $key => $status)

@@ -2,7 +2,7 @@
     {{! navigationMenuListing() }}
 @endif
 
-{{! $user = Auth::guard('admin')->user() }}
+{{! $user = Auth::guard()->user() }}
 {{! $userMenuList = Session::get('navigation_admin') }}
 {{! $fieldname = getSessionLang() == 'en' ? 'en_name' : 'name' }}
 

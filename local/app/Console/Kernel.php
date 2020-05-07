@@ -24,8 +24,18 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        /** Run every minute specified queue if not already started */
+        /* if (stripos((string) shell_exec('ps xf | grep \'[q]ueue:work\''), 'artisan queue:work') === false) {
+            $schedule->command('queue:work --queue=default --sleep=2 --tries=1 --timeout=5')->everyMinute()->appendOutputTo(storage_path() . '/logs/scheduler.log');
+        } */
+
+        // start the queue daemon, if its not running
+        /* if (!$this->osProcessIsRunning('queue:work')) {
+            \Log::info('=================== ** Queue worker is being started. ** ===================');
+            $schedule->command('queue:work')->everyMinute();
+        } else {
+            \Log::info('=================== ** Queue worker is running. ** ===================');
+        } */
     }
 
     /**
@@ -38,5 +48,29 @@ class Kernel extends ConsoleKernel
         $this->load(__DIR__.'/Commands');
 
         require base_path('routes/console.php');
+    }
+
+    /**
+     * checks, if a process with $needle in the name is running
+     *
+     * @param string $needle
+     * @return bool
+     */
+    protected function osProcessIsRunning($needle)
+    {
+        // get process status. the "-ww"-option is important to get the full output!
+        exec('ps aux -ww', $process_status);
+
+        // search $needle in process status
+        $result = array_filter($process_status,
+            function ($var) use ($needle) {return strpos($var, $needle);});
+
+        // if the result is not empty, the needle exists in running processes
+        if (!empty($result)) {
+
+            return true;
+        }
+
+        return false;
     }
 }

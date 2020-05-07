@@ -22,6 +22,29 @@ if (!function_exists('checkFileExistOnS3')) {
     }
 }
 
+if (!function_exists('saveBase64File')) {
+    function saveBase64File($dataArr, $path = 'originalImagePath', $cdn = false)
+    {
+        ['data_url' => $data_url, 'width' => $width, 'height' => $height] = $dataArr;
+
+        $randomString = random_int(0, PHP_INT_MAX) . strtotime(now());
+        $extension = explode('/', mime_content_type($data_url))[1];
+        $filename = "{$randomString}.{$extension}";
+        $imagePath = imagePath('', $path);
+
+        if ($cdn) {
+            $image = \Image::make(file_get_contents($data_url))->resize($width, $height)->encode($extension);
+            \Storage::disk('s3')->put("{$imagePath}/{$filename}", $image, 'public');
+        } else {
+            $image = \Image::make(file_get_contents($data_url))
+                ->resize($width, $height)
+                ->encode($extension)
+                ->save("{$imagePath}{$filename}");
+        }
+        return $filename;
+    }
+}
+
 if (!function_exists('uploadFile')) {
     function uploadFile($filename = false, $type = 'image', $path = 'originalImagePath', $cdn = false)
     {

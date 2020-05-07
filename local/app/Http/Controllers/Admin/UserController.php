@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class UserController extends WebController
 {
     public function getIndex()
     {
@@ -14,27 +14,23 @@ class UserController extends Controller
 
     public function getList()
     {
-        $users = \App\Models\User::select(['id', 'name', 'email', 'dial_code', 'mobile', 'status', 'created_at']);
+        $users = \App\Models\User::select('*');
+        
         return \DataTables::of($users)
-            ->filterColumn('created_at', function ($query, $keyword) {
-                $query->whereRaw("created_at like ?", ["%$keyword%"]);
-            })
-            ->filterColumn('mobile', function ($query, $keyword) {
-                $query->whereRaw("CONCAT(dial_code, ' ', mobile) like ?", ["%$keyword%"]);
-            })
-            ->editColumn('status', function ($query) {
+            ->addColumn('status_text', function ($query) {
                 return transLang('action_status')[$query->status];
-            })
-            ->filterColumn('status', function ($query, $keyword) {
-                $keyword = strtolower($keyword) == "active" ? 1 : 0;
-                $query->where("status", $keyword);
             })
             ->make();
     }
 
     public function getCreate()
     {
-        return view('admin.users.create');
+        $dial_codes = \App\Models\Country::select(\DB::raw("dial_code, CONCAT(dial_code, ' (', {$this->locale}name, ')') AS text"))
+            ->where('status', 1)
+            ->orderBy("{$this->locale}name")
+            ->get();
+
+        return view('admin.users.create', compact('dial_codes'));
     }
 
     public function postCreate(Request $request)
@@ -45,12 +41,9 @@ class UserController extends Controller
             'mobile' => 'required|numeric|digits_between:9,20',
             'email' => 'nullable|email',
             'password' => 'required|min:6',
-            'gender' => 'nullable',
-            'dob' => 'nullable|date_format:Y-m-d',
-            'address' => 'nullable',
             'profile_image' => config('cms.allowed_image_mimes'),
         ]);
-        $dataArr = arrayFromPost($request, ['name', 'email', 'dial_code', 'mobile', 'password', 'gender', 'dob', 'address', 'status']);
+        $dataArr = arrayFromPost(['name', 'email', 'dial_code', 'mobile', 'password', 'status']);
 
         // Check Mobile No Duplicate
         if (\App\Models\User::where('dial_code', $dataArr->dial_code)->where('mobile', $dataArr->mobile)->count()) {
@@ -67,9 +60,6 @@ class UserController extends Controller
             $user->password = bcrypt($request->password);
             $user->dial_code = $dataArr->dial_code;
             $user->mobile = $dataArr->mobile;
-            $user->gender = $dataArr->gender;
-            $user->dob = $dataArr->dob ? date('Y-m-d', strtotime($dataArr->dob)) : null;
-            $user->address = $dataArr->address;
             $user->status = $dataArr->status;
             $user->profile_image = uploadFile('profile_image');
             $user->save();
@@ -88,7 +78,11 @@ class UserController extends Controller
     public function getUpdate(Request $request)
     {
         $user = \App\Models\User::findOrFail($request->id);
-        return view('admin.users.update', compact('user'));
+        $dial_codes = \App\Models\Country::select(\DB::raw("dial_code, CONCAT(dial_code, ' (', {$this->locale}name, ')') AS text"))
+            ->orderBy("{$this->locale}name")
+            ->get();
+
+        return view('admin.users.update', compact('user', 'dial_codes'));
     }
 
     public function postUpdate(Request $request)
@@ -98,15 +92,12 @@ class UserController extends Controller
             'email' => 'nullable|email',
             'dial_code' => 'required|numeric|digits_between:1,5',
             'mobile' => 'required|numeric|digits_between:9,20',
-            'gender' => 'nullable',
-            'dob' => 'nullable|date_format:Y-m-d',
-            'address' => 'nullable',
             'profile_image' => config('cms.allowed_image_mimes'),
         ]);
-        $dataArr = arrayFromPost($request, ['name', 'email', 'dial_code', 'mobile', 'gender', 'dob', 'address', 'status']);
+        $dataArr = arrayFromPost(['name', 'email', 'dial_code', 'mobile', 'status']);
 
         // Check Mobile No Duplicate
-        if (\App\Models\User::where('dial_code', $dataArr->dial_code)->where('mobile', $dataArr->mobile)->where('id', '<>', $request->id)->count()) {
+        if (\App\Models\User::where('dial_code', $dataArr->dial_code)->where('mobile', $dataArr->mobile)->where('id', '<>', $request->id)->exists()) {
             return errorMessage('mobile_already_taken');
         }
 
@@ -119,9 +110,6 @@ class UserController extends Controller
             $user->email = strtolower($dataArr->email);
             $user->dial_code = $dataArr->dial_code;
             $user->mobile = $dataArr->mobile;
-            $user->gender = $dataArr->gender;
-            $user->dob = $dataArr->dob ? date('Y-m-d', strtotime($dataArr->dob)) : null;
-            $user->address = $dataArr->address;
             $user->status = $dataArr->status;
             if (\Input::hasFile('profile_image')) {
                 $user->profile_image = uploadFile('profile_image');

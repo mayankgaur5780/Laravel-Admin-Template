@@ -29,7 +29,6 @@
                         <table class="table table-striped table-bordered table-hover dataTable" id="role-table">
                             <thead>
                                 <tr>
-                                    <th>{{ transLang('id') }}</th>
                                     <th>{{ transLang('name') }}</th>
                                     <th>{{ transLang('status') }}</th>
                                     <th>{{ transLang('action') }}</th>
@@ -53,11 +52,10 @@
             serverSide: true,
             ajax: '{{ route("admin.role.list") }}',
             columns : [
-                { "data": "id"},
-                { "data": "name"},
-                { "data": "status" },
+                { data: "name"},
+                { data: "status_text", name: "status" },
                 {
-                    "mRender": function (data, type, row) {
+                    mRender: (data, type, row) => {
                         return `
                             <a href="{{ URL::to("admin/role/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
                             <a href="{{ URL::to("admin/role/permission") }}/${row.id}"><i class="fa fa-universal-access fa-fw"></i></a>
@@ -66,7 +64,6 @@
                     orderable: false
                 }
 	        ],
-            order : [[0, 'desc']]
         });
     });
 

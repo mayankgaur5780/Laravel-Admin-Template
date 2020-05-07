@@ -35,7 +35,7 @@ if (!function_exists('getUsersPermission')) {
 if (!function_exists('getUsersPermissionIDs')) {
     function getUsersPermissionIDs($accessAdminId, $accessRoleId)
     {
-        $usersPermissions = getUsersPermission($accessAdminId);
+        $usersPermissions = []; //getUsersPermission($accessAdminId);
         return count($usersPermissions) ? $usersPermissions : getRolePermission($accessRoleId);
     }
 }
@@ -75,13 +75,13 @@ if (!function_exists('hasAccess')) {
 
 // Set Navigation in Session
 if (!function_exists('navigationMenuListing')) {
-    function navigationMenuListing($guard = 'admin', $saveSession = true, $accessAdminId = null, $accessRoleId = null)
+    function navigationMenuListing($guard = 'web', $saveSession = true, $accessAdminId = null, $accessRoleId = null)
     {
         $excludeRoleId = [1];
         $navigationMasters = [];
 
         if ($saveSession == true) {
-            $guardData = \Auth::guard($guard)->user();
+            $guardData = auth()->user();
             $accessAdminId = $guardData->id;
             $accessRoleId = $guardData->role_id;
         }
@@ -90,28 +90,51 @@ if (!function_exists('navigationMenuListing')) {
             $navigationMasters = \App\Models\Navigation::select(DB::raw('id, name, en_name, icon, parent_id, action_path, show_in_menu'))
                 ->orderBy('display_order', 'ASC')
                 ->where('status', 1)
-                ->get()
-                ->toArray();
+                ->get();
         } else {
             $allowedNavIds = getUsersPermissionIDs($accessAdminId, $accessRoleId);
             if (count($allowedNavIds)) {
-                $navigationMasters = \App\Models\Navigation::select(DB::raw('id, name, icon, parent_id, action_path, show_in_menu'))
+                $navigationMasters = \App\Models\Navigation::select(DB::raw('id, name, en_name, icon, parent_id, action_path, show_in_menu'))
                     ->orderBy('display_order', 'ASC')
                     ->whereIn('id', $allowedNavIds)
                     ->where('status', 1)
-                    ->get()
-                    ->toArray();
+                    ->get();
             }
         }
 
         if (count($navigationMasters)) {
-            $navigationMasters = arrayToTree($navigationMasters, null);
+            $navigation = arrayToTree($navigationMasters->where('show_in_menu', 1)->toArray(), null);
 
             if ($saveSession == true) {
-                \Session::put("navigation_{$guard}", $navigationMasters);
+                $guard = $guard == 'web' ? 'admin' : $guard;
+                \Session::put("navigation_{$guard}", $navigation);
+                \Session::put("navigation_permission_{$guard}", $navigationMasters->toArray());
             }
         }
 
+        // dd($navigationMasters);
         return $saveSession === true ? $navigationMasters : true;
+    }
+}
+
+if (!function_exists('hasPermission')) {
+    function hasPermission()
+    {
+        $stringArr = func_get_args();
+        if (blank(\Session::get('navigation_permission_admin'))) {
+            navigationMenuListing();
+        }
+
+        if (count($stringArr) > 1) {
+            foreach ($stringArr as $string) {
+                $string_found = array_search($string, array_column(\Session::get('navigation_permission_admin'), 'action_path'));
+                if ($string_found !== false) {
+                    return true;
+                }
+            }
+        } else {
+            $string_found = array_search($stringArr[0], array_column(\Session::get('navigation_permission_admin'), 'action_path'));
+        }
+        return $string_found === false ? false : true;
     }
 }

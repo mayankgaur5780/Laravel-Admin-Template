@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 
-class SubscriptionController extends Controller
+class SubscriptionController extends WebController
 {
     public function getIndex()
     {
@@ -17,10 +17,10 @@ class SubscriptionController extends Controller
         $list = \App\Models\Subscription::select('*');
 
         return \DataTables::of($list)
-            ->editColumn('status', function ($query) {
+            ->addColumn('status_text', function ($query) {
                 return transLang('action_status')[$query->status];
             })
-            ->editColumn('duration_text', function ($query) {
+            ->addColumn('duration_text', function ($query) {
                 return transLang('subscription_days')[$query->duration];
             })
             ->filterColumn('duration', function ($query, $keyword) {
@@ -46,7 +46,7 @@ class SubscriptionController extends Controller
             'duration' => 'required|numeric|min:0',
             'status' => 'required',
         ]);
-        $dataArr = arrayFromPost($request, ['name', 'en_name', 'price', 'duration', 'status']);
+        $dataArr = arrayFromPost(['name', 'en_name', 'price', 'duration', 'status']);
 
         $subscription = new \App\Models\Subscription();
         $subscription->name = $dataArr->name;
@@ -74,7 +74,7 @@ class SubscriptionController extends Controller
             'duration' => 'required|numeric|min:0',
             'status' => 'required',
         ]);
-        $dataArr = arrayFromPost($request, ['name', 'en_name', 'price', 'duration', 'status']);
+        $dataArr = arrayFromPost(['name', 'en_name', 'price', 'duration', 'status']);
 
         $subscription = \App\Models\Subscription::find($request->id);
         if ($subscription != null) {

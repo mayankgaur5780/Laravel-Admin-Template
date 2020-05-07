@@ -35,13 +35,16 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+
+            \App\Http\Middleware\CheckWebLocale::class,
+            \App\Http\Middleware\RedirectToHttps::class,
         ],
 
         'api' => [
             'throttle:60,1',
             'bindings',
-            \App\Http\Middleware\StoreAPILogs::class,
-            \App\Http\Middleware\DetectApiLocale::class,
+            \App\Http\Middleware\StoreApiLogs::class,
+            \App\Http\Middleware\CheckApiLocale::class,
         ],
     ];
 
@@ -65,9 +68,8 @@ class Kernel extends HttpKernel
 
         'jwt.auth' => \Tymon\JWTAuth\Middleware\GetUserFromToken::class,
         'jwt.refresh' => \Tymon\JWTAuth\Middleware\RefreshToken::class,
-        'detect.api.locale' => \App\Http\Middleware\DetectApiLocale::class,
-        'admin.auth' => \App\Http\Middleware\AuthenticateAdmin::class,
-        'detect.admin.locale' => \App\Http\Middleware\DetectAdminLocale::class,
+
+        'assign.guard' => \App\Http\Middleware\AssignGuard::class,
     ];
 
     /**

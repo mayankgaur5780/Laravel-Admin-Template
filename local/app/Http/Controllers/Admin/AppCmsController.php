@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 
-class AppCmsController extends Controller
+class AppCmsController extends WebController
 {
     public function getIndex()
     {
@@ -32,7 +32,7 @@ class AppCmsController extends Controller
             'content' => 'required',
             'en_content' => 'required',
         ]);
-        $dataArr = arrayFromPost($request, ['attribute', 'title', 'en_title', 'content', 'en_content', 'status']);
+        $dataArr = arrayFromPost(['attribute', 'title', 'en_title', 'content', 'en_content', 'status']);
 
         $app_cms = new \App\Models\AppCms();
         $app_cms->attribute = strtolower($dataArr->attribute);
@@ -59,7 +59,7 @@ class AppCmsController extends Controller
             'content' => 'required',
             'en_content' => 'required',
         ]);
-        $dataArr = arrayFromPost($request, ['title', 'en_title', 'content', 'en_content', 'status']);
+        $dataArr = arrayFromPost(['title', 'en_title', 'content', 'en_content', 'status']);
 
         $app_cms = \App\Models\AppCms::find($request->id);
         if ($app_cms != null) {

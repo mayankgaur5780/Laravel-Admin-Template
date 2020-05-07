@@ -3,7 +3,7 @@ local/node_modules/
 local/npm-debug.log
 
 # Laravel 5 & Lumen specific
-local/storage
+local/storage/logs/*.log
 local/hot
 local/storage/*.key
 local/.env.*.php

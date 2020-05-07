@@ -1,4 +1,5 @@
 @extends('admin.layouts.master') 
+
 @section('title') {{ transLang('reset_password') }} @endsection
  
 @section('content')
@@ -19,16 +20,16 @@
                     </div>
                     <div class="box-body">
                         <p class="alert message_box hide"></p>
-                        <form class="form-horizontal" id="resetPassword-form" enctype="multipart/form-data">
-                            {{ csrf_field() }}
+                        <form class="form-horizontal" id="resetPassword-form">
+                            @csrf
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">{{ transLang('new_password') }}</label>
+                                <label class="col-sm-2 control-label required">{{ transLang('new_password') }}</label>
                                 <div class="col-sm-6">
                                     <input type="password" class="form-control" name="password" placeholder="{{ transLang('new_password') }}">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">{{ transLang('confirm_password') }}</label>
+                                <label class="col-sm-2 control-label required">{{ transLang('confirm_password') }}</label>
                                 <div class="col-sm-6">
                                     <input type="password" class="form-control" name="password_confirmation" placeholder="{{ transLang('confirm_password') }}">
                                 </div>
@@ -49,7 +50,7 @@
 @section('scripts')
     <script type="text/javascript">
         jQuery(function($) {
-        $(document).on('click','#resetPasswordBtn',function(e){
+        $(document).on('click','#resetPasswordBtn',function(e) {
                 e.preventDefault();
 				let btn = $(this);
 				let loader = $('.message_box');

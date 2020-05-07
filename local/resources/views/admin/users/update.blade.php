@@ -21,7 +21,7 @@
                     <div class="box-body">
                         <p class="alert message_box hide"></p>
                         <form id="save-frm" class="form-horizontal">
-                            {{ csrf_field() }}
+                            @csrf
 
                             <div class="form-group">
                                 <label for="name" class="col-sm-2 control-label required">{{ transLang('name') }}</label>
@@ -32,40 +32,25 @@
                             <div class="form-group">
                                 <label for="mobile" class="col-sm-2 control-label required">{{ transLang('mobile') }}</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="mobile" value="{{ $user->mobile }}">
+                                    <div class="col-sm-3 no-padding">
+                                        <select name="dial_code" class="form-control select2-class" data-placeholder="{{ transLang('choose') }}">
+                                            <option value=""></option>
+                                            @if ($dial_codes->count())
+                                                @foreach ($dial_codes as $item)
+                                                    <option value="{{ $item->dial_code }}" {{ $item->dial_code == $user->dial_code ? 'selected' : '' }}>{{ $item->text }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="mobile" placeholder="{{ transLang('mobile') }}" value="{{ $user->mobile }}">
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="email" class="col-sm-2 control-label">{{ transLang('email') }}</label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" name="email" placeholder="{{ transLang('email') }}" value="{{ $user->email }}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="email" class="col-sm-2 control-label">{{ transLang('gender') }}</label>
-                                <div class="col-sm-6 form-inline">
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="gender" value="1" {{ $user->gender == 1 ? 'checked' : '' }}> {{ transLang('male') }}
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="gender" value="2" {{ $user->gender == 2 ? 'checked' : '' }}> {{ transLang('female') }}
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="email" class="col-sm-2 control-label">{{ transLang('dob') }}</label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control dob-picker" name="dob" placeholder="{{ transLang('dob') }}" value="{{ $user->dob }}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="email" class="col-sm-2 control-label">{{ transLang('address') }}</label>
-                                <div class="col-sm-6">
-                                    <textarea class="form-control" name="address" placeholder="{{ transLang('address') }}">{{ $user->address }}</textarea>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -102,37 +87,21 @@
 
 
 @section('scripts')
-
     <script type="text/javascript">
         jQuery(function($) {
-            $("[name='mobile']").intlTelInput();
-            if('{{ $user->dial_code }}' in dial_codes) {
-                $("[name='mobile']").intlTelInput("setCountry", dial_codes['{{ $user->dial_code }}']);
-            }
             
-            $(document).on('click','#updateBtn',function(e){
+            $(document).on('click','#updateBtn',function(e) {
                 e.preventDefault();
                 let btn = $(this);
                 let loader = $('.message_box');
 
-                if($.trim($('[name="mobile"]').val()) != '' && $('[name="mobile"]').intlTelInput("isValidNumber") == false) {
-                    $('.message_box').html('{{ transLang("invalid_mobile_no") }}').removeClass('alert-success hide').addClass('alert-danger');;
-                    return false;
-                }
-
-                var phone = $('[name="mobile"]').intlTelInput("getSelectedCountryData");
-                $('[name="mobile"]').val(($('[name="mobile"]').val()).replace(/ /g, ''));
-                var fd = new FormData($('#save-frm')[0]);
-                
-                fd.append('dial_code', phone.dialCode);
-
                 $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
                     url: "{{ route('admin.users.update', ['id' => $user->id]) }}",
-                    data: fd,
+                    data: new FormData($('#save-frm')[0]),
                     processData: false,
                     contentType: false,
-                    dataType: 'json',
-                    type: 'POST',
                     beforeSend: () => {
                         btn.attr('disabled',true);
                         loader.html(`{!! transLang('loader_message') !!}`).removeClass('hide alert-danger alert-success').addClass('alert-info');

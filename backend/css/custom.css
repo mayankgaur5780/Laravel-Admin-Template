@@ -1286,3 +1286,57 @@ body.ar_lang .skin-blue .main-header li.user-header {
     z-index: 9999999;
     background: url('../images/loader.gif') center no-repeat #f8f8f8;
 }
+
+#cropper_model img {
+    width: 100%;
+}
+
+#cropper_model .modal-body {
+    padding: 0;
+}
+
+.map-input-box {
+    border-radius: 0;
+    box-shadow: none;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    border: 1px solid #ccc;
+}
+
+.pac-container {
+    z-index: 999999;
+}
+
+.height-550 {
+    min-height: 550px;
+}
+
+.height-450 {
+    min-height: 450px;
+}
+
+.height-350 {
+    min-height: 350px;
+}
+
+.image-container {
+    overflow: hidden;
+}
+
+.multiple-select .ms-choice {
+    height: 34px;
+    line-height: 34px;
+}
+
+.ms-drop input[type="radio"],
+.ms-drop input[type="checkbox"] {
+    position: relative;
+    margin: 0 10px;
+}
+
+.ms-drop ul>li label {
+    padding-left: 0px;
+}
