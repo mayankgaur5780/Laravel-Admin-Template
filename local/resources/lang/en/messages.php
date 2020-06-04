@@ -182,4 +182,11 @@ return [
     'otp_resend' => 'OTP resend successfully.',
     'invalid_mobile_no' => 'The mobile no field should contain valid no.',
     'close' => 'Close',
+    'mobile_not_registered' => 'The mobile no is not registered with us.',
+    'mobile_already_registered' => 'The mobile no is already registered with us.',
+    'profile_already_completed' => 'You already completed profile details.',
+    'total_users' => 'Total Users',
+    'invalid_locale' => 'The locale field has invalid value.',
+    'given_data_invalid' => 'The given data was invalid.',
+    'invalid_otp' => 'The given otp value is invalid.',
 ];

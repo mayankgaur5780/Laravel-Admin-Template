@@ -18,4 +18,38 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
+    # ensure www.
+    # RewriteCond %{HTTP_HOST} !^www\. [NC]
+    # RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # ensure https
+    # RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^ https://%{HTTP_HOST} [L,R=301]
+
+    ## EXPIRES CACHING ##
+    <IfModule mod_expires.c>
+        ExpiresActive On
+        <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf|otf|css|js)$">
+            ExpiresDefault "access plus 4 weeks"
+        </FilesMatch>
+        ExpiresByType image/ico "access plus 1 month"
+        ExpiresByType text/html "access plus 600 seconds"
+        ExpiresByType image/jpg "access plus 1 year"
+        ExpiresByType image/jpeg "access plus 1 year"
+        ExpiresByType image/gif "access plus 1 year"
+        ExpiresByType image/png "access plus 1 year"
+        ExpiresByType text/css "access plus 1 month"
+        ExpiresByType application/pdf "access plus 1 month"
+        ExpiresByType text/x-javascript "access plus 1 month"
+        ExpiresByType application/x-shockwave-flash "access plus 1 month"
+        ExpiresByType application/x-javascript "access plus 1 month"
+        ExpiresByType text/javascript "access plus 1 month"
+        ExpiresByType application/javascript "access plus 1 month"
+        ExpiresByType application/json "access plus 1 month"
+        ExpiresByType image/x-icon "access plus 1 year"
+        ExpiresDefault "access plus 2 days"
+    </IfModule>
+    ## EXPIRES CACHING ##
 </IfModule>
