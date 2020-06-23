@@ -11,7 +11,6 @@
     </section>
 
     <section class="content">
-        @include('admin.includes.info-box')
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
@@ -32,10 +31,6 @@
                                     <th>{{ transLang('flag') }}</th>
                                     <th>{{ transLang('name') }}</th>
                                     <th>{{ transLang('dial_code') }}</th>
-                                    <th>{{ transLang('alpha_2') }}</th>
-                                    <th>{{ transLang('alpha_3') }}</th>
-                                    <th>{{ transLang('currency') }}</th>
-                                    <th>{{ transLang('tax') . ' (%)' }}</th>
                                     <th>{{ transLang('status') }}</th>
                                     <th>{{ transLang('action') }}</th>
                                 </tr>
@@ -56,15 +51,11 @@
                 processing: true,
                 serverSide: true,
                 ajax: '{{ route("admin.countries.list") }}',
-                order : [[8, 'desc']],
+                order : [[3, 'desc']],
                 columns : [
                     { data: "flag", mRender: data => data ? `<img src="{{ imageBasePath('', 'flagPath') }}/${data}" width="40px"/>` : `` },
                     { data: "name", name: "{{ getCustomSessionLang() }}name"},
                     { data: "dial_code" },
-                    { data: "alpha_2" },
-                    { data: "alpha_3" },
-                    { data: "currency" },
-                    { data: "tax" },
                     { data: "status_text", name: "status" },
                     {
                         mRender: (data, type, row) => {

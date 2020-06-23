@@ -70,9 +70,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'assi
                 'uses' => 'DashboardController@getStats',
                 'as' => 'admin.dashboard.stats'
             ]);
-            Route::get('/dashboard/subscriptions/graph', [
-                'uses' => 'DashboardController@getSubscriptionsGraph',
-                'as' => 'admin.dashboard.subscriptions.graph'
+            Route::get('/dashboard/users/graph', [
+                'uses' => 'DashboardController@getUsersGraph',
+                'as' => 'admin.dashboard.users.graph'
             ]);
             Route::get('/change/locale', [
                 'uses' => 'DashboardController@getChangeLocale',
@@ -306,44 +306,6 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'assi
         /* End App Settings Routes */
     
     
-        /* Start App CMS Routes */
-            Route::get('app_cms', [
-                'uses' => 'AppCmsController@getIndex',
-                'as' => 'admin.app_cms.index'
-            ]);
-    
-            Route::get('app_cms/list', [
-                'uses' => 'AppCmsController@getList',
-                'as' => 'admin.app_cms.list'
-            ]);
-    
-            Route::get('app_cms/create', [
-                'uses' => 'AppCmsController@getCreate',
-                'as' => 'admin.app_cms.create'
-            ]);
-    
-            Route::post('app_cms/create', [
-                'uses' => 'AppCmsController@postCreate',
-                'as' => 'admin.app_cms.create'
-            ]);
-    
-            Route::get('app_cms/update/{id}', [
-                'uses' => 'AppCmsController@getUpdate',
-                'as' => 'admin.app_cms.update'
-            ]);
-    
-            Route::post('app_cms/update/{id}', [
-                'uses' => 'AppCmsController@postUpdate',
-                'as' => 'admin.app_cms.update'
-            ]);
-    
-            Route::get('app_cms/delete/{id}', [
-                'uses' => 'AppCmsController@getDelete',
-                'as' => 'admin.app_cms.delete'
-            ]);
-        /* End App CMS Routes */
-    
-    
         /* Start FAQ Routes */
             Route::get('faq', [
                 'uses' => 'FaqController@getIndex',
@@ -456,43 +418,5 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'assi
                 'as' => 'admin.coupons.delete'
             ]);
         /* End Coupon Routes */
-    
-    
-        /* Start Subscription Routes */
-            Route::get('subscriptions', [
-                'uses' => 'SubscriptionController@getIndex',
-                'as' => 'admin.subscriptions.index'
-            ]);
-    
-            Route::get('subscriptions/list', [
-                'uses' => 'SubscriptionController@getList',
-                'as' => 'admin.subscriptions.list'
-            ]);
-    
-            Route::get('subscriptions/create', [
-                'uses' => 'SubscriptionController@getCreate',
-                'as' => 'admin.subscriptions.create'
-            ]);
-    
-            Route::post('subscriptions/create', [
-                'uses' => 'SubscriptionController@postCreate',
-                'as' => 'admin.subscriptions.create'
-            ]);
-    
-            Route::get('subscriptions/update/{id}', [
-                'uses' => 'SubscriptionController@getUpdate',
-                'as' => 'admin.subscriptions.update'
-            ]);
-    
-            Route::post('subscriptions/update/{id}', [
-                'uses' => 'SubscriptionController@postUpdate',
-                'as' => 'admin.subscriptions.update'
-            ]);
-    
-            Route::get('subscriptions/delete/{id}', [
-                'uses' => 'SubscriptionController@getDelete',
-                'as' => 'admin.subscriptions.delete'
-            ]);
-        /* End Subscription Routes */
     });
 });

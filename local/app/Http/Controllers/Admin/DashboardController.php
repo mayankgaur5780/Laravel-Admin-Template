@@ -21,31 +21,23 @@ class DashboardController extends WebController
         return response()->json(compact('total_users', 'total_coupons'));
     }
 
-    public function getSubscriptionsGraph(Request $request)
+    public function getUsersGraph(Request $request)
     {
-        $labels = $subscriptions = [];
+        $labels = $users = [];
         $date_range = getDaysBetweenDates($request->start_date, $request->end_date);
 
-        $status_arr = blank($request->status) ? [1, 2, 3, 4] : $request->status;
+        $result = \App\Models\User::select(\DB::raw('COUNT(id) AS users, DATE(created_at) AS label'))
+            ->whereBetween(\DB::raw('DATE(created_at)'), [$request->start_date, $request->end_date])
+            ->groupBy(\DB::raw('DATE(created_at)'))
+            ->pluck('users', 'label')
+            ->toArray();
 
         foreach ($date_range as $date) {
-            $result = \App\Models\SubscriptionHistory::where('payment_date', $date)
-                ->groupBy('payment_date')
-                ->count();
-
             $labels[] = date('Y') == date('Y', strtotime($date)) ? date('d-M', strtotime($date)) : date('d-M-y', strtotime($date));
-            $subscriptions[] = $result;
+            $users[] = (int) @$result[$date];
         }
 
-        if (blank(array_filter($subscriptions))) {
-            $subscriptions = [];
-        }
-
-        $stats = [];
-        $stats['total_subscriptions_amount'] = number_format(\App\Models\SubscriptionHistory::whereBetween(\DB::raw('DATE(created_at)'), [$request->start_date, $request->end_date])
-                ->sum('amount'), 2);
-
-        return response()->json(compact('labels', 'subscriptions', 'stats'));
+        return response()->json(compact('labels', 'users'));
     }
 
     public function getChangeLocale(Request $request)

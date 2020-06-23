@@ -21,8 +21,11 @@ class NavigationController extends WebController
             ->addColumn('status_text', function ($query) {
                 return transLang('action_status')[$query->status];
             })
-            ->addColumn('type_text', function ($query) {
-                return transLang('navigation_types')[$query->type];
+            ->addColumn('show_in_menu_text', function ($query) {
+                return transLang('other_action')[$query->show_in_menu];
+            })
+            ->addColumn('show_in_permission_text', function ($query) {
+                return transLang('other_action')[$query->show_in_permission];
             })
             ->make();
     }
@@ -30,7 +33,10 @@ class NavigationController extends WebController
     public function getCreate()
     {
         $locale = getCustomSessionLang();
-        $parent_navigation = \App\Models\Navigation::select(\DB::raw("id, {$locale}name AS name"))->where('parent_id', 0)->get();
+        $parent_navigation = \App\Models\Navigation::select(\DB::raw("id, {$locale}name AS name"))
+            ->where('show_in_menu', 1)
+            ->orderBy("{$locale}name")
+            ->get();
         return view('admin.navigation.create', compact('parent_navigation'));
     }
 
@@ -73,7 +79,10 @@ class NavigationController extends WebController
     {
         $locale = getCustomSessionLang();
         $navigation = \App\Models\Navigation::findOrFail($request->id);
-        $parent_navigation = \App\Models\Navigation::select(\DB::raw("id, {$locale}name AS name"))->where('parent_id', 0)->get();
+        $parent_navigation = \App\Models\Navigation::select(\DB::raw("id, {$locale}name AS name"))
+            ->where('show_in_menu', 1)
+            ->orderBy("{$locale}name")
+            ->get();
         return view('admin.navigation.update', compact('navigation', 'parent_navigation'));
     }
 

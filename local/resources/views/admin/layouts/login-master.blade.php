@@ -42,8 +42,7 @@
         <div class="login-box">
             <div class="login-logo">
                 <a>
-                    <b><img src="{{ asset('logo/logo.png') }}" alt="{{ transLang('company') }}" width="75"></b><br>
-                    {{ transLang('admin_panel') }}
+                    <b><img src="{{ asset('logo/logo.png') }}" alt="{{ transLang('company') }}" width="75"></b>
                 </a>
             </div>
             @yield('content')

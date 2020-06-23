@@ -41,33 +41,6 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label required">{{ transLang('alpha_2') }}</label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="alpha_2" placeholder="{{ transLang('alpha_2') }}" value="{{ $country->alpha_2 }}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label required">{{ transLang('alpha_3') }}</label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="alpha_3" placeholder="{{ transLang('alpha_3') }}" value="{{ $country->alpha_3 }}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label required">{{ transLang('currency') }}</label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="currency" placeholder="{{ transLang('currency') }}" value="{{ $country->currency }}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label required">{{ transLang('tax') }}</label>
-                                <div class="col-sm-6">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="tax" placeholder="{{ transLang('tax') }}" value="{{ $country->tax }}">
-                                        <span class="input-group-addon"><i class="fa fa-percent"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label for="status" class="col-sm-2 control-label required">{{ transLang('status') }}</label>
                                 <div class="col-sm-6">
                                     <select class="form-control" name="status">

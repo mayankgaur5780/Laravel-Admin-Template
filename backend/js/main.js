@@ -167,9 +167,97 @@ function getLatLong(address) {
 
 const formatDate = (date = null, format = 'YYYY-MM-DD hh:mm A') => moment(moment.utc(date).toDate()).local().format(format);
 
+function formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
+    try {
+        decimalCount = Math.abs(decimalCount);
+        decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+
+        const negativeSign = amount < 0 ? "-" : "";
+
+        let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+        let j = (i.length > 3) ? i.length % 3 : 0;
+
+        return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+// For Cropper.js
+function dataURLtoMimeType(dataURL) {
+    var BASE64_MARKER = ';base64,';
+    var data;
+
+    if (dataURL.indexOf(BASE64_MARKER) == -1) {
+        var parts = dataURL.split(',');
+        var contentType = parts[0].split(':')[1];
+        data = decodeURIComponent(parts[1]);
+    } else {
+        var parts = dataURL.split(BASE64_MARKER);
+        var contentType = parts[0].split(':')[1];
+        var raw = window.atob(parts[1]);
+        var rawLength = raw.length;
+
+        data = new Uint8Array(rawLength);
+
+        for (var i = 0; i < rawLength; ++i) {
+            data[i] = raw.charCodeAt(i);
+        }
+    }
+
+    var arr = data.subarray(0, 4);
+    var header = "";
+    for (var i = 0; i < arr.length; i++) {
+        header += arr[i].toString(16);
+    }
+    switch (header) {
+        case "89504e47":
+            mimeType = "image/png";
+            break;
+        case "47494638":
+            mimeType = "image/gif";
+            break;
+        case "ffd8ffe0":
+        case "ffd8ffe1":
+        case "ffd8ffe2":
+            mimeType = "image/jpeg";
+            break;
+        default:
+            mimeType = ""; // Or you can use the blob.type as fallback
+            break;
+    }
+
+    return mimeType;
+}
+
+function initSelect2(target = '.select2-class') {
+    $(target).select2({
+        width: '100%',
+        dir: current_lang == 'ar' ? 'rtl' : 'ltr',
+    });
+}
+
+function initSelect2Custom(target = '.select2-class2') {
+    $(target).select2({
+        width: '100%',
+        allowClear: true,
+        dir: current_lang == 'ar' ? 'rtl' : 'ltr',
+    });
+}
+
+String.prototype.trimToLength = function (m) {
+    return (this.length > m)
+        ? jQuery.trim(this).substring(0, m).split(" ").slice(0, -1).join(" ") + ".."
+        : this;
+};
+
 $(document).ready(function (e) {
-    if ($('.select2-class').length > 0) { $('.select2-class').select2({ width: '100%' }); }
-    if ($('.select2-class2').length > 0) { $('.select2-class2').select2({ width: '100%', allowClear: true }); }
+    if ($('.select2-class').length > 0) {
+        initSelect2();
+    }
+    if ($('.select2-class2').length > 0) {
+        initSelect2Custom();
+    }
 
     if ($('.multiple-select').length > 0) {
         $('.multiple-select').multipleSelect({

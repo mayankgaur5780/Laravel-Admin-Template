@@ -70,24 +70,16 @@ class CountryController extends WebController
             'name' => 'required',
             'en_name' => "required|unique:countries,en_name,{$request->id},id",
             'dial_code' => 'required',
-            'alpha_2' => "required|unique:countries,alpha_2,{$request->id},id",
-            'alpha_3' => "required|unique:countries,alpha_3,{$request->id},id",
-            'currency' => 'required',
-            'tax' => 'required|numeric|min:0',
             'status' => 'required',
             'file' => config('cms.allowed_image_mimes'),
         ]);
-        $dataArr = arrayFromPost(['name', 'en_name', 'dial_code', 'alpha_2', 'alpha_3', 'currency', 'tax', 'status']);
+        $dataArr = arrayFromPost(['name', 'en_name', 'dial_code', 'status']);
 
         $country = \App\Models\Country::find($request->id);
         if ($country != null) {
             $country->name = $dataArr->name;
             $country->en_name = $dataArr->en_name;
             $country->dial_code = $dataArr->dial_code;
-            $country->alpha_2 = strtoupper($dataArr->alpha_2);
-            $country->alpha_3 = strtoupper($dataArr->alpha_3);
-            $country->currency = strtoupper($dataArr->currency);
-            $country->tax = $dataArr->tax;
             $country->status = $dataArr->status;
             if (\Input::hasFile('file')) {
                 $country->flag = uploadFile('file', 'image', 'flagPath');

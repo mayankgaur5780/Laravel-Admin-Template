@@ -111,6 +111,7 @@
             $.widget.bridge('uibutton', $.ui.button);
             const hostname = "{{ URL::to('/') }}"
             const current_url = '{{ Request::url() }}';
+            const current_lang = '{{ getSessionLang() }}';
         </script>
         <!-- Bootstrap 3.3.6 -->
         <script src="{{ asset('backend/bootstrap/js/bootstrap.min.js') }}"></script>

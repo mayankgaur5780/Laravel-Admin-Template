@@ -19,7 +19,9 @@
                                 <h3 class="box-title">{{ transLang('all_admins') }}</h3>
                             </div>
                             <div class="col-xs-12 col-sm-6">
-                                <a href="{{ route('admin.admins.create') }}" class="btn btn-success pull-right">{{ transLang('create_new') }}</a>
+                                @hasPermission('admin/admin/create')
+                                    <a href="{{ route('admin.admins.create') }}" class="btn btn-success pull-right">{{ transLang('create_new') }}</a>
+                                @endhasPermission
                             </div>
                         </div>
                     </div>
@@ -58,10 +60,19 @@
                     {
                         mRender: (data, type, row) => {
                             return `
-                                <a href="{{ URL::to("admin/admin/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
+
+                                @if (hasPermission('admin/admin/update'))
+                                    <a href="{{ URL::to("admin/admin/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
+                                @endif
                                 <a href="{{ URL::to("admin/admin/view") }}/${row.id}"><i class="fa fa-eye fa-fw"></i></a>
-                                <a href="{{ URL::to("admin/admin-account/reset-password") }}/${row.id}" class="danger"><i class="fa fa-key fa-fw"></i></a>
-                                <a href="{{ URL::to("admin/admin/delete") }}/${row.id}" class="delete_admins"><i class="fa fa-trash fa-fw"></i></a>
+
+                                @if (hasPermission('admin/admin-account/reset-password'))
+                                    <a href="{{ URL::to("admin/admin-account/reset-password") }}/${row.id}" class="danger"><i class="fa fa-key fa-fw"></i></a>
+                                @endif
+
+                                @if (hasPermission('admin/admin/delete'))
+                                    <a href="{{ URL::to("admin/admin/delete") }}/${row.id}" class="delete_admins"><i class="fa fa-trash fa-fw"></i></a>
+                                @endif
                             `;
                         }, 
                         orderable: false,

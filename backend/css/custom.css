@@ -1331,8 +1331,7 @@ body.ar_lang .skin-blue .main-header li.user-header {
     line-height: 34px;
 }
 
-.ms-drop input[type="radio"],
-.ms-drop input[type="checkbox"] {
+.ms-drop input[type="radio"], .ms-drop input[type="checkbox"] {
     position: relative;
     margin: 0 10px;
 }
@@ -1340,3 +1339,19 @@ body.ar_lang .skin-blue .main-header li.user-header {
 .ms-drop ul>li label {
     padding-left: 0px;
 }
+
+/* Start Cropper CSS */
+
+#cropper_model img {
+    width: 100%;
+}
+
+#cropper_model .modal-body {
+    padding: 0;
+}
+
+.image-container {
+    overflow: hidden;
+}
+
+/* End Cropper CSS */

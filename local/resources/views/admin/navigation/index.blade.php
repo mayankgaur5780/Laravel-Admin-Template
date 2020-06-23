@@ -11,7 +11,6 @@
     </section>
 
     <section class="content">
-        @include('admin.includes.info-box')
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
@@ -32,7 +31,8 @@
                                     <th>{{ transLang('name') }}</th>
                                     <th>{{ transLang('action_path') }}</th>
                                     <th>{{ transLang('display_order') }}</th>
-                                    <th>{{ transLang('type') }}</th>
+                                    <th>{{ transLang('show_in_menu') }}</th>
+                                    <th>{{ transLang('show_in_permission') }}</th>
                                     <th>{{ transLang('status') }}</th>
                                     <th>{{ transLang('action') }}</th>
                                 </tr>
@@ -58,7 +58,8 @@
                 { data: "name", name: "{{ getCustomSessionLang() }}name"},
                 { data: "action_path" },
 	            { data: "display_order" },
-                { data: "type_text", "name": "type" },
+                { data: "show_in_menu_text", "name": "show_in_menu" },
+                { data: "show_in_permission_text", "name": "show_in_permission" },
                 { data: "status_text", name: "status" },
                 {
                     mRender: (data, type, row) => {

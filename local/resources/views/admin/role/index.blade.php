@@ -11,7 +11,6 @@
     </section>
 
     <section class="content">
-        @include('admin.includes.info-box')
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
@@ -34,8 +33,7 @@
                                     <th>{{ transLang('action') }}</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                            </tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                 </div>
