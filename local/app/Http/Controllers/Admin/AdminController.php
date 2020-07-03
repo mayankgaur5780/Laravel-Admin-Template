@@ -26,7 +26,7 @@ class AdminController extends WebController
 
     public function getCreate()
     {
-        $roles = \App\Models\UserRole::where('status', '=', 1)
+        $roles = \App\Models\AdminRole::where('status', '=', 1)
             ->where('id', '<>', [1])
             ->get();
         return view('admin.admins.create', compact('roles'));
@@ -74,7 +74,7 @@ class AdminController extends WebController
     public function getUpdate(Request $request)
     {
         $admin = \App\Models\Admin::findOrFail($request->id);
-        $roles = \App\Models\UserRole::whereIn('id', [1, 2])->get();
+        $roles = \App\Models\AdminRole::whereIn('id', [1, 2])->get();
         return view('admin.admins.update', compact('admin', 'roles'));
     }
 
@@ -124,7 +124,7 @@ class AdminController extends WebController
     public function getView(Request $request)
     {
         $admin = \App\Models\Admin::findOrFail($request->id);
-        $admin->role = \App\Models\UserRole::find($admin->role_id);
+        $admin->role = \App\Models\AdminRole::find($admin->role_id);
         return view('admin.admins.view', compact('admin'));
     }
 

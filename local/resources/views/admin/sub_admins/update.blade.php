@@ -6,7 +6,7 @@
 	<section class="content-header">
 		<ol class="breadcrumb">
 			<li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> {{ transLang('dashboard') }}</a></li>
-			<li><a href="{{ route('admin.admins.index') }}"> {{ transLang('all_admins') }} </a></li>
+			<li><a href="{{ route('admin.sub_admins.index') }}"> {{ transLang('all_admins') }} </a></li>
 			<li class="active">{{ transLang('update_admin') }}</li>
 		</ol>
 	</section>
@@ -23,6 +23,19 @@
 						<form class="form-horizontal" id="save-frm">
 							@csrf
 							<div class="form-group">
+								<label class="col-sm-2 control-label required">{{ transLang('role') }}</label>
+								<div class="col-sm-6">
+									<select class="form-control select2-class" name="role_id" data-placeholder="{{ transLang('choose') }}">
+										<option value=""></option>
+										@if($roles->count())
+											@foreach($roles as $key => $role)
+												<option value="{{ $role->id }}" {{ ($admin->admin_role_id == $role->id) ? 'selected' : ''}}>{{ $role->name }}</option>
+											@endforeach
+										@endif
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
 								<label class="col-sm-2 control-label required">{{ transLang('name') }}</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" name="name" placeholder="{{ transLang('name') }}" value="{{ $admin->name }}">
@@ -34,26 +47,24 @@
 									<input type="email" class="form-control" name="email" placeholder="{{ transLang('email') }}" value="{{ $admin->email }}">
 								</div>
 							</div>
-							<div class="form-group">
-								<label class="col-sm-2 control-label required">{{ transLang('mobile') }}</label>
-
-								<div class="col-sm-6">
-									<input type="text" class="form-control" name="mobile" placeholder="{{ transLang('mobile') }}" value="{{ $admin->mobile }}">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-2 control-label required">{{ transLang('user_type') }}</label>
-								<div class="col-sm-6">
-									<select class="form-control select2-class" name="user_type" data-placeholder="{{ transLang('choose') }}">
-										<option value=""></option>
-										@if($roles->count())
-											@foreach($roles as $key => $role)
-												<option value="{{ $role->id }}" {{ ($admin->role_id == $role->id) ? 'selected' : ''}}>{{ $role->name }}</option>
-											@endforeach
-										@endif
-									</select>
-								</div>
-							</div>
+                            <div class="form-group">
+                                <label for="mobile" class="col-sm-2 control-label required">{{ transLang('mobile') }}</label>
+                                <div class="col-sm-6">
+                                    <div class="col-sm-3 no-padding">
+                                        <select name="dial_code" class="form-control select2-class" data-placeholder="{{ transLang('choose') }}">
+                                            <option value=""></option>
+                                            @if ($dial_codes->count())
+                                                @foreach ($dial_codes as $item)
+                                                    <option value="{{ $item->dial_code }}" {{ $item->dial_code == $admin->dial_code ? 'selected' : '' }}>{{ $item->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="mobile" placeholder="{{ transLang('mobile') }}" value="{{ $admin->mobile }}">
+                                    </div>
+                                </div>
+                            </div>
 							<div class="form-group">
 								<label class="col-sm-2 control-label required">{{ transLang('status') }}</label>
 								<div class="col-sm-6">
@@ -97,7 +108,7 @@
 				$.ajax({
 					dataType: 'json',
 					type: 'POST',
-					url: "{{ route('admin.admins.update', ['id' => $admin->id]) }}",
+					url: "{{ route('admin.sub_admins.update', ['id' => $admin->id]) }}",
 					data: new FormData($('#save-frm')[0]),
 					processData: false,
 					contentType: false,
@@ -112,7 +123,7 @@
 					success: response => {
 						btn.attr('disabled',false);
 						loader.html(response.message).removeClass('alert-info').addClass('alert-success');
-						location.replace('{{ route("admin.admins.index")}}');
+						location.replace('{{ route("admin.sub_admins.index")}}');
 					}
 				});
 			});

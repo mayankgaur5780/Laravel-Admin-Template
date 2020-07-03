@@ -6,14 +6,14 @@
     <section class="content-header">
         <ol class="breadcrumb">
             <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> {{ transLang('dashboard') }}</a></li>
-            <li><a href="{{ route('admin.admins.index') }}"> {{ transLang('all_admins') }} </a></li>
+            <li><a href="{{ route('admin.sub_admins.index') }}"> {{ transLang('all_admins') }} </a></li>
             <li class="active">{{ transLang('detail') }}</li>
         </ol>
     </section>
 
     <section class="content">
         <p>
-            <a class="btn btn-success" href="{{ route('admin.admins.update', ['id' => $admin->id]) }}">{{ transLang('update') }}</a>
+            <a class="btn btn-success" href="{{ route('admin.sub_admins.update', ['id' => $admin->id]) }}">{{ transLang('update') }}</a>
         </p>
         <div class="row">
             <div class="col-md-12">
@@ -25,8 +25,12 @@
                         <div class="offers-view">
                             <table class="table table-striped table-bordered detail-view">
                                 <tbody>
+                                    </tr>
+                                        <th width="20%">{{ transLang('role') }}</th>
+                                        <td>{{ $admin->role }}</td>
+                                    </tr>
                                     <tr>
-                                        <th width="20%">{{ transLang('name') }}</th>
+                                        <th>{{ transLang('name') }}</th>
                                         <td>{{ $admin->name }}</td>
                                     </tr>
                                     <tr>
@@ -35,10 +39,7 @@
                                     </tr>
                                     <tr>
                                         <th>{{ transLang('mobile') }}</th>
-                                        <td>{{ $admin->mobile }}</td>
-                                    </tr>
-                                        <th>{{ transLang('user_type') }}</th>
-                                        <td>{{ @$admin->role->name }}</td>
+                                        <td>{{ "+{$admin->dial_code} {$admin->mobile}" }}</td>
                                     </tr>
                                     <tr>
                                         <th>{{ transLang('status') }}</th>

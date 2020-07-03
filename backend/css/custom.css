@@ -1355,3 +1355,27 @@ body.ar_lang .skin-blue .main-header li.user-header {
 }
 
 /* End Cropper CSS */
+
+.col-md-3.col-md-offset-1.small_label {
+    font-weight: normal;
+    padding-left: 50px;
+}
+
+.col-md-3.col-md-offset-1.sub_small_label {
+    font-weight: normal;
+    padding-left: 100px;
+}
+
+[type="checkbox"]:not(:checked), [type="checkbox"]:checked {
+    left: 0px;
+}
+
+.ar_lang .col-md-3.col-md-offset-1.small_label {
+    font-weight: normal;
+    padding-right: 50px;
+}
+
+.ar_lang .col-md-3.col-md-offset-1.sub_small_label {
+    font-weight: normal;
+    padding-right: 100px;
+}

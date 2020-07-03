@@ -8,14 +8,14 @@ use Illuminate\Http\Request;
 class NavigationController extends WebController
 {
 
-    public function getIndex()
+    public function getIndex(Request $request)
     {
         return view('admin.navigation.index');
     }
 
-    public function getList()
+    public function getList(Request $request)
     {
-        $list = \App\Models\Navigation::select(\DB::raw("navigation.*, {$this->locale}name AS name"));
+        $list = \App\Models\AdminNavigation::select(\DB::raw("admin_navigations.*, {$this->locale}name AS name"));
 
         return \DataTables::of($list)
             ->addColumn('status_text', function ($query) {
@@ -30,10 +30,10 @@ class NavigationController extends WebController
             ->make();
     }
 
-    public function getCreate()
+    public function getCreate(Request $request)
     {
         $locale = getCustomSessionLang();
-        $parent_navigation = \App\Models\Navigation::select(\DB::raw("id, {$locale}name AS name"))
+        $parent_navigation = \App\Models\AdminNavigation::select(\DB::raw("id, {$locale}name AS name"))
             ->where('show_in_menu', 1)
             ->orderBy("{$locale}name")
             ->get();
@@ -52,34 +52,44 @@ class NavigationController extends WebController
             'status' => 'required',
             'show_in_menu' => 'required',
             'show_in_permission' => 'required',
-            'type' => 'required',
         ]);
-        $dataArr = arrayFromPost(['name', 'en_name', 'action_path', 'icon', 'display_order', 'parent_id', 'status', 'show_in_menu', 'show_in_permission', 'type']);
+        $dataArr = arrayFromPost(['name', 'en_name', 'action_path', 'icon', 'display_order', 'parent_id', 'status', 'show_in_menu', 'show_in_permission']);
 
-        $navigationMaster = new \App\Models\Navigation();
-        $navigationMaster->name = $dataArr->name;
-        $navigationMaster->en_name = $dataArr->en_name;
-        $navigationMaster->action_path = $dataArr->action_path;
-        $navigationMaster->icon = $dataArr->icon;
-        $navigationMaster->display_order = $dataArr->display_order;
-        $navigationMaster->parent_id = $dataArr->parent_id;
-        $navigationMaster->status = $dataArr->status;
-        $navigationMaster->show_in_menu = $dataArr->show_in_menu;
-        $navigationMaster->show_in_permission = $dataArr->show_in_permission;
-        $navigationMaster->type = $dataArr->type;
-        $navigationMaster->save();
+        try {
+            // Start Transaction
+            \DB::beginTransaction();
 
-        // Update Navigation
-        navigationMenuListing();
+            $navigationMaster = new \App\Models\AdminNavigation();
+            $navigationMaster->name = $dataArr->name;
+            $navigationMaster->en_name = $dataArr->en_name;
+            $navigationMaster->action_path = $dataArr->action_path;
+            $navigationMaster->icon = $dataArr->icon;
+            $navigationMaster->display_order = $dataArr->display_order;
+            $navigationMaster->parent_id = $dataArr->parent_id;
+            $navigationMaster->status = $dataArr->status;
+            $navigationMaster->show_in_menu = $dataArr->show_in_menu;
+            $navigationMaster->show_in_permission = $dataArr->show_in_permission;
+            $navigationMaster->save();
 
-        return successMessage();
+            // Update Navigation
+            navigationMenuListing();
+
+            // Commit Transaction
+            \DB::commit();
+
+            return successMessage();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            \DB::rollBack();
+            return errorMessage($e->getMessage(), true);
+        }
     }
 
     public function getUpdate(Request $request)
     {
         $locale = getCustomSessionLang();
-        $navigation = \App\Models\Navigation::findOrFail($request->id);
-        $parent_navigation = \App\Models\Navigation::select(\DB::raw("id, {$locale}name AS name"))
+        $navigation = \App\Models\AdminNavigation::findOrFail($request->id);
+        $parent_navigation = \App\Models\AdminNavigation::select(\DB::raw("id, {$locale}name AS name"))
             ->where('show_in_menu', 1)
             ->orderBy("{$locale}name")
             ->get();
@@ -97,28 +107,38 @@ class NavigationController extends WebController
             'status' => 'required',
             'show_in_menu' => 'required',
             'show_in_permission' => 'required',
-            'type' => 'required',
         ]);
-        $dataArr = arrayFromPost(['name', 'en_name', 'action_path', 'icon', 'display_order', 'parent_id', 'status', 'show_in_menu', 'show_in_permission', 'type']);
+        $dataArr = arrayFromPost(['name', 'en_name', 'action_path', 'icon', 'display_order', 'parent_id', 'status', 'show_in_menu', 'show_in_permission']);
 
-        $navigationMaster = \App\Models\Navigation::find($request->id);
-        if ($navigationMaster != null) {
-            $navigationMaster->name = $dataArr->name;
-            $navigationMaster->en_name = $dataArr->en_name;
-            $navigationMaster->action_path = $dataArr->action_path;
-            $navigationMaster->icon = $dataArr->icon;
-            $navigationMaster->display_order = $dataArr->display_order;
-            $navigationMaster->parent_id = $dataArr->parent_id;
-            $navigationMaster->status = $dataArr->status;
-            $navigationMaster->show_in_menu = $dataArr->show_in_menu;
-            $navigationMaster->show_in_permission = $dataArr->show_in_permission;
-            $navigationMaster->type = $dataArr->type;
-            $navigationMaster->save();
+        try {
+            // Start Transaction
+            \DB::beginTransaction();
+
+            $navigationMaster = \App\Models\AdminNavigation::find($request->id);
+            if (!blank($navigationMaster)) {
+                $navigationMaster->name = $dataArr->name;
+                $navigationMaster->en_name = $dataArr->en_name;
+                $navigationMaster->action_path = $dataArr->action_path;
+                $navigationMaster->icon = $dataArr->icon;
+                $navigationMaster->display_order = $dataArr->display_order;
+                $navigationMaster->parent_id = $dataArr->parent_id;
+                $navigationMaster->status = $dataArr->status;
+                $navigationMaster->show_in_menu = $dataArr->show_in_menu;
+                $navigationMaster->show_in_permission = $dataArr->show_in_permission;
+                $navigationMaster->save();
+            }
+
+            // Update Navigation
+            navigationMenuListing();
+
+            // Commit Transaction
+            \DB::commit();
+
+            return successMessage();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            \DB::rollBack();
+            return errorMessage($e->getMessage(), true);
         }
-
-        // Update Navigation
-        navigationMenuListing();
-
-        return successMessage();
     }
 }

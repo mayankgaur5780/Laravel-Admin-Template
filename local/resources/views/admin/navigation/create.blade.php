@@ -28,35 +28,30 @@
 									<input type="text" class="form-control" name="name" placeholder="{{ transLang('name') }}">
 								</div>
 							</div>
-
 							<div class="form-group">
 								<label class="col-sm-2 control-label required">{{ transLang('en_name') }}</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" name="en_name" placeholder="{{ transLang('en_name') }}">
 								</div>
 							</div>
-
 							<div class="form-group">
 								<label class="col-sm-2 control-label required">{{ transLang('action_path') }}</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" name="action_path" placeholder="{{ transLang('action_path') }}">
 								</div>
 							</div>
-
 							<div class="form-group">
 								<label class="col-sm-2 control-label">{{ transLang('icon') }}</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" name="icon" placeholder="{{ transLang('icon') }}">
 								</div>
 							</div>
-
 							<div class="form-group">
 								<label class="col-sm-2 control-label required">{{ transLang('display_order') }}</label>
 								<div class="col-sm-6">
 									<input type="text" class="form-control" name="display_order" placeholder="{{ transLang('display_order') }}">
 								</div>
 							</div>
-
 							<div class="form-group">
 								<label class="col-sm-2 control-label required">{{ transLang('parent_id') }}</label>
 								<div class="col-sm-6">
@@ -70,19 +65,6 @@
 									</select>
 								</div>
 							</div>
-
-							<div class="form-group">
-								<label class="col-sm-2 control-label required">{{ transLang('type') }}</label>
-								<div class="col-sm-6">
-									<select class="form-control select2-class" name="type" data-placeholder="{{ transLang('choose') }}">
-										<option></option>
-										@foreach(transLang('navigation_types') as $key => $val)
-											<option value="{{ $key }}" {{ $key == 1 ? 'selected' : '' }}>{{ $val }}</option>
-										@endforeach
-									</select>
-								</div>
-							</div>
-
 							<div class="form-group">
 								<label class="col-sm-2 control-label required">{{ transLang('show_in_menu') }}</label>
 								<div class="col-sm-6">
@@ -93,7 +75,6 @@
 									</select>
 								</div>
 							</div>
-
 							<div class="form-group">
 								<label class="col-sm-2 control-label required">{{ transLang('show_in_permission') }}</label>
 								<div class="col-sm-6">
@@ -104,7 +85,6 @@
 									</select>
 								</div>
 							</div>
-
 							<div class="form-group">
 								<label class="col-sm-2 control-label required">{{ transLang('status') }}</label>
 								<div class="col-sm-6">

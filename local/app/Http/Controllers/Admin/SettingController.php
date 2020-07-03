@@ -7,35 +7,38 @@ use Illuminate\Http\Request;
 
 class SettingController extends WebController
 {
-    public function getIndex()
+    public function getIndex(Request $request)
     {
-        return view('admin.settings.index');
-    }
+        abort_unless(hasPermission('admin/settings'), 401);
 
-    public function getList()
-    {
-        $settings = \App\Models\Setting::select(['*']);
-        return \DataTables::of($settings)->make();
-    }
-
-    public function getUpdate(Request $request)
-    {
-        $setting = \App\Models\Setting::findOrFail($request->id);
-        return view('admin.settings.update', compact('setting'));
+        $settings = \App\Models\Setting::all();
+        return view('admin.settings.index', compact('settings'));
     }
 
     public function postUpdate(Request $request)
     {
         $this->validate($request, [
-            'label' => 'required',
-            'value' => 'required',
+            'tax_percentage' => 'required|numeric|gte:0|lte:100',
         ]);
+        $dataArr = arrayFromPost(['tax_percentage']);
 
-        $settings = \App\Models\Setting::find($request->id);
-        $settings->label = $request->label;
-        $settings->value = $request->value;
-        $settings->save();
+        try {
+            // Start Transaction
+            \DB::beginTransaction();
 
-        return successMessage();
+            foreach ($dataArr as $key => $value) {
+                \App\Models\Setting::where('attribute', $key)
+                    ->update(['value' => $value]);
+            }
+
+            // Commit Transaction
+            \DB::commit();
+
+            return successMessage();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            \DB::rollBack();
+            return errorMessage($e->getMessage(), true);
+        }
     }
 }

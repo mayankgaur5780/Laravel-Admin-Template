@@ -6,7 +6,7 @@
 	<section class="content-header">
 		<ol class="breadcrumb">
 			<li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> {{ transLang('dashboard') }}</a></li>
-			<li><a href="{{ route('admin.admins.index') }}"> {{ transLang('all_admins') }} </a></li>
+			<li><a href="{{ route('admin.sub_admins.index') }}"> {{ transLang('all_admins') }} </a></li>
 			<li class="active">{{ transLang('create_admin') }}</li>
 		</ol>
 	</section>
@@ -22,6 +22,19 @@
 						<p class="alert message_box hide"></p>
 						<form class="form-horizontal" id="save-frm">
 							@csrf
+							<div class="form-group">
+								<label class="col-sm-2 control-label required">{{ transLang('role') }}</label>
+								<div class="col-sm-6">
+									<select class="form-control select2-class" name="role_id" data-placeholder="{{ transLang('choose') }}">
+										<option value=""></option>
+										@if($roles->count())
+											@foreach($roles as $key => $role)
+												<option value="{{ $role->id }}">{{ $role->name }}</option>
+											@endforeach
+										@endif
+									</select>
+								</div>
+							</div>
 							<div class="form-group">
 								<label class="col-sm-2 control-label required">{{ transLang('name') }}</label>
 								<div class="col-sm-6">
@@ -40,26 +53,24 @@
 									<input type="password" class="form-control" name="password" placeholder="{{ transLang('password') }}">
 								</div>
 							</div>
-							<div class="form-group">
-								<label class="col-sm-2 control-label required">{{ transLang('mobile') }}</label>
-
-								<div class="col-sm-6">
-									<input type="text" class="form-control" name="mobile" placeholder="{{ transLang('mobile') }}">
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-2 control-label required">{{ transLang('user_type') }}</label>
-								<div class="col-sm-6">
-									<select class="form-control select2-class" name="user_type" data-placeholder="{{ transLang('choose') }}">
-										<option value=""></option>
-										@if($roles->count())
-											@foreach($roles as $key => $role)
-												<option value="{{ $role->id }}">{{ $role->name }}</option>
-											@endforeach
-										@endif
-									</select>
-								</div>
-							</div>
+                            <div class="form-group">
+                                <label for="mobile" class="col-sm-2 control-label required">{{ transLang('mobile') }}</label>
+                                <div class="col-sm-6">
+                                    <div class="col-sm-3 no-padding">
+                                        <select name="dial_code" class="form-control select2-class" data-placeholder="{{ transLang('choose') }}">
+                                            <option value=""></option>
+                                            @if ($dial_codes->count())
+                                                @foreach ($dial_codes as $item)
+                                                    <option value="{{ $item->dial_code }}">{{ $item->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="mobile" placeholder="{{ transLang('mobile') }}">
+                                    </div>
+                                </div>
+                            </div>
 							<div class="form-group">
 								<label class="col-sm-2 control-label required">{{ transLang('status') }}</label>
 								<div class="col-sm-6">
@@ -100,7 +111,7 @@
 				$.ajax({
 					dataType: 'json',
 					type: 'POST',
-					url: "{{ route('admin.admins.create') }}",
+					url: "{{ route('admin.sub_admins.create') }}",
 					data: new FormData($('#save-frm')[0]),
 					processData: false,
 					contentType: false,
@@ -115,7 +126,7 @@
 					success: response => {
 						btn.attr('disabled',false);
 						loader.html(response.message).removeClass('alert-info').addClass('alert-success');
-						location.replace('{{ route("admin.admins.index")}}');
+						location.replace('{{ route("admin.sub_admins.index")}}');
 					}
 				});
 			});

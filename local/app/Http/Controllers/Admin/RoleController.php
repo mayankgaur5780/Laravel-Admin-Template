@@ -7,14 +7,14 @@ use Illuminate\Http\Request;
 
 class RoleController extends WebController
 {
-    public function getIndex()
+    public function getIndex(Request $request)
     {
         return view('admin.role.index');
     }
 
-    public function getList()
+    public function getList(Request $request)
     {
-        $list = \App\Models\UserRole::where('id', '<>', 1);
+        $list = \App\Models\AdminRole::where('id', '<>', 1);
 
         return \DataTables::of($list)
             ->addColumn('status_text', function ($query) {
@@ -23,7 +23,7 @@ class RoleController extends WebController
             ->make();
     }
 
-    public function getCreate()
+    public function getCreate(Request $request)
     {
         return view('admin.role.create');
     }
@@ -36,17 +36,21 @@ class RoleController extends WebController
         ]);
         $dataArr = arrayFromPost(['name', 'en_name', 'status']);
 
-        $userRole = new \App\Models\UserRole();
-        $userRole->name = $dataArr->name;
-        $userRole->status = $dataArr->status;
-        $userRole->save();
+        try {
+            $role = new \App\Models\AdminRole();
+            $role->name = $dataArr->name;
+            $role->status = $dataArr->status;
+            $role->save();
 
-        return successMessage();
+            return successMessage();
+        } catch (\Exception $e) {
+            return errorMessage($e->getMessage(), true);
+        }
     }
 
     public function getUpdate(Request $request)
     {
-        $role = \App\Models\UserRole::findOrFail($request->id);
+        $role = \App\Models\AdminRole::findOrFail($request->id);
         return view('admin.role.update', compact('role'));
     }
 
@@ -58,13 +62,18 @@ class RoleController extends WebController
         ]);
         $dataArr = arrayFromPost(['name', 'en_name', 'status']);
 
-        $userRole = \App\Models\UserRole::find($request->id);
-        if ($userRole != null) {
-            $userRole->name = $dataArr->name;
-            $userRole->status = $dataArr->status;
-            $userRole->save();
+        try {
+            $role = \App\Models\AdminRole::find($request->id);
+            if (!blank($role)) {
+                $role->name = $dataArr->name;
+                $role->status = $dataArr->status;
+                $role->save();
+            }
+
+            return successMessage();
+        } catch (\Exception $e) {
+            return errorMessage($e->getMessage(), true);
         }
-        return successMessage();
     }
 
     public function getPermission(Request $request)

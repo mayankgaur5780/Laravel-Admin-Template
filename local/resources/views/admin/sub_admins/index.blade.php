@@ -19,8 +19,8 @@
                                 <h3 class="box-title">{{ transLang('all_admins') }}</h3>
                             </div>
                             <div class="col-xs-12 col-sm-6">
-                                @hasPermission('admin/admin/create')
-                                    <a href="{{ route('admin.admins.create') }}" class="btn btn-success pull-right">{{ transLang('create_new') }}</a>
+                                @hasPermission('create_sub_admin')
+                                    <a href="{{ route('admin.sub_admins.create') }}" class="btn btn-success pull-right">{{ transLang('create_new') }}</a>
                                 @endhasPermission
                             </div>
                         </div>
@@ -51,27 +51,26 @@
             $('#data-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route("admin.admins.list") }}',
+                ajax: '{{ route("admin.sub_admins.list") }}',
                 columns : [
                     { data: "name" },
                     { data: "email" },
-                    { data: "mobile" },
+                    { data: "mobile", mRender: (data, type, row) => `+${row.dial_code} ${row.mobile}` },
                     { data: "status_text", name: "status" },
                     {
                         mRender: (data, type, row) => {
                             return `
-
-                                @if (hasPermission('admin/admin/update'))
-                                    <a href="{{ URL::to("admin/admin/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
+                                @if (hasPermission('update_sub_admin'))
+                                    <a href="{{ URL::to("admin/sub_admins/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
                                 @endif
-                                <a href="{{ URL::to("admin/admin/view") }}/${row.id}"><i class="fa fa-eye fa-fw"></i></a>
+                                <a href="{{ URL::to("admin/sub_admins/view") }}/${row.id}"><i class="fa fa-eye fa-fw"></i></a>
 
-                                @if (hasPermission('admin/admin-account/reset-password'))
-                                    <a href="{{ URL::to("admin/admin-account/reset-password") }}/${row.id}" class="danger"><i class="fa fa-key fa-fw"></i></a>
+                                @if (hasPermission('change_password_sub_admin'))
+                                    <a href="{{ URL::to("admin/sub_admins/reset-password") }}/${row.id}" class="danger"><i class="fa fa-key fa-fw"></i></a>
                                 @endif
 
-                                @if (hasPermission('admin/admin/delete'))
-                                    <a href="{{ URL::to("admin/admin/delete") }}/${row.id}" class="delete_admins"><i class="fa fa-trash fa-fw"></i></a>
+                                @if (hasPermission('delete_sub_admin'))
+                                    <a href="{{ URL::to("admin/sub_admins/delete") }}/${row.id}" class="delete-entry"><i class="fa fa-trash fa-fw"></i></a>
                                 @endif
                             `;
                         }, 
@@ -81,7 +80,7 @@
                 ]
             });
 
-            $('#data-table').on('click', '.delete_admins', function(e) {
+            $('#data-table').on('click', '.delete-entry', function(e) {
                 e.preventDefault();
                 if (confirm("{{ transLang('are_you_sure_to_delete') }}")) {
                     var href = $(this).attr('href');

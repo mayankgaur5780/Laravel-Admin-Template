@@ -99,59 +99,59 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'assi
                 'as' => 'admin.logout'
             ]);
         /* End Profile Routes */
-    
+
         
-        /* Start Admin Controller Routes */
-            Route::get('admin', [
-                'uses' => 'AdminController@getIndex',
-                'as' => 'admin.admins.index'
+        /* Start Sub Admin Routes */
+            Route::get('sub_admins', [
+                'uses' => 'SubAdminController@getIndex',
+                'as' => 'admin.sub_admins.index'
             ]);
-    
-            Route::get('admin/create', [
-                'uses' => 'AdminController@getCreate',
-                'as' => 'admin.admins.create'
+
+            Route::get('sub_admins/create', [
+                'uses' => 'SubAdminController@getCreate',
+                'as' => 'admin.sub_admins.create'
             ]);
-    
-            Route::post('admin/create', [
-                'uses' => 'AdminController@postCreate',
-                'as' => 'admin.admins.create'
+
+            Route::post('sub_admins/create', [
+                'uses' => 'SubAdminController@postCreate',
+                'as' => 'admin.sub_admins.create'
             ]);
-    
-            Route::get('admin/list', [
-                'uses' => 'AdminController@getList',
-                'as' => 'admin.admins.list'
+
+            Route::get('sub_admins/list', [
+                'uses' => 'SubAdminController@getList',
+                'as' => 'admin.sub_admins.list'
             ]);
-    
-            Route::get('admin/update/{id}', [
-                'uses' => 'AdminController@getUpdate',
-                'as' => 'admin.admins.update'
+
+            Route::get('sub_admins/update/{id}', [
+                'uses' => 'SubAdminController@getUpdate',
+                'as' => 'admin.sub_admins.update'
             ]);
-    
-            Route::post('admin/update/{id}', [
-                'uses' => 'AdminController@postUpdate',
-                'as' => 'admin.admins.update'
+
+            Route::post('sub_admins/update/{id}', [
+                'uses' => 'SubAdminController@postUpdate',
+                'as' => 'admin.sub_admins.update'
             ]);
-    
-            Route::get('admin/delete/{id}', [
-                'uses' => 'AdminController@getDelete',
-                'as' => 'admin.admins.delete'
+
+            Route::get('sub_admins/delete/{id}', [
+                'uses' => 'SubAdminController@getDelete',
+                'as' => 'admin.sub_admins.delete'
             ]);
-    
-            Route::get('admin/view/{id}', [
-                'uses' => 'AdminController@getView',
-                'as' => 'admin.admins.view'
+
+            Route::get('sub_admins/view/{id}', [
+                'uses' => 'SubAdminController@getView',
+                'as' => 'admin.sub_admins.view'
             ]);
-    
-            Route::post('admin-account/reset-password/{id}', [
-                'uses' => 'AdminController@postPasswordReset',
-                'as' => 'admin.admins.password-reset'
+
+            Route::post('sub_admins/reset-password/{id}', [
+                'uses' => 'SubAdminController@postPasswordReset',
+                'as' => 'admin.sub_admins.password-reset'
             ]);
-    
-            Route::get('admin-account/reset-password/{id}', [
-                'uses' => 'AdminController@getPasswordReset',
-                'as' => 'admin.admins.password-reset'
+
+            Route::get('sub_admins/reset-password/{id}', [
+                'uses' => 'SubAdminController@getPasswordReset',
+                'as' => 'admin.sub_admins.password-reset'
             ]);
-        /* End Admin Controller Routes */
+        /* End Sub Admin Routes */
     
     
         /* Start Navigation Routes */
@@ -282,24 +282,12 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'assi
             ]);
         /* End User Routes */
     
-        
         /* Start App Settings Routes */
             Route::get('settings', [
                 'uses' => 'SettingController@getIndex',
-                'as'   => 'admin.settings.index'
+                'as' => 'admin.settings.index'
             ]);
-            
-            Route::get('settings/list', [
-                'uses' => 'SettingController@getList',
-                'as'   => 'admin.settings.list'
-            ]);
-            
-            Route::get('settings/update/{id}', [
-                'uses' => 'SettingController@getUpdate',
-                'as' => 'admin.settings.update'
-            ]);
-    
-            Route::post('settings/update/{id}', [
+            Route::post('settings', [
                 'uses' => 'SettingController@postUpdate',
                 'as' => 'admin.settings.update'
             ]);

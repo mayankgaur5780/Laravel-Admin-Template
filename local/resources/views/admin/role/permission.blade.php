@@ -43,15 +43,34 @@
                                                             <label for="chkAll_<?= $nav['id'] ?>" class="col-md-3 col-md-offset-1 small_label"><?= $nav['name'] ?></label>
                                                             <div class="col-md-2">
                                                                 <label>
-                                                                    <input type="checkbox" id="chkAll_<?= $nav['id'] ?>" name="navigation_id[]" value="<?= $nav['id'] ?>" <?= in_array($nav['id'], $rolePermissions) ? 'checked' : '' ?>> 
+                                                                    <input type="checkbox" class="checkAllSub" id="chkAll_<?= $nav['id'] ?>" name="navigation_id[]" value="<?= $nav['id'] ?>" <?= in_array($nav['id'], $rolePermissions) ? 'checked' : '' ?>> 
                                                                 </label>
                                                             </div>
+
+        
+                                                            <?php if(isset($nav['children']) && count($nav['children']))  { ?>
+                                                                <div id="sub-permission-user-<?= $nav['id'] ?>">
+                                                                    <?php foreach ($nav['children'] as $navVal) { ?>
+                                                                        <div class="row">
+                                                                            <div class="col-xs-12">
+                                                                                <label for="chkAll_<?= $navVal['id'] ?>" class="col-md-3 col-md-offset-1 sub_small_label"><?= $navVal['name'] ?></label>
+                                                                                <div class="col-md-2">
+                                                                                    <label>
+                                                                                        <input type="checkbox" id="chkAll_<?= $navVal['id'] ?>" name="navigation_id[]" value="<?= $navVal['id'] ?>" <?= in_array($navVal['id'], $rolePermissions) ? 'checked' : '' ?>> 
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    <?php } ?> 
+                                                                </div>
+                                                            <?php } ?>
                                                         </div>
                                                     </div>
                                                 <?php } ?> 
                                             <?php } ?>
                                         </div>
                                     </div>
+                                    <hr>
                                 <?php } ?> 
                             <?php } ?>
                         </form>
@@ -74,6 +93,14 @@
                 var ContainerID = $(this).val();
                 var status = this.checked ? true : false;
                 $("#permission-user-"+ContainerID).find("input[type=checkbox]").each(function() {
+                    this.checked = status;
+                });
+            });
+
+            $(document).on('change', '.checkAllSub', function(e) {
+                var ContainerID = $(this).val();
+                var status = this.checked ? true : false;
+                $("#sub-permission-user-"+ContainerID).find("input[type=checkbox]").each(function() {
                     this.checked = status;
                 });
             });

@@ -7,15 +7,15 @@ use Illuminate\Http\Request;
 
 class UserController extends WebController
 {
-    public function getIndex()
+    public function getIndex(Request $request)
     {
         return view('admin.users.index');
     }
 
-    public function getList()
+    public function getList(Request $request)
     {
         $users = \App\Models\User::select('*');
-        
+
         return \DataTables::of($users)
             ->addColumn('status_text', function ($query) {
                 return transLang('action_status')[$query->status];
@@ -23,7 +23,7 @@ class UserController extends WebController
             ->make();
     }
 
-    public function getCreate()
+    public function getCreate(Request $request)
     {
         $dial_codes = \App\Models\Country::select(\DB::raw("dial_code, CONCAT(dial_code, ' (', {$this->locale}name, ')') AS text"))
             ->where('status', 1)
@@ -46,7 +46,7 @@ class UserController extends WebController
         $dataArr = arrayFromPost(['name', 'email', 'dial_code', 'mobile', 'password', 'status']);
 
         // Check Mobile No Duplicate
-        if (\App\Models\User::where('dial_code', $dataArr->dial_code)->where('mobile', $dataArr->mobile)->count()) {
+        if (\App\Models\User::where('dial_code', $dataArr->dial_code)->where('mobile', ltrim($dataArr->mobile, '0'))->count()) {
             return errorMessage('mobile_already_taken');
         }
 
@@ -59,7 +59,7 @@ class UserController extends WebController
             $user->email = strtolower($dataArr->email);
             $user->password = bcrypt($request->password);
             $user->dial_code = $dataArr->dial_code;
-            $user->mobile = $dataArr->mobile;
+            $user->mobile = ltrim($dataArr->mobile, '0');
             $user->status = $dataArr->status;
             $user->profile_image = uploadFile('profile_image');
             $user->save();
@@ -79,6 +79,8 @@ class UserController extends WebController
     {
         $user = \App\Models\User::findOrFail($request->id);
         $dial_codes = \App\Models\Country::select(\DB::raw("dial_code, CONCAT(dial_code, ' (', {$this->locale}name, ')') AS text"))
+            ->where('status', 1)
+            ->orWhere('dial_code', $admin->dial_code)
             ->orderBy("{$this->locale}name")
             ->get();
 
@@ -97,7 +99,7 @@ class UserController extends WebController
         $dataArr = arrayFromPost(['name', 'email', 'dial_code', 'mobile', 'status']);
 
         // Check Mobile No Duplicate
-        if (\App\Models\User::where('dial_code', $dataArr->dial_code)->where('mobile', $dataArr->mobile)->where('id', '<>', $request->id)->exists()) {
+        if (\App\Models\User::where('dial_code', $dataArr->dial_code)->where('mobile', ltrim($dataArr->mobile, '0'))->where('id', '<>', $request->id)->exists()) {
             return errorMessage('mobile_already_taken');
         }
 
@@ -109,7 +111,7 @@ class UserController extends WebController
             $user->name = $dataArr->name;
             $user->email = strtolower($dataArr->email);
             $user->dial_code = $dataArr->dial_code;
-            $user->mobile = $dataArr->mobile;
+            $user->mobile = ltrim($dataArr->mobile, '0');
             $user->status = $dataArr->status;
             if (\Input::hasFile('profile_image')) {
                 $user->profile_image = uploadFile('profile_image');

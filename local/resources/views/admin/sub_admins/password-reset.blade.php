@@ -6,7 +6,7 @@
     <section class="content-header">
         <ol class="breadcrumb">
             <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> {{ transLang('dashboard') }}</a></li>
-            <li><a href='{{ route("admin.admins.index") }}'> {{ transLang('all_admins') }} </a></li>
+            <li><a href='{{ route("admin.sub_admins.index") }}'> {{ transLang('all_admins') }} </a></li>
             <li class="active">{{ transLang('reset_password') }}</li>
         </ol>
     </section>
@@ -58,7 +58,7 @@
                 $.ajax({
                     dataType: 'json',
                     type: 'POST',
-                    url: "{{ route('admin.admins.password-reset', ['id' => $admin->id]) }}",
+                    url: "{{ route('admin.sub_admins.password-reset', ['id' => $admin->id]) }}",
                     data: $('#resetPassword-form').serialize(),
                     beforeSend: () => {
                         btn.attr('disabled',true);
@@ -71,7 +71,7 @@
                     success: response => {
                         btn.attr('disabled',false);
                         loader.html(response.message).removeClass('alert-info').addClass('alert-success');
-                        location.replace('{{ route("admin.admins.index")}}');
+                        location.replace('{{ route("admin.sub_admins.index")}}');
                     }
                 });
             });

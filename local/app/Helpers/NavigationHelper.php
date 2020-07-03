@@ -4,9 +4,11 @@ if (!function_exists('getGroupNavigation')) {
     function getGroupNavigation()
     {
         $locale = getSessionLang() == 'en' ? 'en_' : '';
-        $navigation = \App\Models\Navigation::select(DB::raw("id, {$locale}name AS name, parent_id"))
+        $navigation = \App\Models\AdminNavigation::select(DB::raw("id, {$locale}name AS name, parent_id"))
             ->where('status', 1)
             ->where('show_in_permission', 1)
+            ->orderBy("display_order")
+            // ->orderBy("{$locale}name")
             ->get()
             ->toArray();
 
@@ -17,25 +19,25 @@ if (!function_exists('getGroupNavigation')) {
 if (!function_exists('getRolePermission')) {
     function getRolePermission($accessRoleId)
     {
-        return \App\Models\RolePermission::where('role_id', $accessRoleId)
-            ->pluck('navigation_id')
+        return \App\Models\AdminRolePermission::where('admin_role_id', $accessRoleId)
+            ->pluck('admin_navigation_id')
             ->toArray();
     }
 }
 
-if (!function_exists('getUsersPermission')) {
-    function getUsersPermission($accessAdminId)
+if (!function_exists('getAdminPermission')) {
+    function getAdminPermission($accessAdminId)
     {
-        return \App\Models\UserPermission::where('user_id', $accessAdminId)
-            ->pluck('navigation_id')
+        return \App\Models\AdminPermission::where('user_id', $accessAdminId)
+            ->pluck('admin_navigation_id')
             ->toArray();
     }
 }
 
-if (!function_exists('getUsersPermissionIDs')) {
-    function getUsersPermissionIDs($accessAdminId, $accessRoleId)
+if (!function_exists('getAdminPermissionIDs')) {
+    function getAdminPermissionIDs($accessAdminId, $accessRoleId)
     {
-        $usersPermissions = []; //getUsersPermission($accessAdminId);
+        $usersPermissions = []; //getAdminPermission($accessAdminId);
         return count($usersPermissions) ? $usersPermissions : getRolePermission($accessRoleId);
     }
 }
@@ -75,26 +77,26 @@ if (!function_exists('hasAccess')) {
 
 // Set Navigation in Session
 if (!function_exists('navigationMenuListing')) {
-    function navigationMenuListing($guard = 'web', $saveSession = true, $accessAdminId = null, $accessRoleId = null)
+    function navigationMenuListing($guard = 'admin', $saveSession = true, $accessAdminId = null, $accessRoleId = null)
     {
         $excludeRoleId = [1];
         $navigationMasters = [];
 
         if ($saveSession == true) {
-            $guardData = auth()->user();
+            $guardData = \Auth::guard($guard)->user();
             $accessAdminId = $guardData->id;
-            $accessRoleId = $guardData->role_id;
+            $accessRoleId = $guardData->admin_role_id;
         }
 
         if (in_array($accessRoleId, $excludeRoleId)) {
-            $navigationMasters = \App\Models\Navigation::select(DB::raw('id, name, en_name, icon, parent_id, action_path, show_in_menu'))
+            $navigationMasters = \App\Models\AdminNavigation::select(DB::raw('id, name, en_name, icon, parent_id, action_path, show_in_menu'))
                 ->orderBy('display_order', 'ASC')
                 ->where('status', 1)
                 ->get();
         } else {
-            $allowedNavIds = getUsersPermissionIDs($accessAdminId, $accessRoleId);
+            $allowedNavIds = getAdminPermissionIDs($accessAdminId, $accessRoleId);
             if (count($allowedNavIds)) {
-                $navigationMasters = \App\Models\Navigation::select(DB::raw('id, name, en_name, icon, parent_id, action_path, show_in_menu'))
+                $navigationMasters = \App\Models\AdminNavigation::select(DB::raw('id, name, en_name, icon, parent_id, action_path, show_in_menu'))
                     ->orderBy('display_order', 'ASC')
                     ->whereIn('id', $allowedNavIds)
                     ->where('status', 1)
@@ -106,13 +108,11 @@ if (!function_exists('navigationMenuListing')) {
             $navigation = arrayToTree($navigationMasters->where('show_in_menu', 1)->toArray(), null);
 
             if ($saveSession == true) {
-                $guard = $guard == 'web' ? 'admin' : $guard;
                 \Session::put("navigation_{$guard}", $navigation);
                 \Session::put("navigation_permission_{$guard}", $navigationMasters->toArray());
             }
         }
 
-        // dd($navigationMasters);
         return $saveSession === true ? $navigationMasters : true;
     }
 }
