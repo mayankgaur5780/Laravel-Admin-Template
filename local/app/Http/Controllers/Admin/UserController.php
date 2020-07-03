@@ -80,7 +80,7 @@ class UserController extends WebController
         $user = \App\Models\User::findOrFail($request->id);
         $dial_codes = \App\Models\Country::select(\DB::raw("dial_code, CONCAT(dial_code, ' (', {$this->locale}name, ')') AS text"))
             ->where('status', 1)
-            ->orWhere('dial_code', $admin->dial_code)
+            ->orWhere('dial_code', $user->dial_code)
             ->orderBy("{$this->locale}name")
             ->get();
 

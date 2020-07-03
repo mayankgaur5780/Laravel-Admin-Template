@@ -31,7 +31,7 @@ class RoleController extends WebController
     public function postCreate(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|unique:users_roles',
+            'name' => 'required|unique:admin_roles',
             'status' => 'required',
         ]);
         $dataArr = arrayFromPost(['name', 'en_name', 'status']);
@@ -57,7 +57,7 @@ class RoleController extends WebController
     public function postUpdate(Request $request)
     {
         $this->validate($request, [
-            'name' => "required|unique:users_roles,name,{$request->id}",
+            'name' => "required|unique:admin_roles,name,{$request->id}",
             'status' => 'required',
         ]);
         $dataArr = arrayFromPost(['name', 'en_name', 'status']);
