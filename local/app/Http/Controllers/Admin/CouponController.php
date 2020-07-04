@@ -7,12 +7,14 @@ use Illuminate\Http\Request;
 
 class CouponController extends WebController
 {
-    public function getIndex()
+    public function getIndex(Request $request)
     {
+        abort_unless(hasPermission('admin/coupons'), 401);
+
         return view('admin.coupons.index');
     }
 
-    public function getList()
+    public function getList(Request $request)
     {
         $list = \App\Models\Coupon::select('*');
 
@@ -23,8 +25,10 @@ class CouponController extends WebController
             ->make();
     }
 
-    public function getCreate()
+    public function getCreate(Request $request)
     {
+        abort_unless(hasPermission('create_coupon'), 401);
+
         return view('admin.coupons.create');
     }
 
@@ -42,22 +46,28 @@ class CouponController extends WebController
         ]);
         $dataArr = arrayFromPost(['coupon_code', 'type', 'discount', 'max_discount', 'valid_from', 'valid_to', 'per_user_usage', 'status']);
 
-        $coupon = new \App\Models\Coupon();
-        $coupon->coupon_code = $dataArr->coupon_code;
-        $coupon->type = $dataArr->type;
-        $coupon->discount = $dataArr->discount;
-        $coupon->max_discount = $dataArr->type == 2 ? $dataArr->max_discount : null;
-        $coupon->valid_from = date('Y-m-d', strtotime($dataArr->valid_from));
-        $coupon->valid_to = date('Y-m-d', strtotime($dataArr->valid_to));
-        $coupon->per_user_usage = $dataArr->per_user_usage;
-        $coupon->status = $dataArr->status;
-        $coupon->save();
+        try {
+            $coupon = new \App\Models\Coupon();
+            $coupon->coupon_code = $dataArr->coupon_code;
+            $coupon->type = $dataArr->type;
+            $coupon->discount = $dataArr->discount;
+            $coupon->max_discount = $dataArr->type == 2 ? $dataArr->max_discount : null;
+            $coupon->valid_from = date('Y-m-d', strtotime($dataArr->valid_from));
+            $coupon->valid_to = date('Y-m-d', strtotime($dataArr->valid_to));
+            $coupon->per_user_usage = $dataArr->per_user_usage;
+            $coupon->status = $dataArr->status;
+            $coupon->save();
 
-        return successMessage();
+            return successMessage();
+        } catch (\Throwable $th) {
+            return exceptionErrorMessage($th);
+        }
     }
 
     public function getUpdate($id = null)
     {
+        abort_unless(hasPermission('update_coupon'), 401);
+
         $coupon = \App\Models\Coupon::findOrFail($id);
         return view('admin.coupons.update', compact('coupon'));
     }
@@ -76,22 +86,30 @@ class CouponController extends WebController
         ]);
         $dataArr = arrayFromPost(['coupon_code', 'type', 'discount', 'max_discount', 'valid_from', 'valid_to', 'per_user_usage', 'status']);
 
-        $coupon = \App\Models\Coupon::find($request->id);
-        $coupon->coupon_code = $dataArr->coupon_code;
-        $coupon->type = $dataArr->type;
-        $coupon->discount = $dataArr->discount;
-        $coupon->max_discount = $dataArr->type == 2 ? $dataArr->max_discount : null;
-        $coupon->valid_from = date('Y-m-d', strtotime($dataArr->valid_from));
-        $coupon->valid_to = date('Y-m-d', strtotime($dataArr->valid_to));
-        $coupon->per_user_usage = $dataArr->per_user_usage;
-        $coupon->status = $dataArr->status;
-        $coupon->save();
+        try {
+            $coupon = \App\Models\Coupon::find($request->id);
+            if (!blank($coupon)) {
+                $coupon->coupon_code = $dataArr->coupon_code;
+                $coupon->type = $dataArr->type;
+                $coupon->discount = $dataArr->discount;
+                $coupon->max_discount = $dataArr->type == 2 ? $dataArr->max_discount : null;
+                $coupon->valid_from = date('Y-m-d', strtotime($dataArr->valid_from));
+                $coupon->valid_to = date('Y-m-d', strtotime($dataArr->valid_to));
+                $coupon->per_user_usage = $dataArr->per_user_usage;
+                $coupon->status = $dataArr->status;
+                $coupon->save();
+            }
 
-        return successMessage();
+            return successMessage();
+        } catch (\Throwable $th) {
+            return exceptionErrorMessage($th);
+        }
     }
 
     public function getDelete(Request $request)
     {
+        abort_unless(hasPermission('delete_coupon'), 401);
+
         \App\Models\Coupon::find($request->id)->delete();
         return successMessage();
     }

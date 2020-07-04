@@ -7,12 +7,14 @@ use Illuminate\Http\Request;
 
 class CountryController extends WebController
 {
-    public function getIndex()
+    public function getIndex(Request $request)
     {
+        abort_unless(hasPermission('admin/countries'), 401);
+
         return view('admin.countries.index');
     }
 
-    public function getList()
+    public function getList(Request $request)
     {
         $list = \App\Models\Country::select(\DB::raw("countries.*, {$this->locale}name AS name"));
 
@@ -23,8 +25,10 @@ class CountryController extends WebController
             ->make();
     }
 
-    public function getCreate()
+    public function getCreate(Request $request)
     {
+        abort_unless(hasPermission('create_country'), 401);
+
         return view('admin.countries.create');
     }
 
@@ -43,24 +47,30 @@ class CountryController extends WebController
         ]);
         $dataArr = arrayFromPost(['name', 'en_name', 'dial_code', 'alpha_2', 'alpha_3', 'currency', 'tax', 'status']);
 
-        $country = new \App\Models\Country();
-        $country->name = $dataArr->name;
-        $country->en_name = $dataArr->en_name;
-        $country->dial_code = $dataArr->dial_code;
-        $country->alpha_2 = strtoupper($dataArr->alpha_2);
-        $country->alpha_3 = strtoupper($dataArr->alpha_3);
-        $country->currency = strtoupper($dataArr->currency);
-        $country->tax = $dataArr->tax;
-        $country->status = $dataArr->status;
-        $country->flag = uploadFile('file', 'image', 'flagPath');
-        $country->save();
+        try {
+            $country = new \App\Models\Country();
+            $country->name = $dataArr->name;
+            $country->en_name = $dataArr->en_name;
+            $country->dial_code = $dataArr->dial_code;
+            $country->alpha_2 = strtoupper($dataArr->alpha_2);
+            $country->alpha_3 = strtoupper($dataArr->alpha_3);
+            $country->currency = strtoupper($dataArr->currency);
+            $country->tax = $dataArr->tax;
+            $country->status = $dataArr->status;
+            $country->flag = uploadFile('file', 'image', 'flagPath');
+            $country->save();
 
-        return successMessage();
+            return successMessage();
+        } catch (\Throwable $th) {
+            return exceptionErrorMessage($th);
+        }
     }
 
-    public function getUpdate($id = null)
+    public function getUpdate(Request $request)
     {
-        $country = \App\Models\Country::findOrFail($id);
+        abort_unless(hasPermission('update_country'), 401);
+
+        $country = \App\Models\Country::findOrFail($request->id);
         return view('admin.countries.update', compact('country'));
     }
 
@@ -75,23 +85,29 @@ class CountryController extends WebController
         ]);
         $dataArr = arrayFromPost(['name', 'en_name', 'dial_code', 'status']);
 
-        $country = \App\Models\Country::find($request->id);
-        if ($country != null) {
-            $country->name = $dataArr->name;
-            $country->en_name = $dataArr->en_name;
-            $country->dial_code = $dataArr->dial_code;
-            $country->status = $dataArr->status;
-            if (\Input::hasFile('file')) {
-                $country->flag = uploadFile('file', 'image', 'flagPath');
+        try {
+            $country = \App\Models\Country::find($request->id);
+            if (!blank($country)) {
+                $country->name = $dataArr->name;
+                $country->en_name = $dataArr->en_name;
+                $country->dial_code = $dataArr->dial_code;
+                $country->status = $dataArr->status;
+                if (\Input::hasFile('file')) {
+                    $country->flag = uploadFile('file', 'image', 'flagPath');
+                }
+                $country->save();
             }
-            $country->save();
-        }
 
-        return successMessage();
+            return successMessage();
+        } catch (\Throwable $th) {
+            return exceptionErrorMessage($th);
+        }
     }
 
     public function getDelete(Request $request)
     {
+        abort_unless(hasPermission('delete_country'), 401);
+
         \App\Models\Country::find($request->id)->delete();
         return successMessage();
     }

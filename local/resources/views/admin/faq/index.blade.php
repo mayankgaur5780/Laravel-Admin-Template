@@ -29,7 +29,6 @@
                             <thead>
                                 <tr>
                                     <th>{{ transLang('title') }}</th>
-                                    <th>{{ transLang('en_title') }}</th>
                                     <th>{{ transLang('action') }}</th>
                                 </tr>
                             </thead>
@@ -50,8 +49,7 @@
                 serverSide: true,
                 ajax: '{{ route("admin.faq.list") }}',
                 columns : [
-                    { data: "title" },
-                    { data: "en_title" },
+                    { data: "title", name: "{{ getCustomSessionLang() }}title" },
                     {
                         mRender: (data, type, row) => {
                             return `

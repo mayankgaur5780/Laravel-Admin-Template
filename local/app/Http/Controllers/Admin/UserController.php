@@ -9,6 +9,8 @@ class UserController extends WebController
 {
     public function getIndex(Request $request)
     {
+        abort_unless(hasPermission('admin/users'), 401);
+
         return view('admin.users.index');
     }
 
@@ -25,6 +27,8 @@ class UserController extends WebController
 
     public function getCreate(Request $request)
     {
+        abort_unless(hasPermission('create_user'), 401);
+
         $dial_codes = \App\Models\Country::select(\DB::raw("dial_code, CONCAT(dial_code, ' (', {$this->locale}name, ')') AS text"))
             ->where('status', 1)
             ->orderBy("{$this->locale}name")
@@ -67,16 +71,17 @@ class UserController extends WebController
             // Commit Transaction
             \DB::commit();
             return successMessage();
-
-        } catch (\Exception $e) {
+        } catch (\Throwable $th) {
             // Rollback Transaction
             \DB::rollBack();
-            return errorMessage($e->getMessage(), true);
+            return exceptionErrorMessage($th);
         }
     }
 
     public function getUpdate(Request $request)
     {
+        abort_unless(hasPermission('update_user'), 401);
+
         $user = \App\Models\User::findOrFail($request->id);
         $dial_codes = \App\Models\Country::select(\DB::raw("dial_code, CONCAT(dial_code, ' (', {$this->locale}name, ')') AS text"))
             ->where('status', 1)
@@ -121,16 +126,17 @@ class UserController extends WebController
             // Commit Transaction
             \DB::commit();
             return successMessage();
-
-        } catch (\Exception $e) {
+        } catch (\Throwable $th) {
             // Rollback Transaction
             \DB::rollBack();
-            return errorMessage($e->getMessage(), true);
+            return exceptionErrorMessage($th);
         }
     }
 
     public function getDelete(Request $request)
     {
+        abort_unless(hasPermission('delete_user'), 401);
+
         $user = \App\Models\User::find($request->id)->delete();
         return successMessage();
     }
@@ -143,6 +149,8 @@ class UserController extends WebController
 
     public function getPasswordReset(Request $request)
     {
+        abort_unless(hasPermission('change_password_user'), 401);
+
         $user = \App\Models\User::findOrFail($request->id);
         return view('admin.users.password-reset', compact('user'));
     }
@@ -153,10 +161,14 @@ class UserController extends WebController
             'password' => 'required|min:6|confirmed',
         ]);
 
-        $user = \App\Models\User::find($request->id);
-        $user->password = bcrypt($request->password);
-        $user->save();
-
-        return successMessage('password_changed_successfully');
+        try {
+            $user = \App\Models\User::find($request->id);
+            $user->password = bcrypt($request->password);
+            $user->save();
+    
+            return successMessage('password_changed');
+        } catch (\Throwable $th) {
+            return exceptionErrorMessage($th);
+        }
     }
 }

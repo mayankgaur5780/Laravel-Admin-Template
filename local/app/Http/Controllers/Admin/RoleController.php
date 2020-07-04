@@ -9,6 +9,8 @@ class RoleController extends WebController
 {
     public function getIndex(Request $request)
     {
+        abort_unless(hasPermission('admin/role'), 401);
+
         return view('admin.role.index');
     }
 
@@ -25,6 +27,8 @@ class RoleController extends WebController
 
     public function getCreate(Request $request)
     {
+        abort_unless(hasPermission('create_role'), 401);
+
         return view('admin.role.create');
     }
 
@@ -43,13 +47,15 @@ class RoleController extends WebController
             $role->save();
 
             return successMessage();
-        } catch (\Exception $e) {
-            return errorMessage($e->getMessage(), true);
+        } catch (\Throwable $th) {
+            return exceptionErrorMessage($th);
         }
     }
 
     public function getUpdate(Request $request)
     {
+        abort_unless(hasPermission('update_role'), 401);
+
         $role = \App\Models\AdminRole::findOrFail($request->id);
         return view('admin.role.update', compact('role'));
     }
@@ -71,13 +77,15 @@ class RoleController extends WebController
             }
 
             return successMessage();
-        } catch (\Exception $e) {
-            return errorMessage($e->getMessage(), true);
+        } catch (\Throwable $th) {
+            return exceptionErrorMessage($th);
         }
     }
 
     public function getPermission(Request $request)
     {
+        abort_unless(hasPermission('update_permission_role'), 401);
+
         $navigation = getGroupNavigation();
         $rolePermissions = getRolePermission($request->id);
         return view('admin.role.permission', compact('navigation', 'rolePermissions'));
@@ -114,11 +122,10 @@ class RoleController extends WebController
             \DB::commit();
 
             return successMessage();
-
-        } catch (\Exception $e) {
+        } catch (\Throwable $th) {
             // Rollback Transaction
             \DB::rollBack();
-            return errorMessage($e->getMessage(), true);
+            return exceptionErrorMessage($th);
         }
     }
 }

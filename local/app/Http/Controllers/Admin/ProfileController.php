@@ -7,16 +7,15 @@ use Illuminate\Http\Request;
 
 class ProfileController extends WebController
 {
-    public function getDetails()
+    public function getDetails(Request $request)
     {
-        $admin = \Auth::guard('admin')->user();
+        $admin = auth()->user();
         return view('admin.profile', compact('admin'));
     }
 
     public function postUpdate(Request $request)
     {
-        $admin = \Auth::guard('admin')->user();
-
+        $admin = auth()->user();
         $this->validate($request, [
             'name' => 'required',
             'email' => "required|email|unique:admins,id,{$admin->id}",
@@ -26,7 +25,6 @@ class ProfileController extends WebController
         $dataArr = arrayFromPost(['name', 'email', 'mobile']);
 
         try {
-
             $admin->name = $dataArr->name;
             $admin->email = strtolower($dataArr->email);
             $admin->mobile = $dataArr->mobile;
@@ -35,9 +33,8 @@ class ProfileController extends WebController
             }
             $admin->save();
             return successMessage();
-
-        } catch (\Exception $e) {
-            return errorMessage($e->getMessage(), true);
+        } catch (\Throwable $th) {
+            return exceptionErrorMessage($th);
         }
     }
 
@@ -47,23 +44,27 @@ class ProfileController extends WebController
             'old_password' => 'required|min:6',
             'password' => 'required|confirmed|min:6',
         ]);
+        $dataArr = arrayFromPost(['old_password', 'password']);
 
-        $fieldArr = ['old_password', 'password', 'locale'];
-        $dataArr = arrayFromPost( $fieldArr);
-        $admin = \Auth::guard('admin')->user();
+        try {
+            $admin = auth()->user();
 
-        if (!\Hash::check($dataArr->old_password, $admin->password)) {
-            return errorMessage('invalid_old_password');
+            if (!\Hash::check($dataArr->old_password, $admin->password)) {
+                return errorMessage('invalid_old_password');
+            }
+
+            $admin->password = bcrypt($dataArr->password);
+            $admin->save();
+
+            return successMessage('password_changed');
+        } catch (\Throwable $th) {
+            return exceptionErrorMessage($th);
         }
-        $admin->password = bcrypt($dataArr->password);
-        $admin->save();
-
-        return successMessage('password_changed');
     }
 
-    public function getLogout()
+    public function getLogout(Request $request)
     {
-        \Auth::guard('admin')->logout();
+        auth()->logout();
         return redirect()->route('admin.login')->with(['success' => transLang('user_logged_out')]);
     }
 }

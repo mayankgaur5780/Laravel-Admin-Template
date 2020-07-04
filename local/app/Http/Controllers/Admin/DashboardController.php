@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 class DashboardController extends WebController
 {
-    public function getIndex()
+    public function getIndex(Request $request)
     {
-        // navigationMenuListing();
+        navigationMenuListing();
         return view('admin.dashboard.index');
     }
 

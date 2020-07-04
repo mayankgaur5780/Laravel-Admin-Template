@@ -155,6 +155,14 @@ if (!function_exists('successMessage')) {
     }
 }
 
+if (!function_exists('exceptionErrorMessage')) {
+    function exceptionErrorMessage($e, $throw_exception = false)
+    {
+        \Log::error($e);
+        return errorMessage('session_expire', false, $throw_exception);
+    }
+}
+
 if (!function_exists('errorMessage')) {
     function errorMessage($template = '', $string = false, $throw_exception = false)
     {

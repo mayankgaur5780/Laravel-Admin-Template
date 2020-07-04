@@ -79,11 +79,10 @@ class SubAdminController extends Controller
             // Commit Transaction
             \DB::commit();
             return successMessage();
-
-        } catch (\Exception $e) {
+        } catch (\Throwable $th) {
             // Rollback Transaction
             \DB::rollBack();
-            return errorMessage($e->getMessage(), true);
+            return exceptionErrorMessage($th);
         }
     }
 
@@ -141,11 +140,10 @@ class SubAdminController extends Controller
             // Commit Transaction
             \DB::commit();
             return successMessage();
-
-        } catch (\Exception $e) {
+        } catch (\Throwable $th) {
             // Rollback Transaction
             \DB::rollBack();
-            return errorMessage($e->getMessage(), true);
+            return exceptionErrorMessage($th);
         }
     }
 
@@ -193,10 +191,10 @@ class SubAdminController extends Controller
             \DB::commit();
 
             return successMessage();
-        } catch (\Exception $e) {
+        } catch (\Throwable $th) {
             // Rollback Transaction
             \DB::rollBack();
-            return errorMessage($e->getMessage(), true);
+            return exceptionErrorMessage($th);
         }
     }
 }

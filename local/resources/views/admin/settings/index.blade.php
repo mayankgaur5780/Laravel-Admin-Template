@@ -4,7 +4,6 @@
  
 @section('content')
     <section class="content-header">
-        <h1> {{ transLang('app_settings') }}</h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> {{ transLang('dashboard') }} </a></li>
             <li class="active">{{ transLang('app_settings') }}</li>
@@ -14,6 +13,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ transLang('app_settings') }}</h3>
+                    </div>
                     <div class="box-body">
                         <p class="alert message_box hide"></p>
                         <form class="form-horizontal" id="save-frm">

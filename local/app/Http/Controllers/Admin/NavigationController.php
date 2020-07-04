@@ -10,6 +10,8 @@ class NavigationController extends WebController
 
     public function getIndex(Request $request)
     {
+        abort_unless(hasPermission('admin/navigation'), 401);
+
         return view('admin.navigation.index');
     }
 
@@ -32,6 +34,8 @@ class NavigationController extends WebController
 
     public function getCreate(Request $request)
     {
+        abort_unless(hasPermission('create_navigation'), 401);
+
         $locale = getCustomSessionLang();
         $parent_navigation = \App\Models\AdminNavigation::select(\DB::raw("id, {$locale}name AS name"))
             ->where('show_in_menu', 1)
@@ -78,15 +82,17 @@ class NavigationController extends WebController
             \DB::commit();
 
             return successMessage();
-        } catch (\Exception $e) {
+        } catch (\Throwable $th) {
             // Rollback Transaction
             \DB::rollBack();
-            return errorMessage($e->getMessage(), true);
+            return exceptionErrorMessage($th);
         }
     }
 
     public function getUpdate(Request $request)
     {
+        abort_unless(hasPermission('update_navigation'), 401);
+
         $locale = getCustomSessionLang();
         $navigation = \App\Models\AdminNavigation::findOrFail($request->id);
         $parent_navigation = \App\Models\AdminNavigation::select(\DB::raw("id, {$locale}name AS name"))
@@ -135,10 +141,10 @@ class NavigationController extends WebController
             \DB::commit();
 
             return successMessage();
-        } catch (\Exception $e) {
+        } catch (\Throwable $th) {
             // Rollback Transaction
             \DB::rollBack();
-            return errorMessage($e->getMessage(), true);
+            return exceptionErrorMessage($th);
         }
     }
 }

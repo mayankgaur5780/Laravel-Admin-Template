@@ -12,7 +12,6 @@ return [
     "request_processed_successfully" => "Your request processed successfully.",
     "admin_not_found" => "Admin not found.",
     "success" => "success",
-    "password_changed_successfully" => "Password Reset successfully!",
     "account_inactive" => "ERROR: Your account is inactive.",
     "account_blocked" => "ERROR: Your account is blocked.",
     "logged_in_successfully" => "Logged in Successfully!",

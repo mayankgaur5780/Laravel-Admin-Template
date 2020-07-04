@@ -87,8 +87,8 @@ class AuthController extends WebController
             sendEmail('reset_password', 'Reset Password', $admin->email, $configArr);
 
             return successMessage('recovery_mail_send');
-        } catch (\Exception $e) {
-            return errorMessage($e->getMessage(), true);
+        } catch (\Throwable $th) {
+            return exceptionErrorMessage($th);
         }
     }
 
@@ -117,8 +117,8 @@ class AuthController extends WebController
             $admin->save();
 
             return successMessage('password_changed');
-        } catch (\Exception $e) {
-            return errorMessage($e->getMessage(), true);
+        } catch (\Throwable $th) {
+            return exceptionErrorMessage($th);
         }
     }
 }

@@ -35,10 +35,10 @@ class SettingController extends WebController
             \DB::commit();
 
             return successMessage();
-        } catch (\Exception $e) {
+        } catch (\Throwable $th) {
             // Rollback Transaction
             \DB::rollBack();
-            return errorMessage($e->getMessage(), true);
+            return exceptionErrorMessage($th);
         }
     }
 }
