@@ -6,6 +6,8 @@ use Closure;
 
 class StoreApiLogs
 {
+    public $start, $end;
+    
     public function handle($request, Closure $next)
     {
         $authorization = $request->header('Authorization');
