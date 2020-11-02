@@ -60,15 +60,16 @@
 
         <!-- Select2 -->
         <link rel="stylesheet" href="{{ asset('backend/plugins/select2/select2.min.css') }}">
-
-        <!-- bootstrap wysihtml5 - text editor -->
-        <link rel="stylesheet" href="{{ asset('backend/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
+        <!-- summernote -->
+       <link href="{{ asset('backend/plugins/summernote/summernote.css', true) }}" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('backend/css/site.css') }}">
         <link rel="stylesheet" href="{{ asset('backend/css/custom.css') }}?time={{ time() }}">
         <!-- Star Rating -->
         <link rel="stylesheet" href="{{ asset('backend/plugins/star-rating-svg-master/src/css/star-rating-svg.css') }}">
         <!-- Tel Input -->
         <link rel="stylesheet" href="{{ asset('backend/plugins/intl-tel-input/css/intlTelInput.css') }}">
+        <!-- Image Cropper -->
+        <link rel="stylesheet" href="{{ asset('backend/plugins/cropper/cropper.css') }}">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -145,20 +146,20 @@
         <script src="{{ asset('backend/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
         <!-- bootstrap date-time picker -->
         <script src="{{ asset('backend/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
-        <!-- Bootstrap WYSIHTML5 -->
-        <script src="{{ asset('backend/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>
+        <!-- summernote -->
+        <script src="{{ asset('backend/plugins/summernote/summernote.js', true) }}"></script>
         <!-- Slimscroll -->
         <script src="{{ asset('backend/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
         <!-- FastClick -->
         <script src="{{ asset('backend/plugins/fastclick/fastclick.js') }}"></script>
-        <!-- CK Editor -->
-        <script src="{{ asset('backend/plugins/ckeditor/ckeditor.js') }}"></script>
         <!-- Chart JS -->
         <script src="{{ asset('backend/plugins/chartjs/Chart.min.js') }}"></script>
         <!-- Select2 -->
         <script src="{{ asset('backend/plugins/select2/select2.full.min.js') }}"></script>
         <!-- Tel Input -->
         <script src="{{ asset('backend/plugins/intl-tel-input/js/intlTelInput.js') }}"></script>
+        <!-- Image Cropper -->
+        <script src="{{ asset('backend/plugins/cropper/cropper.js') }}"></script>
         <!-- Star Rating -->
         <script src="{{ asset('backend/plugins/star-rating-svg-master/src/jquery.star-rating-svg.js') }}"></script>
         <!-- AdminLTE App -->
@@ -176,7 +177,6 @@
 
             @if(getSessionLang() == 'ar')
                 moment.locale("ar");
-                CKEDITOR.config.language = 'ar';
             @endif
             
     
@@ -230,6 +230,11 @@
                 <div class="modal-content"></div>
             </div>
         </div>
+        <div id="cropper_model" class="modal fade" data-backdrop="static">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content"></div>
+            </div>
+        </div>
         
         <script type="text/javascript">
             $(document).on('click', 'a[data-toggle="modal"]', function (e) {
@@ -250,6 +255,46 @@
                 $(this).find('.modal-content').empty();
             });
             $('#remote_model').on('show.bs.modal', function (e) {});
+    
+            $('#cropper_model').on('hidden.bs.modal', function (e) {                
+                $(this).removeData();
+                $(this).find('.modal-content').empty();
+            });
+            $('#cropper_model').on('show.bs.modal', function (e) {});
+            
+            // For Image Cropper 
+            $(document).on('change', '.image-cropper', function (e) {
+                if (this.files && this.files[0]) {
+                    let file = this.files[0];
+                    let _URL = window.URL || window.webkitURL;
+                    
+                    let { width, height, name, enable_ratio } = $(this).data();
+                    enable_ratio = enable_ratio === undefined ? 1 : enable_ratio;
+                    let filename = $(this).val();
+                    let extension = filename.substr((filename.lastIndexOf('.') + 1)).toLowerCase();
+                    if($.inArray(extension, ['jpg', 'jpeg', 'png']) < 0) {
+                        alert('{{ transLang("invalid_file_type") }}');
+                        return false;
+                    }
+                    
+                    // Validate image dimensions
+                    let img = new Image();
+                    img.onload = function () {
+                        if(this.width < width || this.height < height) {
+                            alert('{{ transLang("invalid_file_dimension") }}');
+                            return false;
+                        }
+
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            $('#cropper_model .modal-content').data('crop_img', e.target.result);
+                            $('#cropper_model').modal({show:true, remote: `{{ URL::to("admin/cropper/init") }}/${width}/${height}/${name}/${enable_ratio}`});
+                        }
+                        reader.readAsDataURL(file);
+                    };
+                    img.src = _URL.createObjectURL(file);
+                }
+            });
         </script>
         @yield('scripts')
     </body>

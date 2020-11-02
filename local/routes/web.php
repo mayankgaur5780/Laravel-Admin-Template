@@ -60,7 +60,14 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'assi
     ]);
 
     // Secured Routes
-    Route::group(['middleware' => 'auth:admin'], function () {
+    Route::group(['middleware' => ['auth:admin', 'optimizeImages']], function () {
+        /* Start Cropper Routes */
+            Route::get('/cropper/init/{width}/{height}/{name}/{enable_ratio}', [
+                'uses' => 'CropperController@getIndex',
+                'as' => 'admin.image.cropper'
+            ]);
+        /* End Cropper Routes */
+
         /* Start Dashboard Routes */
             Route::get('/dashboard', [
                 'uses' => 'DashboardController@getIndex',

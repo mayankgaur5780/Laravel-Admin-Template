@@ -40,6 +40,10 @@ if (!function_exists('saveBase64File')) {
                 ->resize($width, $height)
                 ->encode($extension)
                 ->save("{$imagePath}{$filename}");
+
+            // Optimize Image
+            $imagePath = app()->basePath() . "/../{$imagePath}{$filename}";
+            \ImageOptimizer::optimize($imagePath);
         }
         return $filename;
     }

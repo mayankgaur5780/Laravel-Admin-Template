@@ -1287,14 +1287,6 @@ body.ar_lang .skin-blue .main-header li.user-header {
     background: url('../images/loader.gif') center no-repeat #f8f8f8;
 }
 
-#cropper_model img {
-    width: 100%;
-}
-
-#cropper_model .modal-body {
-    padding: 0;
-}
-
 .map-input-box {
     border-radius: 0;
     box-shadow: none;

@@ -178,4 +178,8 @@ return [
     'invalid_otp' => 'The given otp value is invalid.',
     'users_registration' => 'Users Registration',
     'users' => 'Users',
+    'crop_image' => 'Crop Image',
+    'crop' => 'Crop',
+    'invalid_file_type' => 'Please choose valid image file.',
+    'invalid_file_dimension' => 'Invalid image dimension.',
 ];
