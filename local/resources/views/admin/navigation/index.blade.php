@@ -20,7 +20,9 @@
                                 <h3 class="box-title">{{ transLang('all_navigation') }}</h3>
                             </div>
                             <div class="col-xs-12 col-sm-6">
-                                <a href="{{ route('admin.navigation.create') }}" class="btn btn-success pull-right">{{ transLang('create_new') }}</a>
+                                @hasPermission('create_navigation')
+                                    <a href="{{ route('admin.navigation.create') }}" class="btn btn-success pull-right">{{ transLang('create_new') }}</a>
+                                @endhasPermission
                             </div>
                         </div>
                     </div>
@@ -63,7 +65,11 @@
                 { data: "status_text", name: "status" },
                 {
                     mRender: (data, type, row) => {
-                        return `<a href="{{ URL::to("admin/navigation/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>`;
+                        return `
+                            @if (hasPermission('update_navigation'))
+                                <a href="{{ URL::to("admin/navigation/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
+                            @endif
+                        `;
                     }, 
                     orderable: false
                 }

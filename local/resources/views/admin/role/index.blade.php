@@ -20,7 +20,9 @@
                                 <h3 class="box-title">{{ transLang('all_role') }}</h3>
                             </div>
                             <div class="col-xs-12 col-sm-6">
-                                <a href="{{ route('admin.role.create') }}" class="btn btn-success pull-right">{{ transLang('create_new') }}</a>
+                                @hasPermission('create_role')
+                                    <a href="{{ route('admin.role.create') }}" class="btn btn-success pull-right">{{ transLang('create_new') }}</a>
+                                @endhasPermission
                             </div>
                         </div>
                     </div>
@@ -55,8 +57,12 @@
                 {
                     mRender: (data, type, row) => {
                         return `
-                            <a href="{{ URL::to("admin/role/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
-                            <a href="{{ URL::to("admin/role/permission") }}/${row.id}"><i class="fa fa-universal-access fa-fw"></i></a>
+                            @if (hasPermission('update_role'))
+                                <a href="{{ URL::to("admin/role/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
+                            @endif
+                            @if (hasPermission('update_permission_role'))
+                                <a href="{{ URL::to("admin/role/permission") }}/${row.id}"><i class="fa fa-universal-access fa-fw"></i></a>
+                            @endif
                         `;
                     }, 
                     orderable: false

@@ -1293,6 +1293,7 @@ a.customer-files:hover {
 	background-color: #4589b1;
 }
 
+
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
 	background-color: #3c8dbc;
 }
@@ -1300,9 +1301,12 @@ a.customer-files:hover {
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
 	color: #fff;
 	float: right;
-	margin-left: 5px;
 }
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
 	border-color: #3c8dbc;
+}
+
+.select2-container--default .select2-result-repository {
+	margin-right: 13px;
 }
