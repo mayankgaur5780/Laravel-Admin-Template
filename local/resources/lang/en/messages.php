@@ -182,4 +182,7 @@ return [
     'crop' => 'Crop',
     'invalid_file_type' => 'Please choose valid image file.',
     'invalid_file_dimension' => 'Invalid image dimension.',
+    'logo' => 'Logo',
+    'ar_company_name' => 'AR Company Name',
+    'en_company_name' => 'EN Company Name',
 ];

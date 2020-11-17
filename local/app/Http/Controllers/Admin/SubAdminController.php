@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use Illuminate\Http\Request;
 
-class SubAdminController extends Controller
+class SubAdminController extends WebController
 {
     public function getIndex(Request $request)
     {

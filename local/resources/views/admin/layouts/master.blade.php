@@ -57,11 +57,10 @@
         <link rel="stylesheet" href="{{ asset('backend/plugins/timepicker/bootstrap-timepicker.min.css') }}">
         <!-- Bootstrap date-time Picker -->
         <link rel="stylesheet" href="{{ asset('backend/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') }}">
-
+        <!-- summernote -->
+       <link href="{{ asset('backend/plugins/summernote/summernote.css') }}" rel="stylesheet">
         <!-- Select2 -->
         <link rel="stylesheet" href="{{ asset('backend/plugins/select2/select2.min.css') }}">
-        <!-- summernote -->
-       <link href="{{ asset('backend/plugins/summernote/summernote.css', true) }}" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('backend/css/site.css') }}">
         <link rel="stylesheet" href="{{ asset('backend/css/custom.css') }}?time={{ time() }}">
         <!-- Star Rating -->
@@ -147,7 +146,7 @@
         <!-- bootstrap date-time picker -->
         <script src="{{ asset('backend/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
         <!-- summernote -->
-        <script src="{{ asset('backend/plugins/summernote/summernote.js', true) }}"></script>
+        <script src="{{ asset('backend/plugins/summernote/summernote.js') }}"></script>
         <!-- Slimscroll -->
         <script src="{{ asset('backend/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
         <!-- FastClick -->
