@@ -8,6 +8,8 @@ return [
     |--------------------------------------------------------------------------
      */
 
+    'en' => 'English',
+    'ar' => 'العربية',
     'username_password_not_exist' => 'Username & password combination doesn\'t exist.',
     "request_processed_successfully" => "Your request processed successfully.",
     "admin_not_found" => "Admin not found.",

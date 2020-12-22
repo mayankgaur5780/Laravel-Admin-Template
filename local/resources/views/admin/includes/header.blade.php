@@ -17,7 +17,7 @@
             <ul class="nav navbar-nav">
                 <li style="padding:7px;">
                     <a href="{{ route('admin.change.locale', ['lang' => (getSessionLang() == 'en' ? 'ar' : 'en')]) }}" class="btn change-lang-btn">
-                        {{ getSessionLang() == 'en' ? 'AR' : 'EN' }}
+                        {{ getSessionLang() == 'en' ? transLang('ar') : transLang('en') }}
                     </a>
                 </li>
 
