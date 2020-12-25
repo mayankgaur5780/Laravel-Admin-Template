@@ -49,7 +49,7 @@
                                         <th>{{ transLang('profile_image') }}</th>
                                         <td>
                                             @if($admin->profile_image)
-                                                <img src="{{ imageBasePath($admin->profile_image) }}" width="60" style="float:left;" /> 
+                                                <img src="{{ imageBasePath($admin->profile_image) }}" width="60" /> 
                                             @endif
                                         </td>
                                     </tr>

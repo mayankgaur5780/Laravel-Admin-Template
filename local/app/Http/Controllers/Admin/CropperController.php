@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\WebController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 
-class CropperController extends WebController
+class CropperController extends AdminController
 {
     public function getIndex(Request $request)
     {

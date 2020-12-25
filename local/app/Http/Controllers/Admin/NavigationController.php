@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\WebController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 
-class NavigationController extends WebController
+class NavigationController extends AdminController
 {
 
     public function getIndex(Request $request)
     {
-        abort_unless(hasPermission('admin/navigation'), 401);
+        abort_unless(hasPermission('admin.navigation.index'), 401);
 
         return view('admin.navigation.index');
     }
 
     public function getList(Request $request)
     {
-        $list = \App\Models\AdminNavigation::select(\DB::raw("admin_navigations.*, {$this->locale}name AS name"));
+        $list = \App\Models\AdminNavigation::select(\DB::raw("admin_navigations.*, {$this->ql}name AS name"));
 
         return \DataTables::of($list)
             ->addColumn('status_text', function ($query) {
@@ -34,19 +34,17 @@ class NavigationController extends WebController
 
     public function getCreate(Request $request)
     {
-        abort_unless(hasPermission('create_navigation'), 401);
+        abort_unless(hasPermission('admin.navigation.create'), 401);
 
-        $locale = getCustomSessionLang();
-        $parent_navigation = \App\Models\AdminNavigation::select(\DB::raw("id, {$locale}name AS name"))
+        $parent_navigation = \App\Models\AdminNavigation::select(\DB::raw("id, {$this->ql}name AS name"))
             ->where('show_in_menu', 1)
-            ->orderBy("{$locale}name")
+            ->orderBy("{$this->ql}name")
             ->get();
         return view('admin.navigation.create', compact('parent_navigation'));
     }
 
     public function postCreate(Request $request)
     {
-
         $this->validate($request, [
             'name' => 'required',
             'en_name' => 'required',
@@ -91,13 +89,12 @@ class NavigationController extends WebController
 
     public function getUpdate(Request $request)
     {
-        abort_unless(hasPermission('update_navigation'), 401);
+        abort_unless(hasPermission('admin.navigation.update'), 401);
 
-        $locale = getCustomSessionLang();
         $navigation = \App\Models\AdminNavigation::findOrFail($request->id);
-        $parent_navigation = \App\Models\AdminNavigation::select(\DB::raw("id, {$locale}name AS name"))
+        $parent_navigation = \App\Models\AdminNavigation::select(\DB::raw("id, {$this->ql}name AS name"))
             ->where('show_in_menu', 1)
-            ->orderBy("{$locale}name")
+            ->orderBy("{$this->ql}name")
             ->get();
         return view('admin.navigation.update', compact('navigation', 'parent_navigation'));
     }

@@ -20,14 +20,14 @@
                                 <h3 class="box-title">{{ transLang('all_users') }}</h3>
                             </div>
                             <div class="col-xs-12 col-sm-6">
-                                @hasPermission('create_user')
+                                @hasPermission('admin.users.create')
                                     <a href="{{ route('admin.users.create') }}" class="btn btn-success pull-right">{{ transLang('create_new') }}</a>
                                 @endhasPermission
                             </div>
                         </div>
                     </div>
                     <div class="box-body">
-                        <table class="table table-striped table-bordered table-hover dataTable" id="users-table">
+                        <table class="table table-striped table-bordered table-hover dataTable" id="data-table">
                             <thead>
                                 <tr>
                                     <th>{{ transLang('name') }}</th>
@@ -50,7 +50,7 @@
 @section('scripts')
     <script type="text/javascript">
         $(function() {
-            $('#users-table').DataTable({
+            $('#data-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: '{{ route("admin.users.list") }}',
@@ -61,32 +61,24 @@
                     { data: "status_text", name: "status" },
                     { data: "created_at", mRender: data => formatDate(data, 'YYYY-MM-DD hh:mm A') },
                     {
-                        "mRender": (data, type, row) => {
+                        mRender: (data, type, row) => {
                             return `
-                                @if (hasPermission('update_user'))
-                                    <a href="{{ URL::to("admin/users/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
+                                @if (hasPermission('admin.users.update'))
+                                    <a href="{{ route("admin.users.update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
                                 @endif
-                                @if (hasPermission('delete_user'))
-                                    <a href="{{ URL::to("admin/users/delete") }}/${row.id}" class="delete_admins" ><i class="fa fa-trash fa-fw"></i></a>
+                                @if (hasPermission('admin.users.delete'))
+                                    <a href="{{ route("admin.users.delete") }}/${row.id}" class="delete-entry" data-tbl="data"><i class="fa fa-trash fa-fw"></i></a>
                                 @endif
-                                @if (hasPermission('change_password_user'))
-                                    <a href="{{ URL::to("admin/users/reset-password") }}/${row.id}" class="danger" ><i class="fa fa-key fa-fw"></i></a>
+                                @if (hasPermission('admin.users.password_reset'))
+                                    <a href="{{ route("admin.users.password_reset") }}/${row.id}" class="danger"><i class="fa fa-key fa-fw"></i></a>
                                 @endif
-                                <a href="{{ URL::to("admin/users/view") }}/${row.id}"><i class="fa fa-eye fa-fw"></i></a>
+                                <a href="{{ route("admin.users.view") }}/${row.id}"><i class="fa fa-eye fa-fw"></i></a>
                             `;
                         }, 
                         orderable: false,
                         searchable: false
                     }
                 ]
-            });
-
-            $('#users-table').on('click', '.delete_admins', function(e) {
-                e.preventDefault();
-                if (confirm("{{ transLang('are_you_sure_to_delete') }}")) {
-                    var href = $(this).attr('href');
-                    $.get( href, () => reloadTable('users-table'));
-                }
             });
         });
     </script>

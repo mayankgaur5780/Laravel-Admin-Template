@@ -1,5 +1,3 @@
-{{! $user = auth()->user() }}
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -7,13 +5,10 @@
         <meta charset="utf-8" />
         <link rel="icon" type="image/x-icon" href="{{ asset('logo/favicon.ico') }}" />
         <title>{{ transLang('admin_app_name') }} - @yield('title')</title>
-
         <meta name="description" content="{{ config('app.name') }} - @yield('title')" />
-        <!-- CSRF Token -->
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
         <!-- Bootstrap 3.3.6 -->
         <link rel="stylesheet" href="{{ asset('backend/bootstrap/css/bootstrap.min.css') }}">
         @if(getSessionLang() == 'ar')
@@ -61,12 +56,12 @@
        <link href="{{ asset('backend/plugins/summernote/summernote.css') }}" rel="stylesheet">
         <!-- Select2 -->
         <link rel="stylesheet" href="{{ asset('backend/plugins/select2/select2.min.css') }}">
+        <!-- sweetalert2 -->
+        <link rel="stylesheet" href="{{ asset('backend/plugins/sweetalert2/sweetalert2.min.css') }}">
         <link rel="stylesheet" href="{{ asset('backend/css/site.css') }}">
         <link rel="stylesheet" href="{{ asset('backend/css/custom.css') }}?time={{ time() }}">
         <!-- Star Rating -->
-        <link rel="stylesheet" href="{{ asset('backend/plugins/star-rating-svg-master/src/css/star-rating-svg.css') }}">
-        <!-- Tel Input -->
-        <link rel="stylesheet" href="{{ asset('backend/plugins/intl-tel-input/css/intlTelInput.css') }}">
+        {{-- <link rel="stylesheet" href="{{ asset('backend/plugins/star-rating-svg-master/src/css/star-rating-svg.css') }}"> --}}
         <!-- Image Cropper -->
         <link rel="stylesheet" href="{{ asset('backend/plugins/cropper/cropper.css') }}">
 
@@ -84,24 +79,24 @@
         <div class="se-pre-con"></div>
         
         <div class="wrapper">
-        <!-- Header Container Start -->
-        @include('admin.includes.header')
+            <!-- Header Container Start -->
+            @include('admin.includes.header')
         
-        <!-- Header Container End -->
-        <!-- Left side column. contains the logo and sidebar -->
-        @include('admin.includes.leftmenu')
+            <!-- Left side column. contains the logo and sidebar -->
+            @include('admin.includes.leftmenu')
 
 
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            @yield('content')
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+                @yield('content')
+            </div>
+            <!-- /.content-wrapper -->
+            
+            <!-- Include Footer -->
+            @include('admin.includes.footer')
         </div>
-        <!-- /.content-wrapper -->
-
-        @include('admin.includes.footer')
 
         <!-- basic scripts -->
-
         <!-- jQuery 2.2.3 -->
         <script src="{{ asset('backend/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
         <!-- jQuery UI 1.11.4 -->
@@ -109,9 +104,8 @@
         <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
         <script>
             $.widget.bridge('uibutton', $.ui.button);
-            const hostname = "{{ URL::to('/') }}"
-            const current_url = '{{ Request::url() }}';
-            const current_lang = '{{ getSessionLang() }}';
+            const CURRENT_URL = '{{ Request::url() }}';
+            const CURRENT_LANG = '{{ getSessionLang() }}';
         </script>
         <!-- Bootstrap 3.3.6 -->
         <script src="{{ asset('backend/bootstrap/js/bootstrap.min.js') }}"></script>
@@ -155,29 +149,35 @@
         <script src="{{ asset('backend/plugins/chartjs/Chart.min.js') }}"></script>
         <!-- Select2 -->
         <script src="{{ asset('backend/plugins/select2/select2.full.min.js') }}"></script>
-        <!-- Tel Input -->
-        <script src="{{ asset('backend/plugins/intl-tel-input/js/intlTelInput.js') }}"></script>
+        <!-- sweetalert2 -->
+        <script src="{{ asset('backend/plugins/sweetalert2/sweetalert2.all.min.js') }}"></script>
         <!-- Image Cropper -->
         <script src="{{ asset('backend/plugins/cropper/cropper.js') }}"></script>
         <!-- Star Rating -->
-        <script src="{{ asset('backend/plugins/star-rating-svg-master/src/jquery.star-rating-svg.js') }}"></script>
+        {{-- <script src="{{ asset('backend/plugins/star-rating-svg-master/src/jquery.star-rating-svg.js') }}"></script> --}}
         <!-- AdminLTE App -->
         <script src="{{ asset('backend/dist/js/app.min.js') }}"></script>
         <!-- Google Map API js -->
         {{-- <script src="http://maps.google.com/maps/api/js?key={{ config('cms.google_api_key') }}&libraries=places"></script> --}}
 
+        <div id="remote_model" class="modal fade" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+        <div id="cropper_model" class="modal fade" data-backdrop="static">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content"></div>
+            </div>
+        </div>
 
-	
         <script type="text/javascript">
             $(window).on('load', function() {
                 // Animate loader off screen
                 $(".se-pre-con").fadeOut("slow");
             });
 
-            @if(getSessionLang() == 'ar')
-                moment.locale("ar");
-            @endif
-            
+            moment.locale('{{ getSessionLang() }}');
     
             // <!-- Http Errors -->
             const ajax_errors = {
@@ -190,7 +190,6 @@
                 request_timeout: "{{ transLang('request_timeout') }}",
                 request_abort: "{{ transLang('request_abort') }}"
             };
-    
     
             $.extend( true, $.fn.dataTable.defaults, {
                 @if(getSessionLang() == 'ar')
@@ -221,24 +220,11 @@
                     }
                 ]
             });
-        </script>
-
-        <script src="{{ asset('backend/js/main.js') }}"></script>
-        <div id="remote_model" class="modal fade" data-backdrop="static">
-            <div class="modal-dialog">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-        <div id="cropper_model" class="modal fade" data-backdrop="static">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content"></div>
-            </div>
-        </div>
-        
-        <script type="text/javascript">
+            
             $(document).on('click', 'a[data-toggle="modal"]', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
+
                 var target_element = $(this).data('target');
                 $(target_element).find('.modal-content').html(`
                     <div class="modal-body">
@@ -249,17 +235,11 @@
                 `);
             });
             
-            $('#remote_model').on('hidden.bs.modal', function (e) {
+            $('#remote_model,#cropper_model').on('hidden.bs.modal', function (e) {
                 $(this).removeData();
                 $(this).find('.modal-content').empty();
             });
-            $('#remote_model').on('show.bs.modal', function (e) {});
-    
-            $('#cropper_model').on('hidden.bs.modal', function (e) {                
-                $(this).removeData();
-                $(this).find('.modal-content').empty();
-            });
-            $('#cropper_model').on('show.bs.modal', function (e) {});
+            // $('#remote_model').on('show.bs.modal', function (e) {});
             
             // For Image Cropper 
             $(document).on('change', '.image-cropper', function (e) {
@@ -272,7 +252,7 @@
                     let filename = $(this).val();
                     let extension = filename.substr((filename.lastIndexOf('.') + 1)).toLowerCase();
                     if($.inArray(extension, ['jpg', 'jpeg', 'png']) < 0) {
-                        alert('{{ transLang("invalid_file_type") }}');
+                        infoAlert('{{ transLang("invalid_file_type") }}');
                         return false;
                     }
                     
@@ -280,7 +260,7 @@
                     let img = new Image();
                     img.onload = function () {
                         if(this.width < width || this.height < height) {
-                            alert('{{ transLang("invalid_file_dimension") }}');
+                            infoAlert('{{ transLang("invalid_file_dimension") }}');
                             return false;
                         }
 
@@ -294,7 +274,44 @@
                     img.src = _URL.createObjectURL(file);
                 }
             });
+
+            $('#data-table').on('click', '.delete-entry', async function(e) {
+                e.preventDefault();
+
+                if (await confirmAlert()) {
+                    var href = $(this).attr('href');
+                    var tbl = $(this).data('tbl');
+                    $.get( href, () => reloadTable(`${tbl}-table`));
+                }
+            });
+
+            // await confirmAlert()
+            async function confirmAlert() {
+                let { value: isAccepted } = await Swal.fire({
+                    text: `{{ transLang('are_you_sure') }}`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: `<i class="fa fa-check"></i> {{ transLang('yes') }}`,
+                    cancelButtonText: `{{ transLang('cancel') }}`,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                });
+                return isAccepted === true;
+            }
+
+            async function infoAlert(msg, icon = 'warning') {
+                await Swal.fire({
+                    text: msg,
+                    icon, // warning, error, success, info, and question
+                    showCancelButton: false,
+                    confirmButtonText: `<i class="fa fa-check"></i> {{ transLang('okay') }}`,
+                    confirmButtonColor: '#3085d6',
+                });
+            }
         </script>
+
+        <script src="{{ asset('backend/js/main.js') }}"></script>
+
         @yield('scripts')
     </body>
 </html>

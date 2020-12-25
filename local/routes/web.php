@@ -29,7 +29,7 @@ Route::group(['namespace' => 'Admin', 'middleware' => 'assign.guard:admin'], fun
     ]);
 });
 
-Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'assign.guard:admin'], function () {
+Route::group(['namespace' => 'Admin', 'prefix' => env('URL_PREFIX'), 'middleware' => 'assign.guard:admin'], function () {
     Route::get('/', [
         'uses' => 'AuthController@getLogin',
         'as' => 'login'
@@ -129,34 +129,34 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'assi
                 'as' => 'admin.sub_admins.list'
             ]);
 
-            Route::get('sub_admins/update/{id}', [
+            Route::get('sub_admins/update/{id?}', [
                 'uses' => 'SubAdminController@getUpdate',
                 'as' => 'admin.sub_admins.update'
             ]);
 
-            Route::post('sub_admins/update/{id}', [
+            Route::post('sub_admins/update/{id?}', [
                 'uses' => 'SubAdminController@postUpdate',
                 'as' => 'admin.sub_admins.update'
             ]);
 
-            Route::get('sub_admins/delete/{id}', [
+            Route::get('sub_admins/delete/{id?}', [
                 'uses' => 'SubAdminController@getDelete',
                 'as' => 'admin.sub_admins.delete'
             ]);
 
-            Route::get('sub_admins/view/{id}', [
+            Route::get('sub_admins/view/{id?}', [
                 'uses' => 'SubAdminController@getView',
                 'as' => 'admin.sub_admins.view'
             ]);
 
-            Route::post('sub_admins/reset-password/{id}', [
+            Route::post('sub_admins/reset-password/{id?}', [
                 'uses' => 'SubAdminController@postPasswordReset',
-                'as' => 'admin.sub_admins.password-reset'
+                'as' => 'admin.sub_admins.password_reset'
             ]);
 
-            Route::get('sub_admins/reset-password/{id}', [
+            Route::get('sub_admins/reset-password/{id?}', [
                 'uses' => 'SubAdminController@getPasswordReset',
-                'as' => 'admin.sub_admins.password-reset'
+                'as' => 'admin.sub_admins.password_reset'
             ]);
         /* End Sub Admin Routes */
     
@@ -182,12 +182,12 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'assi
                 'as' => 'admin.navigation.list'
             ]);
     
-            Route::get('navigation/update/{id}', [
+            Route::get('navigation/update/{id?}', [
                 'uses' => 'NavigationController@getUpdate',
                 'as' => 'admin.navigation.update'
             ]);
     
-            Route::post('navigation/update/{id}', [
+            Route::post('navigation/update/{id?}', [
                 'uses' => 'NavigationController@postUpdate',
                 'as' => 'admin.navigation.update'
             ]);
@@ -215,22 +215,22 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'assi
                 'as' => 'admin.role.list'
             ]);
     
-            Route::get('role/update/{id}', [
+            Route::get('role/update/{id?}', [
                 'uses' => 'RoleController@getUpdate',
                 'as' => 'admin.role.update'
             ]);
     
-            Route::post('role/update/{id}', [
+            Route::post('role/update/{id?}', [
                 'uses' => 'RoleController@postUpdate',
                 'as' => 'admin.role.update'
             ]);
     
-            Route::get('role/permission/{id}', [
+            Route::get('role/permission/{id?}', [
                 'uses' => 'RoleController@getPermission',
                 'as' => 'admin.role.permission'
             ]);
     
-            Route::post('role/permission/{id}', [
+            Route::post('role/permission/{id?}', [
                 'uses' => 'RoleController@savePermission',
                 'as' => 'admin.role.permission.save'
             ]);
@@ -258,34 +258,34 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'assi
                 'as' => 'admin.users.create'
             ]);
     
-            Route::get('users/update/{id}', [
+            Route::get('users/update/{id?}', [
                 'uses' => 'UserController@getUpdate',
                 'as' => 'admin.users.update'
             ]);
     
-            Route::post('users/update/{id}', [
+            Route::post('users/update/{id?}', [
                 'uses' => 'UserController@postUpdate',
                 'as' => 'admin.users.update'
             ]);
     
-            Route::get('users/delete/{id}', [
+            Route::get('users/delete/{id?}', [
                 'uses' => 'UserController@getDelete',
                 'as' => 'admin.users.delete'
             ]);
     
-            Route::get('users/view/{id}', [
+            Route::get('users/view/{id?}', [
                 'uses' => 'UserController@getView',
                 'as' => 'admin.users.view'
             ]);
     
-            Route::post('users/reset-password/{id}', [
+            Route::post('users/reset-password/{id?}', [
                 'uses' => 'UserController@postPasswordReset',
-                'as' => 'admin.users.password-reset'
+                'as' => 'admin.users.password_reset'
             ]);
     
-            Route::get('users/reset-password/{id}', [
+            Route::get('users/reset-password/{id?}', [
                 'uses' => 'UserController@getPasswordReset',
-                'as' => 'admin.users.password-reset'
+                'as' => 'admin.users.password_reset'
             ]);
         /* End User Routes */
     
@@ -322,17 +322,17 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'assi
                 'as' => 'admin.faq.create'
             ]);
     
-            Route::get('faq/update/{id}', [
+            Route::get('faq/update/{id?}', [
                 'uses' => 'FaqController@getUpdate',
                 'as' => 'admin.faq.update'
             ]);
     
-            Route::post('faq/update/{id}', [
+            Route::post('faq/update/{id?}', [
                 'uses' => 'FaqController@postUpdate',
                 'as' => 'admin.faq.update'
             ]);
     
-            Route::get('faq/delete/{id}', [
+            Route::get('faq/delete/{id?}', [
                 'uses' => 'FaqController@getDelete',
                 'as' => 'admin.faq.delete'
             ]);
@@ -360,17 +360,17 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'assi
                 'as' => 'admin.countries.create'
             ]);
     
-            Route::get('countries/update/{id}', [
+            Route::get('countries/update/{id?}', [
                 'uses' => 'CountryController@getUpdate',
                 'as' => 'admin.countries.update'
             ]);
     
-            Route::post('countries/update/{id}', [
+            Route::post('countries/update/{id?}', [
                 'uses' => 'CountryController@postUpdate',
                 'as' => 'admin.countries.update'
             ]);
     
-            Route::get('countries/delete/{id}', [
+            Route::get('countries/delete/{id?}', [
                 'uses' => 'CountryController@getDelete',
                 'as' => 'admin.countries.delete'
             ]);
@@ -398,17 +398,17 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => 'assi
                 'as' => 'admin.coupons.create'
             ]);
     
-            Route::get('coupons/update/{id}', [
+            Route::get('coupons/update/{id?}', [
                 'uses' => 'CouponController@getUpdate',
                 'as' => 'admin.coupons.update'
             ]);
     
-            Route::post('coupons/update/{id}', [
+            Route::post('coupons/update/{id?}', [
                 'uses' => 'CouponController@postUpdate',
                 'as' => 'admin.coupons.update'
             ]);
     
-            Route::get('coupons/delete/{id}', [
+            Route::get('coupons/delete/{id?}', [
                 'uses' => 'CouponController@getDelete',
                 'as' => 'admin.coupons.delete'
             ]);

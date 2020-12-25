@@ -54,7 +54,7 @@
                                 <label class="col-sm-2 control-label required">{{ transLang('flag') }}</label>
                                 <div class="col-sm-6">
                                     @if($country->flag)
-                                        <img alt="" src="{{ imageBasePath($country->flag, 'flagPath') }}" width="40" style="float:left;"/>
+                                        <img alt="" src="{{ imageBasePath($country->flag, 'flagPath') }}" width="40"/>
                                     @endif
                                     <input type="file" name="file">
                                 </div>

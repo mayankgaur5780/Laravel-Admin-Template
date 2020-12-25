@@ -58,7 +58,7 @@
                 $.ajax({
                     dataType: 'json',
                     type: 'POST',
-                    url: "{{ route('admin.sub_admins.password-reset', ['id' => $admin->id]) }}",
+                    url: "{{ route('admin.sub_admins.password_reset', ['id' => $admin->id]) }}",
                     data: $('#resetPassword-form').serialize(),
                     beforeSend: () => {
                         btn.attr('disabled',true);

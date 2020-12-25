@@ -3,17 +3,6 @@
 @section('title') {{ transLang('sign_in') }} @endsection
 
 @section('content')
-    <p class="alert alert-block alert-danger message_box hide"></p>
-    @if(Session::has('success'))
-        <div class="alert alert-success alert-dismissible" id="message_box">
-            <button type="button" class="close" data-dismiss="alert">
-                <i class="ace-icon fa fa-times"></i>
-            </button>
-            <i class="ace-icon fa fa-check green"></i>
-            {{ Session::get('success') }}
-        </div>
-    @endif
- 
     <div class="login-box-body">
         <p class="login-box-msg">{{ transLang('sign_in_to_start_your_session') }}</p>
 
@@ -69,19 +58,15 @@
                     type: 'POST',
                     data: $('#login-form').serialize(),
                     beforeSend: () => {
-                        $('#message_box').remove();
                         $('#login-submit').attr('disabled',true);
-                        $('.message_box').html('').addClass('hide');
                     },
                     error: (jqXHR, exception) => {
                         $('#login-submit').attr('disabled',false);
-                        
-                        var msg = formatErrorMessage(jqXHR, exception);
-                        $('.message_box').html(msg).removeClass('hide');
+                        console.log(formatErrorMessage(jqXHR, exception));
                     },
                     success: data => {
                         $('#login-submit').html(data.success).removeClass('btn-primary').addClass('btn-success');
-                        window.location.replace('{{ route("admin.dashboard")}}');
+                        location.replace('{{ route("admin.dashboard")}}');
                     }
                 });
             });

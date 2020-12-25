@@ -1,48 +1,45 @@
-@if (blank(\Session::get('navigation_admin')))
-    {{! navigationMenuListing() }}
-@endif
-
-{{! $user = Auth::guard()->user() }}
-{{! $userMenuList = Session::get('navigation_admin') }}
-{{! $fieldname = getSessionLang() == 'en' ? 'en_name' : 'name' }}
+@php 
+    $fieldname = getSessionLang() == 'en' ? 'en_name' : 'name';
+@endphp
 
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu">
-			<li class="header nav-header"><?= transLang('main_navigation') ?></li>
-			<?php if(count($userMenuList)) { ?>
-				<?php foreach($userMenuList as $navigation) {?>
-                    <?php if($navigation['show_in_menu'] == 1) { ?>
-                        <?php if(isset($navigation['children']) && count($navigation['children'])) { ?>
+            <li class="header nav-header">{{ transLang('main_navigation') }}</li>
+
+            @if (count($navMenu))
+                @foreach ($navMenu as $navigation)
+                    @if ($navigation['show_in_menu'] == 1)
+                        @if (isset($navigation['children']) && count($navigation['children']))
                             <li class="treeview">
-                                <a href="<?= URL::to($navigation['action_path']) ?>">
-                                    <i class="<?= $navigation['icon'] ?>"></i> 
-                                    <span><?= $navigation[$fieldname] ?></span>
-                                    <span class="pull-right-container">
-                                        <i class="fa fa-angle-left pull-right"></i>
-                                    </span>
+                                <a href="{{ $navigation['action_path'] != '#' ? route($navigation['action_path']) : 'javascript:void(0);' }}">
+                                    <i class="{{ $navigation['icon'] }}"></i> 
+                                    <span>{{ $navigation[$fieldname] }}</span>
+                                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                                 </a>
-								<ul class="treeview-menu">
-									<?php foreach($navigation['children'] as $sub_menu) { ?>
-										<?php if($sub_menu['show_in_menu'] == 1) { ?>
-											<li class="<?= Request::is("{$sub_menu['action_path']}*") ? 'active' : '' ?>">
-												<a href="<?= URL::to($sub_menu['action_path']) ?>"><i class="fa fa-circle-o"></i><?= $sub_menu[$fieldname] ?></a>
-											</li>
-										<?php } ?>
-									<?php } ?>
-								</ul>
+                                <ul class="treeview-menu">
+                                    @foreach ($navigation['children'] as $sub_menu)
+                                        @if ($sub_menu['show_in_menu'] == 1)
+                                            <li class="{{ isCurrentRoute("{$sub_menu['action_path']}*") ? 'active' : '' }}">
+                                                <a href="{{ route($sub_menu['action_path']) }}">
+                                                    <i class="fa fa-circle-o"></i> {{ $sub_menu[$fieldname] }}
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
                             </li>
-						<?php } else { ?>
-                            <li class="<?= Request::is("{$navigation['action_path']}*") ? 'active' : '' ?>">
-                                <a href="<?= URL::to($navigation['action_path']) ?>">
-                                    <i class="<?= $navigation['icon'] ?>"></i> 
-                                    <span><?= $navigation[$fieldname] ?></span>
+                        @else
+                            <li class="{{ isCurrentRoute($navigation['action_path']) ? 'active' : '' }}">
+                                <a href="{{ route($navigation['action_path']) }}">
+                                    <i class="{{ $navigation['icon'] }}"></i> 
+                                    <span>{{ $navigation[$fieldname] }}</span>
                                 </a>
                             </li>
-						<?php } ?>
-					<?php } ?>
-				<?php } ?>
-			<?php } ?>
+                        @endif
+                    @endif
+                @endforeach
+            @endif
         </ul>
     </section>
 </aside>

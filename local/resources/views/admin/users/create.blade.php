@@ -92,11 +92,11 @@
 @section('scripts')
     <script type="text/javascript">
         jQuery(function($) {
-            $(document).on('click','#createBtn',function(e) {
+            $(document).on('click','#createBtn', async function(e) {
                 e.preventDefault();
                 let btn = $(this);
                 let loader = $('.message_box');
-
+                
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',

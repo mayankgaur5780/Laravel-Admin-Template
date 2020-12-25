@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\WebController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 
-class UserController extends WebController
+class UserController extends AdminController
 {
     public function getIndex(Request $request)
     {
-        abort_unless(hasPermission('admin/users'), 401);
+        abort_unless(hasPermission('admin.users.index'), 401);
 
         return view('admin.users.index');
     }
@@ -27,11 +27,11 @@ class UserController extends WebController
 
     public function getCreate(Request $request)
     {
-        abort_unless(hasPermission('create_user'), 401);
+        abort_unless(hasPermission('admin.users.create'), 401);
 
-        $dial_codes = \App\Models\Country::select(\DB::raw("dial_code, CONCAT(dial_code, ' (', {$this->locale}name, ')') AS text"))
+        $dial_codes = \App\Models\Country::select(\DB::raw("dial_code, CONCAT(dial_code, ' (', {$this->ql}name, ')') AS text"))
             ->where('status', 1)
-            ->orderBy("{$this->locale}name")
+            ->orderBy("{$this->ql}name")
             ->get();
 
         return view('admin.users.create', compact('dial_codes'));
@@ -80,13 +80,13 @@ class UserController extends WebController
 
     public function getUpdate(Request $request)
     {
-        abort_unless(hasPermission('update_user'), 401);
+        abort_unless(hasPermission('admin.users.update'), 401);
 
         $user = \App\Models\User::findOrFail($request->id);
-        $dial_codes = \App\Models\Country::select(\DB::raw("dial_code, CONCAT(dial_code, ' (', {$this->locale}name, ')') AS text"))
+        $dial_codes = \App\Models\Country::select(\DB::raw("dial_code, CONCAT(dial_code, ' (', {$this->ql}name, ')') AS text"))
             ->where('status', 1)
             ->orWhere('dial_code', $user->dial_code)
-            ->orderBy("{$this->locale}name")
+            ->orderBy("{$this->ql}name")
             ->get();
 
         return view('admin.users.update', compact('user', 'dial_codes'));
@@ -135,7 +135,7 @@ class UserController extends WebController
 
     public function getDelete(Request $request)
     {
-        abort_unless(hasPermission('delete_user'), 401);
+        abort_unless(hasPermission('admin.users.delete'), 401);
 
         $user = \App\Models\User::find($request->id)->delete();
         return successMessage();
@@ -149,7 +149,7 @@ class UserController extends WebController
 
     public function getPasswordReset(Request $request)
     {
-        abort_unless(hasPermission('change_password_user'), 401);
+        abort_unless(hasPermission('admin.users.password_reset'), 401);
 
         $user = \App\Models\User::findOrFail($request->id);
         return view('admin.users.password-reset', compact('user'));

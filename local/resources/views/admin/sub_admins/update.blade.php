@@ -79,7 +79,7 @@
 								<label class="col-sm-2 control-label">{{ transLang('profile_image') }}</label>
 								<div class="col-sm-6">
 									@if($admin->profile_image)
-										<img src="{{ imageBasePath($admin->profile_image) }}" width="60" style="float:left;" /> 
+										<img src="{{ imageBasePath($admin->profile_image) }}" width="60" /> 
 									@endif
 									<input type="file" name="profile_image">
 								</div>

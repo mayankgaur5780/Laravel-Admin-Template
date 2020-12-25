@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\WebController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 
-class FaqController extends WebController
+class FaqController extends AdminController
 {
     public function getIndex(Request $request)
     {
-        abort_unless(hasPermission('admin/faq'), 401);
+        abort_unless(hasPermission('admin.faq.index'), 401);
 
         return view('admin.faq.index');
     }
 
     public function getList(Request $request)
     {
-        $list = \App\Models\Faq::select(\DB::raw("faq.*, faq.{$this->locale}title as title"));
+        $list = \App\Models\Faq::select(\DB::raw("faq.*, faq.{$this->ql}title as title"));
         return \DataTables::of($list)->make();
     }
 
     public function getCreate(Request $request)
     {
-        abort_unless(hasPermission('create_faq'), 401);
+        abort_unless(hasPermission('admin.faq.create'), 401);
 
         return view('admin.faq.create');
     }
@@ -53,7 +53,7 @@ class FaqController extends WebController
 
     public function getUpdate(Request $request)
     {
-        abort_unless(hasPermission('update_faq'), 401);
+        abort_unless(hasPermission('admin.faq.update'), 401);
 
         $faq = \App\Models\Faq::findOrFail($request->id);
         return view('admin.faq.update', compact('faq'));
@@ -87,9 +87,9 @@ class FaqController extends WebController
 
     public function getDelete(Request $request)
     {
-        abort_unless(hasPermission('delete_faq'), 401);
+        abort_unless(hasPermission('admin.faq.delete'), 401);
 
-        \App\Models\Faq::find($request->id)->delete();
+        \App\Models\Faq::where('id', $request->id)->delete();
         return successMessage();
     }
 }

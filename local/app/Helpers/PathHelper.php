@@ -113,3 +113,15 @@ if (!function_exists('uploadFile')) {
         return null;
     }
 }
+
+if (!function_exists('isCurrentRoute')) {
+    function isCurrentRoute($routeName)
+    {
+        $routeName = substr($routeName, 0, strrpos($routeName, '.'));
+
+        $currentRoute = Route::currentRouteName();
+        $currentRoute = substr($currentRoute, 0, strrpos($currentRoute, '.'));
+
+        return $routeName == $currentRoute;
+    }
+}

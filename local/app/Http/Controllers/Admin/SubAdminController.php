@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\WebController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 
-class SubAdminController extends WebController
+class SubAdminController extends AdminController
 {
     public function getIndex(Request $request)
     {
-        abort_unless(hasPermission('admin/sub_admins'), 401);
+        abort_unless(hasPermission('admin.sub_admins.index'), 401);
 
         return view('admin.sub_admins.index');
     }
@@ -29,11 +29,9 @@ class SubAdminController extends WebController
 
     public function getCreate(Request $request)
     {
-        abort_unless(hasPermission('create_sub_admin'), 401);
+        abort_unless(hasPermission('admin.sub_admins.create'), 401);
 
-        $locale = getCustomSessionLang();
-
-        $dial_codes = \App\Models\Country::select(\DB::raw("dial_code, CONCAT(dial_code, ' (', {$locale}name,')') AS name"))
+        $dial_codes = \App\Models\Country::select(\DB::raw("dial_code, CONCAT(dial_code, ' (', {$this->ql}name,')') AS name"))
             ->where('status', 1)
             ->orderBy('dial_code')
             ->get();
@@ -88,22 +86,21 @@ class SubAdminController extends WebController
 
     public function getUpdate(Request $request)
     {
-        abort_unless(hasPermission('update_sub_admin'), 401);
+        abort_unless(hasPermission('admin.sub_admins.update'), 401);
 
-        $locale = getCustomSessionLang();
         $admin = \App\Models\Admin::findOrFail($request->id);
 
-        $dial_codes = \App\Models\Country::select(\DB::raw("dial_code, CONCAT(dial_code, ' (', {$locale}name,')') AS name"))
+        $dial_codes = \App\Models\Country::select(\DB::raw("dial_code, CONCAT(dial_code, ' (', {$this->ql}name,')') AS name"))
             ->where('status', 1)
             ->orWhere('dial_code', $admin->dial_code)
             ->orderBy('dial_code')
             ->get();
 
-        $roles = \App\Models\AdminRole::where(function ($query) {
-            $query->where('status', 1)
-                ->where('id', '<>', 1);
-        })
-            ->orWhere('id', $admin->admin_role_id)
+        $roles = \App\Models\AdminRole::where('id', $admin->admin_role_id)
+            ->orWhere([
+                ['status', '=', 1],
+                ['id', '<>', 1],
+            ])
             ->orderBy('name')
             ->get();
         return view('admin.sub_admins.update', compact('admin', 'roles', 'dial_codes'));
@@ -149,7 +146,7 @@ class SubAdminController extends WebController
 
     public function getDelete(Request $request)
     {
-        abort_unless(hasPermission('delete_sub_admin'), 401);
+        abort_unless(hasPermission('admin.sub_admins.delete'), 401);
 
         \App\Models\Admin::find($request->id)->delete();
         return successMessage();
@@ -157,7 +154,7 @@ class SubAdminController extends WebController
 
     public function getView(Request $request)
     {
-        abort_unless(hasPermission('admin/sub_admins'), 401);
+        abort_unless(hasPermission('admin.sub_admins.index'), 401);
 
         $admin = \App\Models\Admin::findOrFail($request->id);
         $admin->role = \App\Models\AdminRole::where('id', $admin->admin_role_id)->value('name');
@@ -166,7 +163,7 @@ class SubAdminController extends WebController
 
     public function getPasswordReset(Request $request)
     {
-        abort_unless(hasPermission('change_password_sub_admin'), 401);
+        abort_unless(hasPermission('admin.sub_admins.permission'), 401);
 
         $admin = \App\Models\Admin::findOrFail($request->id);
         return view('admin.sub_admins.password-reset', compact('admin'));

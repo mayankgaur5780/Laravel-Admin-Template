@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\WebController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 
-class ProfileController extends WebController
+class ProfileController extends AdminController
 {
     public function getDetails(Request $request)
     {
@@ -65,6 +65,6 @@ class ProfileController extends WebController
     public function getLogout(Request $request)
     {
         auth()->logout();
-        return redirect()->route('admin.login')->with(['success' => transLang('user_logged_out')]);
+        return redirect()->route('admin.login');
     }
 }

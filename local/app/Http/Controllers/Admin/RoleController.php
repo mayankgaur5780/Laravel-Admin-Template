@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\WebController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 
-class RoleController extends WebController
+class RoleController extends AdminController
 {
     public function getIndex(Request $request)
     {
-        abort_unless(hasPermission('admin/role'), 401);
+        abort_unless(hasPermission('admin.role.index'), 401);
 
         return view('admin.role.index');
     }
@@ -27,7 +27,7 @@ class RoleController extends WebController
 
     public function getCreate(Request $request)
     {
-        abort_unless(hasPermission('create_role'), 401);
+        abort_unless(hasPermission('admin.role.create'), 401);
 
         return view('admin.role.create');
     }
@@ -54,7 +54,7 @@ class RoleController extends WebController
 
     public function getUpdate(Request $request)
     {
-        abort_unless(hasPermission('update_role'), 401);
+        abort_unless(hasPermission('admin.role.update'), 401);
 
         $role = \App\Models\AdminRole::findOrFail($request->id);
         return view('admin.role.update', compact('role'));
@@ -84,7 +84,7 @@ class RoleController extends WebController
 
     public function getPermission(Request $request)
     {
-        abort_unless(hasPermission('update_permission_role'), 401);
+        abort_unless(hasPermission('admin.role.permission'), 401);
 
         $navigation = getGroupNavigation();
         $rolePermissions = getRolePermission($request->id);

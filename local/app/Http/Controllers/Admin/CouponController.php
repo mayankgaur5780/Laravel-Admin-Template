@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\WebController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 
-class CouponController extends WebController
+class CouponController extends AdminController
 {
     public function getIndex(Request $request)
     {
-        abort_unless(hasPermission('admin/coupons'), 401);
+        abort_unless(hasPermission('admin.coupons.index'), 401);
 
         return view('admin.coupons.index');
     }
@@ -27,7 +27,7 @@ class CouponController extends WebController
 
     public function getCreate(Request $request)
     {
-        abort_unless(hasPermission('create_coupon'), 401);
+        abort_unless(hasPermission('admin.coupons.create'), 401);
 
         return view('admin.coupons.create');
     }
@@ -64,11 +64,11 @@ class CouponController extends WebController
         }
     }
 
-    public function getUpdate($id = null)
+    public function getUpdate(Request $request)
     {
-        abort_unless(hasPermission('update_coupon'), 401);
+        abort_unless(hasPermission('admin.coupons.update'), 401);
 
-        $coupon = \App\Models\Coupon::findOrFail($id);
+        $coupon = \App\Models\Coupon::findOrFail($request->id);
         return view('admin.coupons.update', compact('coupon'));
     }
 
@@ -108,9 +108,9 @@ class CouponController extends WebController
 
     public function getDelete(Request $request)
     {
-        abort_unless(hasPermission('delete_coupon'), 401);
+        abort_unless(hasPermission('admin.coupons.delete'), 401);
 
-        \App\Models\Coupon::find($request->id)->delete();
+        \App\Models\Coupon::where('id', $request->id)->delete();
         return successMessage();
     }
 }

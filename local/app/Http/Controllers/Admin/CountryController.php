@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\WebController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 
-class CountryController extends WebController
+class CountryController extends AdminController
 {
     public function getIndex(Request $request)
     {
-        abort_unless(hasPermission('admin/countries'), 401);
+        abort_unless(hasPermission('admin.countries.index'), 401);
 
         return view('admin.countries.index');
     }
 
     public function getList(Request $request)
     {
-        $list = \App\Models\Country::select(\DB::raw("countries.*, {$this->locale}name AS name"));
+        $list = \App\Models\Country::select(\DB::raw("countries.*, {$this->ql}name AS name"));
 
         return \DataTables::of($list)
             ->addColumn('status_text', function ($query) {
@@ -27,7 +27,7 @@ class CountryController extends WebController
 
     public function getCreate(Request $request)
     {
-        abort_unless(hasPermission('create_country'), 401);
+        abort_unless(hasPermission('admin.countries.create'), 401);
 
         return view('admin.countries.create');
     }
@@ -68,7 +68,7 @@ class CountryController extends WebController
 
     public function getUpdate(Request $request)
     {
-        abort_unless(hasPermission('update_country'), 401);
+        abort_unless(hasPermission('admin.countries.update'), 401);
 
         $country = \App\Models\Country::findOrFail($request->id);
         return view('admin.countries.update', compact('country'));
@@ -92,7 +92,7 @@ class CountryController extends WebController
                 $country->en_name = $dataArr->en_name;
                 $country->dial_code = $dataArr->dial_code;
                 $country->status = $dataArr->status;
-                if (\Input::hasFile('file')) {
+                if ($request->file) {
                     $country->flag = uploadFile('file', 'image', 'flagPath');
                 }
                 $country->save();
@@ -106,9 +106,9 @@ class CountryController extends WebController
 
     public function getDelete(Request $request)
     {
-        abort_unless(hasPermission('delete_country'), 401);
+        abort_unless(hasPermission('admin.countries.delete'), 401);
 
-        \App\Models\Country::find($request->id)->delete();
+        \App\Models\Country::where('id', $request->id)->delete();
         return successMessage();
     }
 }

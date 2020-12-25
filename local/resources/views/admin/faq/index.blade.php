@@ -20,7 +20,7 @@
                                 <h3 class="box-title">{{ transLang('all_faq') }}</h3>
                             </div>
                             <div class="col-xs-12 col-sm-6">
-                                @hasPermission('create_faq')
+                                @hasPermission('admin.faq.create')
                                     <a href="{{ route('admin.faq.create') }}" class="btn btn-success pull-right">{{ transLang('create_new') }}</a>
                                 @endhasPermission
                             </div>
@@ -55,11 +55,11 @@
                     {
                         mRender: (data, type, row) => {
                             return `
-                                @if (hasPermission('update_faq'))
-                                    <a href="{{ URL::to("admin/faq/update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
+                                @if (hasPermission('admin.faq.update'))
+                                    <a href="{{ route("admin.faq.update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
                                 @endif
-                                @if (hasPermission('delete_faq'))
-                                    <a href="{{ URL::to("admin/faq/delete") }}/${row.id}" class="delete-entry"><i class="fa fa-trash fa-fw"></i></a>
+                                @if (hasPermission('admin.faq.delete'))
+                                    <a href="{{ route("admin.faq.delete") }}/${row.id}" class="delete-entry" data-tbl="data"><i class="fa fa-trash fa-fw"></i></a>
                                 @endif
                             `;
                         }, 
@@ -67,16 +67,6 @@
                         searchable: false
                     }
                 ]
-            });
-
-            $('#data-table').on('click', '.delete-entry', function(e) {
-                e.preventDefault();
-                if (confirm("{{ transLang('are_you_sure_to_delete') }}")) {
-                    var href = $(this).attr('href');
-                    $.get( href, function( data ) {
-                        $('#data-table').DataTable().ajax.reload();
-                    });
-                }
             });
         });
     </script>

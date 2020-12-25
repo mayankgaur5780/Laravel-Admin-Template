@@ -57,7 +57,7 @@
             let loader = $('.message_box');
             
             $.ajax({
-                url: "{{ route('admin.users.password-reset', ['id' => $user->id]) }}",
+                url: "{{ route('admin.users.password_reset', ['id' => $user->id]) }}",
                 data: $('#resetPassword-form').serialize(),
                 dataType: 'json',
                 type: 'POST',

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\WebController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Http\Request;
 
-class SettingController extends WebController
+class SettingController extends AdminController
 {
     public function getIndex(Request $request)
     {
-        abort_unless(hasPermission('admin/settings'), 401);
+        abort_unless(hasPermission('admin.settings.index'), 401);
 
         $settings = \App\Models\Setting::orderBy('display_order')->get();
         return view('admin.settings.index', compact('settings'));

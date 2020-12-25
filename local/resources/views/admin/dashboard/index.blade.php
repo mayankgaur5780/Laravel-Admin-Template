@@ -11,9 +11,9 @@
     </section>
 
     <section class="content">
-        @if (hasPermission('admin/users') || hasPermission('admin/coupons'))
+        @if (hasPermission('admin.users.index') || hasPermission('admin.coupons.index'))
             <div class="row">
-                @hasPermission('admin/users')
+                @hasPermission('admin.users.index')
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                         <div class="small-box bg-blue">
                             <div class="inner">
@@ -26,7 +26,7 @@
                     </div>
                 @endhasPermission
                 
-                @hasPermission('admin/coupons')
+                @hasPermission('admin.coupons.index')
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                         <div class="small-box bg-teal">
                             <div class="inner">
@@ -42,7 +42,7 @@
         @endif
 
         <!-- Users Graph -->
-        @hasPermission('admin/users')
+        @hasPermission('admin.users.index')
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box box-primary">
@@ -93,7 +93,7 @@
                 customRangeLabel: '{{ transLang("custom") }}',
             };
 
-            @if (hasPermission('admin/users'))
+            @if (hasPermission('admin.users.index'))
                 setTimeout(getUsersGraphData, 400);
 
                 // Users Chart
@@ -146,7 +146,7 @@
             @endif
 
 
-            @if (hasPermission('admin/users') || hasPermission('admin/coupons'))
+            @if (hasPermission('admin.users.index') || hasPermission('admin.coupons.index'))
                 getStats();
                 
                 function getStats() {

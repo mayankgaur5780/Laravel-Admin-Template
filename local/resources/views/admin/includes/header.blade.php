@@ -1,9 +1,8 @@
-{{! $user = auth()->user() }}
 <header class="main-header">
     <!-- Logo -->
     <a href="{{ route('admin.dashboard') }}" class="logo">
-        <span class="logo-mini"><b><img src="{{ asset("logo/logo.png") }}" width="30px"></b></span>
-        <span class="logo-lg"><img src="{{ asset("logo/logo.png") }}" width="30px"></b> <b>{{ transLang('company') }}</b></span>
+        <span class="logo-mini"><img src="{{ asset("logo/logo.png") }}" width="30px"></span>
+        <span class="logo-lg"><img src="{{ asset("logo/logo.png") }}" width="30px"> <b>{{ transLang('company') }}</b></span>
     </a>
 
     <!-- Header Navbar: style can be found in header.less -->
@@ -23,20 +22,14 @@
 
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        @if($user->profile_image)
-                            <img src="{{ imageBasePath($user->profile_image) }}" class="user-image">
-                        @else 
-                            <img src="{{ imageBasePath('backend/images/default-user.png') }}" class="user-image">
-                        @endif
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="{{ imageBasePath($user->profile_image) }}" class="user-image">
                         <span class="hidden-xs">{{ $user->name }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
-                            @if($user->profile_image)
-                            <img src="{{ imageBasePath($user->profile_image) }}" class="img-circle"> @else
-                            <img src="{{ imageBasePath('backend/images/default-user.png')}}" class="img-circle"> @endif
+                            <img src="{{ imageBasePath($user->profile_image) }}" class="img-circle">
                             <p>{{ $user->name }}</p>
                         </li>
                         <!-- Menu Footer-->
