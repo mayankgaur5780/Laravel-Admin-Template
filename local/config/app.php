@@ -228,7 +228,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         
         'Date' => Jenssegers\Date\Date::class,
-        'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Input' => Illuminate\Support\Facades\Input::class,
         'Str' => Illuminate\Support\Str::class,
         'Crypt' => Illuminate\Support\Facades\Crypt::class,

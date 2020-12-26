@@ -50,9 +50,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => env('URL_PREFIX'), 'middleware
         'uses' => 'AuthController@postForgotPassword',
         'as' => 'admin.forgot.password'
     ]);
-    Route::get('/password/reset/{token}', [
+    Route::get('/password/reset/request/{token}', [
         'uses' => 'AuthController@getResetPassword',
-        'as' => 'admin.password.reset'
+        'as' => 'admin.password.reset.request'
     ]);
     Route::post('/password/reset', [
         'uses' => 'AuthController@postResetPassword',

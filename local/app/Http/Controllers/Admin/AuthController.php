@@ -71,7 +71,7 @@ class AuthController extends AdminController
             if (blank($admin)) {
                 return errorMessage('email_incorrect');
             } elseif ($admin->status != 1) {
-                return errorMessage(($user->status == 0 ? 'account_inactive' : 'account_blocked'));
+                return errorMessage('account_inactive');
             }
 
             if (blank($admin->hash_token)) {
@@ -81,8 +81,8 @@ class AuthController extends AdminController
 
             // Try to send email
             $configArr = [
-                'email' => $admin->email,
-                'reset_link' => route('admin.password.reset', ['token' => $admin->hash_token]),
+                'name' => $admin->name,
+                'reset_link' => route('admin.password.reset.request', ['token' => $admin->hash_token]),
             ];
             sendEmail('reset_password', 'Reset Password', $admin->email, $configArr);
 
