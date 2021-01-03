@@ -1165,29 +1165,6 @@ i.has-error {
 
 /* PRICE COLOR CODE END */
 
-ol.breadcrumb {
-    /* display: none; */
-}
-
-body.ar_lang .form-horizontal .control-label {
-    padding-top: 7px;
-    margin-bottom: 0;
-    text-align: left;
-    float: right;
-}
-
-body.ar_lang .form-group .col-sm-6 {
-    float: right;
-}
-
-body.ar_lang .box-footer .col-sm-offset-1 {
-    margin-right: 8.33333333%;
-}
-
-body.ar_lang .box-footer .col-sm-6 {
-    float: right;
-}
-
 .map-input-box {
     border-radius: 0;
     box-shadow: none;
@@ -1210,7 +1187,7 @@ body.ar_lang .box-footer .col-sm-6 {
 /* Header, Login, Forgot & Reset Password Page Backgrounds  */
 
 header.main-header {
-    background-image: linear-gradient(to right, #13547a 0%, #80d0c7 100%);
+    background-image: linear-gradient(to left, #bdc3c7, #2c3e50);
 }
 
 .skin-blue .main-header .logo, .skin-blue .main-header .navbar {
@@ -1222,15 +1199,15 @@ header.main-header {
 }
 
 .skin-blue .main-header li.user-header {
-    background-image: linear-gradient(to right, #13547a 0%, #80d0c7 100%);
+    background-image: linear-gradient(to left, #bdc3c7, #2c3e50);
 }
 
 .skin-blue .sidebar-menu>li:hover>a, .skin-blue .sidebar-menu>li.active>a {
-    border-left-color: #80d0c7;
+    border-left-color: #b3babf;
 }
 
 .login-page {
-    background-image: linear-gradient(to right, #13547a 0%, #80d0c7 100%);
+    background-image: linear-gradient(to bottom, #bdc3c7, #2c3e50);
 }
 
 .login-logo a {
@@ -1238,30 +1215,26 @@ header.main-header {
 }
 
 .login-page .btn {
-    background: #3d8397;
+    background: #47596b;
     border-color: transparent;
 }
 
 .login-page .btn:active, .login-page .btn:hover {
-    background: #3d8397;
+    background: #47596b;
     border-color: transparent;
 }
 
 table.table-bordered.dataTable thead tr:first-child {
-    background: #41889a;
+    background: #3a4b5c;
 }
 
 .pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover, .dt-buttons .dt-button, .dt-buttons .dt-button:hover {
-    background: #3d8397;
+    background: #47596b;
     border-color: transparent;
 }
 
-body.ar_lang header.main-header {
-    background-image: linear-gradient(to right, #80d0c7 0%, #13547a 100%);
-}
-
-body.ar_lang .skin-blue .main-header li.user-header {
-    background-image: linear-gradient(to right, #80d0c7 0%, #13547a 100%);
+.box.box-primary, .nav-tabs-custom>.nav-tabs>li.active {
+    border-top-color: #47596b;
 }
 
 /* Header, Login, Forgot & Reset Password Page Backgrounds  */
@@ -1360,14 +1333,4 @@ body.ar_lang .skin-blue .main-header li.user-header {
 
 [type="checkbox"]:not(:checked), [type="checkbox"]:checked {
     left: 0px;
-}
-
-.ar_lang .col-md-3.col-md-offset-1.small_label {
-    font-weight: normal;
-    padding-right: 50px;
-}
-
-.ar_lang .col-md-3.col-md-offset-1.sub_small_label {
-    font-weight: normal;
-    padding-right: 100px;
 }
