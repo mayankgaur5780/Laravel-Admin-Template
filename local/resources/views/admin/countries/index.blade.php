@@ -62,10 +62,10 @@
                     {
                         mRender: (data, type, row) => {
                             return `
-                                @if (hasPermission('update_country'))
+                                @if (hasPermission('admin.countries.update'))
                                     <a href="{{ route("admin.countries.update") }}/${row.id}"><i class="fa fa-edit fa-fw"></i></a>
                                 @endif
-                                @if (hasPermission('delete_country'))
+                                @if (hasPermission('admin.countries.delete'))
                                     <a href="{{ route("admin.countries.delete") }}/${row.id}" class="delete-entry hide" data-tbl="data"><i class="fa fa-trash fa-fw"></i></a>
                                 @endif
                             `;
