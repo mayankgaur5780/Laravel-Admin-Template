@@ -1,5 +1,5 @@
 @php 
-    $fieldname = getSessionLang() == 'en' ? 'en_name' : 'name';
+    $fieldName = getSessionLang() == 'en' ? 'en_name' : 'name';
 @endphp
 
 <aside class="main-sidebar">
@@ -14,7 +14,7 @@
                             <li class="treeview">
                                 <a href="{{ $navigation['action_path'] != '#' ? route($navigation['action_path']) : 'javascript:void(0);' }}">
                                     <i class="{{ $navigation['icon'] }}"></i> 
-                                    <span>{{ $navigation[$fieldname] }}</span>
+                                    <span>{{ $navigation[$fieldName] }}</span>
                                     <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                                 </a>
                                 <ul class="treeview-menu">
@@ -22,7 +22,7 @@
                                         @if ($sub_menu['show_in_menu'] == 1)
                                             <li class="{{ isCurrentRoute("{$sub_menu['action_path']}*") ? 'active' : '' }}">
                                                 <a href="{{ route($sub_menu['action_path']) }}">
-                                                    <i class="fa fa-circle-o"></i> {{ $sub_menu[$fieldname] }}
+                                                    <i class="fa fa-circle-o"></i> {{ $sub_menu[$fieldName] }}
                                                 </a>
                                             </li>
                                         @endif
@@ -33,7 +33,7 @@
                             <li class="{{ isCurrentRoute($navigation['action_path']) ? 'active' : '' }}">
                                 <a href="{{ route($navigation['action_path']) }}">
                                     <i class="{{ $navigation['icon'] }}"></i> 
-                                    <span>{{ $navigation[$fieldname] }}</span>
+                                    <span>{{ $navigation[$fieldName] }}</span>
                                 </a>
                             </li>
                         @endif

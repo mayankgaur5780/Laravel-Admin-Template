@@ -416,7 +416,7 @@ if (!function_exists('getSessionLang')) {
     function getSessionLang($session = 'admin')
     {
         $keyArr = ['admin' => 'lang'];
-        return \Session::get($keyArr[$session]);
+        return \Session::get($keyArr[$session]) ? \Session::get($keyArr[$session]) : env('APP_LOCALE');
     }
 }
 

@@ -32,34 +32,37 @@ Route::group(['namespace' => 'Admin', 'middleware' => 'assign.guard:admin'], fun
 });
 
 Route::group(['namespace' => 'Admin', 'prefix' => env('URL_PREFIX'), 'middleware' => 'assign.guard:admin'], function () {
-    Route::get('/', [
-        'uses' => 'AuthController@getLogin',
-        'as' => 'login'
-    ]);
-    Route::get('/login', [
-        'uses' => 'AuthController@getLogin',
-        'as' => 'admin.login'
-    ]);
-    Route::post('/login', [
-        'uses' => 'AuthController@postLogin',
-        'as' => 'admin.login'
-    ]);
-    Route::get('/forgot/password', [
-        'uses' => 'AuthController@getForgotPassword',
-        'as' => 'admin.forgot.password'
-    ]);
-    Route::post('/forgot/password', [
-        'uses' => 'AuthController@postForgotPassword',
-        'as' => 'admin.forgot.password'
-    ]);
-    Route::get('/password/reset/request/{token}', [
-        'uses' => 'AuthController@getResetPassword',
-        'as' => 'admin.password.reset.request'
-    ]);
-    Route::post('/password/reset', [
-        'uses' => 'AuthController@postResetPassword',
-        'as' => 'admin.password.reset'
-    ]);
+    
+    /* Start Unsecured Routes */
+        Route::get('/', [
+            'uses' => 'AuthController@getLogin',
+            'as' => 'login'
+        ]);
+        Route::get('/login', [
+            'uses' => 'AuthController@getLogin',
+            'as' => 'admin.login'
+        ]);
+        Route::post('/login', [
+            'uses' => 'AuthController@postLogin',
+            'as' => 'admin.login'
+        ]);
+        Route::get('/forgot/password', [
+            'uses' => 'AuthController@getForgotPassword',
+            'as' => 'admin.forgot.password'
+        ]);
+        Route::post('/forgot/password', [
+            'uses' => 'AuthController@postForgotPassword',
+            'as' => 'admin.forgot.password'
+        ]);
+        Route::get('/password/reset/request/{token}', [
+            'uses' => 'AuthController@getResetPassword',
+            'as' => 'admin.password.reset.request'
+        ]);
+        Route::post('/password/reset', [
+            'uses' => 'AuthController@postResetPassword',
+            'as' => 'admin.password.reset'
+        ]);
+    /* End Unsecured Routes */
 
     // Secured Routes
     Route::group(['middleware' => ['auth:admin', 'optimizeImages']], function () {
