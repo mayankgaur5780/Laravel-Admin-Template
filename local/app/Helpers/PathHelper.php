@@ -58,8 +58,8 @@ if (!function_exists('uploadFile')) {
             $s3 = \Storage::disk('s3');
         }
 
-        if (\Input::hasFile($filename)) {
-            $mediaFile = \Input::file($filename);
+        if (request()->$filename) {
+            $mediaFile = request()->$filename;
             $filename = $randomString . '.' . $mediaFile->getClientOriginalExtension();
             if ($type == 'image') {
                 if ($cdn == true) {
