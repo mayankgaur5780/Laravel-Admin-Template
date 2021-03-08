@@ -21,7 +21,7 @@
                                     @foreach ($navigation['children'] as $sub_menu)
                                         @if ($sub_menu['show_in_menu'] == 1)
                                             <li class="{{ isCurrentRoute("{$sub_menu['action_path']}*") ? 'active' : '' }}">
-                                                <a href="{{ route($sub_menu['action_path']) }}">
+                                                <a href="{{ $sub_menu['action_path'] == '#' ? '#' : route($sub_menu['action_path']) }}">
                                                     <i class="fa fa-circle-o"></i> {{ $sub_menu[$fieldName] }}
                                                 </a>
                                             </li>
@@ -31,7 +31,7 @@
                             </li>
                         @else
                             <li class="{{ isCurrentRoute($navigation['action_path']) ? 'active' : '' }}">
-                                <a href="{{ route($navigation['action_path']) }}">
+                                <a href="{{ $navigation['action_path'] == '#' ? '#' : route($navigation['action_path']) }}">
                                     <i class="{{ $navigation['icon'] }}"></i> 
                                     <span>{{ $navigation[$fieldName] }}</span>
                                 </a>
