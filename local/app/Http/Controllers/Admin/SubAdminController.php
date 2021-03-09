@@ -129,7 +129,7 @@ class SubAdminController extends AdminController
             $admin->mobile = ltrim($dataArr->mobile, '0');
             $admin->admin_role_id = $dataArr->role_id;
             $admin->status = $dataArr->status;
-            if (\Input::hasFile('profile_image')) {
+            if ($request->profile_image) {
                 $admin->profile_image = uploadFile('profile_image');
             }
             $admin->save();
