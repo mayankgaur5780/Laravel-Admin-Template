@@ -117,8 +117,8 @@ class UserController extends AdminController
             $user->email = strtolower($dataArr->email);
             $user->dial_code = $dataArr->dial_code;
             $user->mobile = ltrim($dataArr->mobile, '0');
-            $user->status = $dataArr->status;
-            if (\Input::hasFile('profile_image')) {
+            $user->status = $dataArr->status
+            if ($request->profile_image) {
                 $user->profile_image = uploadFile('profile_image');
             }
             $user->save();
