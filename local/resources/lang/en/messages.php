@@ -12,6 +12,7 @@ return [
     'ar' => 'العربية',
     'username_password_not_exist' => 'Username & password combination doesn\'t exist.',
     "request_processed_successfully" => "Your request processed successfully.",
+    "mobile_already_taken" => "This mobile no is already been taken.",
     "admin_not_found" => "Admin not found.",
     "success" => "success",
     "account_inactive" => "ERROR: Your account is inactive.",
