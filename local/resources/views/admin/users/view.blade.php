@@ -13,7 +13,7 @@
 
     <section class="content">
         <p>
-            <a class="btn btn-success btn-floating" href="{{ route('admin.users.update', ['?id' => $user->id]) }}">{{ transLang('update') }}</a>
+            <a class="btn btn-success btn-floating" href="{{ route('admin.users.update', $user->id) }}">{{ transLang('update') }}</a>
         </p>
         <div class="row">
             <div class="col-md-12">
