@@ -3,6 +3,8 @@
 @section('title') {{ transLang('sign_in') }} @endsection
 
 @section('content')
+    <div id="message_box" style="display: none;"></div>
+
     <div class="login-box-body">
         <p class="login-box-msg">{{ transLang('sign_in_to_start_your_session') }}</p>
 
@@ -51,6 +53,7 @@
         jQuery(function($) {
             $(document).on('click','#login-submit',function(e) {
                 e.preventDefault();
+                let $loader = $('#message_box');
                 
                 $.ajax({
                     url: '{{ route("admin.login") }}',
@@ -59,13 +62,20 @@
                     data: $('#login-form').serialize(),
                     beforeSend: () => {
                         $('#login-submit').attr('disabled',true);
+                        $loader.hide();
                     },
                     error: (jqXHR, exception) => {
                         $('#login-submit').attr('disabled',false);
-                        console.log(formatErrorMessage(jqXHR, exception));
+                        $loader.html(`
+                            <div class="alert alert-danger alert-dismissible">
+                                <button aria-hidden="true" class="close" data-dismiss="alert" type="button">&times;</button>
+                                ${formatErrorMessage(jqXHR, exception)}
+                            </div>
+                        `).show();
                     },
                     success: data => {
                         $('#login-submit').html(data.success).removeClass('btn-primary').addClass('btn-success');
+                        $loader.hide();
                         location.replace('{{ route("admin.dashboard")}}');
                     }
                 });

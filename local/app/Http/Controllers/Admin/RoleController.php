@@ -102,7 +102,7 @@ class RoleController extends AdminController
             // Start Transaction
             \DB::beginTransaction();
 
-            $result = \App\Models\AdminRolePermission::where('role_id', '=', $request->id)->get();
+            $result = \App\Models\AdminRolePermission::where('admin_role_id', '=', $request->id)->get();
             if ($result->isNotEmpty()) {
                 foreach ($result as $value) {
                     $item = \App\Models\AdminRolePermission::find($value->id);
@@ -112,8 +112,8 @@ class RoleController extends AdminController
             if (count($dataArr->navigation_id)) {
                 foreach ($dataArr->navigation_id as $navigation_id) {
                     $rolesPermissions = new \App\Models\AdminRolePermission();
-                    $rolesPermissions->role_id = $request->id;
-                    $rolesPermissions->navigation_id = $navigation_id;
+                    $rolesPermissions->admin_role_id = $request->id;
+                    $rolesPermissions->admin_navigation_id = $navigation_id;
                     $rolesPermissions->save();
                 }
             }
