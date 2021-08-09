@@ -32,7 +32,7 @@ CREATE TABLE `admin_navigations` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `parent_id` (`parent_id`),
-  CONSTRAINT `admin_navigations_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `admin_navigations` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  CONSTRAINT `admin_navigations_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `admin_navigations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `admin_navigations` */
