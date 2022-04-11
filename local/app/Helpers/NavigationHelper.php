@@ -107,7 +107,7 @@ if (!function_exists('navigationMenuListing')) {
         if ($saveSession) {
             \Session::put("navigation_{$guard}", collect());
             \Session::put("navigation_permission_{$guard}", []);
-
+        }
 
         if (count($navigationMasters)) {
             $navigation = arrayToTree($navigationMasters->where('show_in_menu', 1)->toArray(), null);
