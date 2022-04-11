@@ -8,7 +8,7 @@ if (!function_exists('getGroupNavigation')) {
             ->where('status', 1)
             ->where('show_in_permission', 1)
             ->orderBy("display_order")
-            // ->orderBy("{$locale}name")
+        // ->orderBy("{$locale}name")
             ->get()
             ->toArray();
 
@@ -104,6 +104,9 @@ if (!function_exists('navigationMenuListing')) {
             }
         }
 
+        \Session::put("navigation_{$guard}", collect());
+        \Session::put("navigation_permission_{$guard}", []);
+
         if (count($navigationMasters)) {
             $navigation = arrayToTree($navigationMasters->where('show_in_menu', 1)->toArray(), null);
 
@@ -121,19 +124,22 @@ if (!function_exists('hasPermission')) {
     function hasPermission()
     {
         $stringArr = func_get_args();
+        $navigation_permission_admin = \Session::get('navigation_permission_admin');
         if (blank(\Session::get('navigation_permission_admin'))) {
             navigationMenuListing();
+            $navigation_permission_admin = \Session::get('navigation_permission_admin');
         }
+        $navigation_permission_admin = $navigation_permission_admin ? $navigation_permission_admin : [];
 
         if (count($stringArr) > 1) {
             foreach ($stringArr as $string) {
-                $string_found = array_search($string, array_column(\Session::get('navigation_permission_admin'), 'action_path'));
+                $string_found = array_search($string, array_column($navigation_permission_admin, 'action_path'));
                 if ($string_found !== false) {
                     return true;
                 }
             }
         } else {
-            $string_found = array_search($stringArr[0], array_column(\Session::get('navigation_permission_admin'), 'action_path'));
+            $string_found = array_search($stringArr[0], array_column($navigation_permission_admin, 'action_path'));
         }
         return $string_found === false ? false : true;
     }
